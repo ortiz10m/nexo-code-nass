@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
+from rutas import calcular_ruta_astar
 
 # Importamos la lógica de viabilidad
 from viabilidad import evaluar_mision, comparar_mision_historica
@@ -54,17 +55,27 @@ def get_puntos():
 @app.post("/calcular_ruta")
 def calcular_ruta(req: RutaRequest):
     """Calcula la ruta y devuelve la energía requerida."""
-    # TODO: Implementar algoritmo A* real.
-    # Retornamos datos simulados para que el frontend pueda avanzar.
+    
+    # 1. Obtenemos los puntos (usando la misma función de arriba)
+    puntos = get_puntos()
+    
+    # 2. Llamamos a tu algoritmo A*
+    ruta, energia_req, pend_max = calcular_ruta_astar(
+        puntos=puntos, 
+        inicio_id=req.inicio_id, 
+        destino_id=req.destino_id
+    )
+    
+    # 3. Validamos si se encontró ruta
+    if ruta is None:
+        return {"error": "No se pudo calcular la ruta"}
+
+    # 4. Devolvemos el JSON con los datos reales
     return {
         "estado": "exito",
-        "ruta_calculada": [
-            {"x": 10, "y": 20},
-            {"x": 15, "y": 25},
-            {"x": 20, "y": 30}
-        ],
-        "energia_requerida": 65.5, # Energía simulada que gastará el astronauta
-        "pendiente_maxima": 22.0   # Pendiente simulada del terreno
+        "ruta_calculada": ruta,
+        "energia_requerida": energia_req,
+        "pendiente_maxima": pend_max
     }
 
 @app.post("/evaluar_viabilidad")
