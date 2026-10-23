@@ -8,7 +8,7 @@ from viabilidad import evaluar_mision, comparar_mision_historica
 
 app = FastAPI(title="Nexo Code - Mars Marswalk API")
 
-# Configuración de CORS: Permite que el frontend (React) se conecte.
+# Configuración de CORS: Permite que el frontend se conecte sin bloqueos.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,8 +20,8 @@ app.add_middleware(
 class PuntoMarte(BaseModel):
     id: int
     nombre: str
-    x: float
-    y: float
+    lat: float
+    lng: float
     pendiente: float
 
 class RutaRequest(BaseModel):
@@ -29,7 +29,6 @@ class RutaRequest(BaseModel):
     destino_id: int
     energia_astronauta: float
 
-# NUEVO MODELO: Para conectar /calcular_ruta con /evaluar_viabilidad
 class EvaluacionRequest(BaseModel):
     energia_astronauta: float
     energia_requerida: float
@@ -43,25 +42,28 @@ def read_root():
 
 @app.get("/puntos", response_model=List[PuntoMarte])
 def get_puntos():
-    """Retorna los puntos de interés."""
-    # TODO: Conectar con el archivo JSON real.
+    """Retorna los puntos de interés con coordenadas reales de Marte."""
+    # TODO: Conectar con el archivo JSON real de Maylyn.
+    # Coordenadas aproximadas del Cráter Jezero, Marte.
     return [
-        {"id": 1, "nombre": "Cráter Jezero", "x": 10, "y": 20, "pendiente": 5.0},
-        {"id": 2, "nombre": "Delta Oeste", "x": 15, "y": 25, "pendiente": 22.5},
-        {"id": 3, "nombre": "Zona de Aterrizaje", "x": 5, "y": 5, "pendiente": 1.0}
+        {"id": 1, "nombre": "Cráter Jezero", "lat": 18.38, "lng": 77.58, "pendiente": 5.0},
+        {"id": 2, "nombre": "Delta Oeste", "lat": 18.42, "lng": 77.50, "pendiente": 22.5},
+        {"id": 3, "nombre": "Zona de Aterrizaje", "lat": 18.35, "lng": 77.60, "pendiente": 1.0}
     ]
 
 @app.post("/calcular_ruta")
 def calcular_ruta(req: RutaRequest):
-    """Calcula la ruta y devuelve la energía requerida."""
+    """
+    Calcula la ruta y devuelve la energía requerida.
+    (Daniel reemplazará estos datos simulados con su algoritmo A*).
+    """
     # TODO: Implementar algoritmo A* real.
-    # Retornamos datos simulados para que el frontend pueda avanzar.
     return {
         "estado": "exito",
         "ruta_calculada": [
-            {"x": 10, "y": 20},
-            {"x": 15, "y": 25},
-            {"x": 20, "y": 30}
+            {"lat": 18.38, "lng": 77.58},
+            {"lat": 18.42, "lng": 77.50},
+            {"lat": 18.35, "lng": 77.60}
         ],
         "energia_requerida": 65.5, # Energía simulada que gastará el astronauta
         "pendiente_maxima": 22.0   # Pendiente simulada del terreno
@@ -70,8 +72,7 @@ def calcular_ruta(req: RutaRequest):
 @app.post("/evaluar_viabilidad")
 def evaluar_viabilidad(req: EvaluacionRequest):
     """
-    Recibe los datos del cálculo de ruta y evalúa si es viable.
-    Aquí es donde TU lógica (viabilidad.py) se conecta con la API.
+    Recibe los datos del cálculo de ruta y evalúa si es viable usando tu lógica.
     """
     # 1. Llamamos a tu función de viabilidad
     resultado_viabilidad = evaluar_mision(

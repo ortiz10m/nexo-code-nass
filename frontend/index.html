@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexo Code - Planificador Marswalk</title>
+    
+    <!-- Libreria Leaflet para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #1e1e1e;
+            padding: 15px 20px;
+            border-bottom: 2px solid #c1440e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 20px;
+            color: #ff6b35;
+        }
+
+        .contenedor-principal {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Panel izquierdo de controles */
+        .panel-control {
+            width: 360px;
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-right: 1px solid #333;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .grupo-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        select, input {
+            padding: 8px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #c1440e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #e05316;
+        }
+
+        /* Cajas de resultados */
+        .caja-resultado {
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .viable {
+            background-color: #133320;
+            border: 1px solid #2ecc71;
+        }
+
+        .no-viable {
+            background-color: #3b1414;
+            border: 1px solid #e74c3c;
+        }
+
+        .caja-resultado h3 {
+            margin-bottom: 8px;
+        }
+
+        .caja-resultado ul {
+            margin-left: 18px;
+            margin-bottom: 10px;
+        }
+
+        .caja-historica {
+            background-color: #222;
+            padding: 10px;
+            border-left: 3px solid #ff6b35;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        /* Seccion para los datos de Samuel */
+        .info-astronauta {
+            background-color: #242424;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #383838;
+            font-size: 13px;
+        }
+
+        .info-astronauta h4 {
+            color: #ff6b35;
+            margin-bottom: 6px;
+        }
+
+        /* Mapa a la derecha */
+        #mapa {
+            flex: 1;
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Nexo Code - Planificador de Rutas en Marte</h1>
+        <span>NASA Space Apps Challenge</span>
+    </header>
+
+    <div class="contenedor-principal">
+        <div class="panel-control">
+            <h2>Configurar Ruta</h2>
+
+            <div class="grupo-input">
+                <label for="select-inicio">Punto de Inicio:</label>
+                <select id="select-inicio"></select>
+            </div>
+
+            <div class="grupo-input">
+                <label for="select-destino">Punto de Destino:</label>
+                <select id="select-destino"></select>
+            </div>
+
+            <div class="grupo-input">
+                <label for="input-energia">Energia disponible del astronauta:</label>
+                <input type="number" id="input-energia" value="100">
+            </div>
+
+            <button onclick="evaluarRuta()">Calcular y Evaluar Ruta</button>
+
+            <!-- Resultado de viabilidad (conectado a viabilidad.py) -->
+            <div id="caja-resultado" class="caja-resultado">
+                <h3 id="titulo-estado"></h3>
+                <ul id="lista-razones"></ul>
+                <div class="caja-historica">
+                    <strong>Comparacion historica:</strong>
+                    <p id="texto-historico"></p>
+                </div>
+            </div>
+
+            <!-- TODO (Samuel): Completar datos del traje e indumentaria aqui -->
+            <div class="info-astronauta">
+                <h4>Parametros del Astronauta</h4>
+                <p><strong>Traje:</strong> NASA xEMU</p>
+                <p><strong>Pendiente maxima segura:</strong> 20°</p>
+                <p><strong>Gravedad:</strong> 3.72 m/s²</p>
+            </div>
+        </div>
+
+        <div id="mapa"></div>
+    </div>
+
+    <script>
+        const URL_API = "http://127.0.0.1:8000";
+        let lineaRuta = null;
+
+        // 1. Iniciar el mapa de Marte
+        const mapa = L.map('mapa').setView([18.38, 77.58], 10); // Centrado en Jezero
+
+        L.tileLayer('https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png', {
+            attribution: 'OpenPlanetaryMap / NASA'
+        }).addTo(mapa);
+
+        // 2. Pedir los puntos al backend (GET /puntos)
+        async function cargarPuntos() {
+            try {
+                const respuesta = await fetch(`${URL_API}/puntos`);
+                const puntos = await respuesta.json();
+
+                const selectInicio = document.getElementById("select-inicio");
+                const selectDestino = document.getElementById("select-destino");
+
+                puntos.forEach(punto => {
+                    // Agregar opciones a los select
+                    const textoOpcion = `${punto.nombre} (Pendiente: ${punto.pendiente}°)`;
+                    selectInicio.innerHTML += `<option value="${punto.id}">${textoOpcion}</option>`;
+                    selectDestino.innerHTML += `<option value="${punto.id}">${textoOpcion}</option>`;
+
+                    // Poner marcador en el mapa (AJUSTADO A LAT Y LNG)
+                    L.marker([punto.lat, punto.lng])
+                        .addTo(mapa)
+                        .bindPopup(`<b>${punto.nombre}</b><br>Pendiente: ${punto.pendiente}°`);
+                });
+
+                if (puntos.length > 1) {
+                    selectDestino.selectedIndex = 1;
+                }
+            } catch (error) {
+                console.error("Error cargando los puntos desde FastAPI:", error);
+            }
+        }
+
+        // 3. Calcular ruta y evaluar viabilidad
+        async function evaluarRuta() {
+            const inicio_id = parseInt(document.getElementById("select-inicio").value);
+            const destino_id = parseInt(document.getElementById("select-destino").value);
+            const energia_astronauta = parseFloat(document.getElementById("input-energia").value);
+
+            try {
+                // Paso 1: Llamar a /calcular_ruta
+                const resRuta = await fetch(`${URL_API}/calcular_ruta`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ inicio_id, destino_id, energia_astronauta })
+                });
+                const datosRuta = await resRuta.json();
+
+                // Dibujar la linea de la ruta en el mapa
+                if (lineaRuta) {
+                    mapa.removeLayer(lineaRuta);
+                }
+                // AJUSTADO A LAT Y LNG
+                const coordenadas = datosRuta.ruta_calculada.map(p => [p.lat, p.lng]);
+                lineaRuta = L.polyline(coordenadas, { color: '#ff6b35', weight: 4 }).addTo(mapa);
+
+                // Paso 2: Llamar a /evaluar_viabilidad (tu archivo viabilidad.py)
+                const resViabilidad = await fetch(`${URL_API}/evaluar_viabilidad`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        energia_astronauta: energia_astronauta,
+                        energia_requerida: datosRuta.energia_requerida,
+                        pendiente_maxima: datosRuta.pendiente_maxima
+                    })
+                });
+                const datosViabilidad = await resViabilidad.json();
+
+                // Paso 3: Mostrar resultado en el panel izquierdo
+                const caja = document.getElementById("caja-resultado");
+                caja.style.display = "block";
+                caja.className = "caja-resultado " + (datosViabilidad.viable ? "viable" : "no-viable");
+
+                document.getElementById("titulo-estado").innerText = datosViabilidad.viable 
+                    ? "Ruta Viable" 
+                    : "Ruta No Viable (Riesgo Alto)";
+
+                const lista = document.getElementById("lista-razones");
+                lista.innerHTML = "";
+                datosViabilidad.razones.forEach(razon => {
+                    lista.innerHTML += `<li>${razon}</li>`;
+                });
+
+                document.getElementById("texto-historico").innerText = datosViabilidad.comparacion_historica;
+
+            } catch (error) {
+                alert("No se pudo conectar con el backend. Asegurate de tener uvicorn corriendo.");
+                console.error(error);
+            }
+        }
+
+        // Ejecutar al abrir la pagina
+        cargarPuntos();
+    </script>
+</body>
+</html>
