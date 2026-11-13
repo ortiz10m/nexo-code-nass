@@ -1,0 +1,32 @@
+[
+  {
+    "codigo": "blackout",
+    "mision": "Mars Polar Lander (NASA, 1999)",
+    "sol_evento": "Fase EDL / Descenso Polar",
+    "leccion": "Pérdida total de telemetría en terreno escarpado sin línea de vista directa. En una EVA humana, entrar en sombra de radio UHF impide asistencia médica remota."
+  },
+  {
+    "codigo": "pendiente",
+    "mision": "Spirit MER-A (NASA, Sol 1892 - Troy)",
+    "sol_evento": "Sol 1892 - Cráter Gusev",
+    "leccion": "Inmovilización permanente al transitar laderas inclinadas con sulfatos blandos ocultos bajo el regolito. Con el traje xEMU (47.5 kg en Marte), superar 20° desplaza el centro de gravedad."
+  },
+  {
+    "codigo": "energia_critica",
+    "mision": "Opportunity MER-B (NASA, Sol 5111)",
+    "sol_evento": "Sol 5111 - Valle de la Perseverancia",
+    "leccion": "Agotamiento irreversible de reservas energéticas durante contingencia ambiental. Consumir la reserva del 30% del PLSS deja al astronauta sin margen ante tormentas locales."
+  },
+  {
+    "codigo": "moderado",
+    "mision": "InSight Discovery (NASA, Sol 1440)",
+    "sol_evento": "Sol 1440 - Elysium Planitia",
+    "leccion": "Operación viable pero bajo degradación progresiva de margen energético. Se recomienda monitoreo continuo de sublimación de agua y fatiga cognitiva."
+  },
+  {
+    "codigo": "optimo",
+    "mision": "Perseverance Mars 2020 (Campaña Three Forks)",
+    "sol_evento": "Soles 650-700 - Cráter Jezero",
+    "leccion": "Parámetros nominales equivalentes a los corredores planos validados por AutoNav en Jezero. Desgaste metabólico y térmico completamente controlados."
+  }
+]

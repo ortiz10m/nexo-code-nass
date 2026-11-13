@@ -3,300 +3,1951 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexo Code - Planificador Marswalk</title>
-    
-    <!-- Libreria Leaflet para el mapa -->
+    <title>Mars Maps — Nexo Code</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+            background: #241914;
+            color: #202124;
         }
 
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            height: 100vh;
+        #mapa {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #2b1d16;
+        }
+
+        /* Tono cálido marciano nítido para CTX 5m/px */
+        .tono-marte .leaflet-tile-pane {
+            filter: sepia(0.26) saturate(1.35) contrast(1.18) brightness(1.14);
+        }
+
+        /* Panel izquierdo estilo Google Maps */
+        .gmaps-panel {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            max-height: calc(100vh - 24px);
+            width: 384px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-        }
-
-        header {
-            background-color: #1e1e1e;
-            padding: 15px 20px;
-            border-bottom: 2px solid #c1440e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 20px;
-            color: #ff6b35;
-        }
-
-        .contenedor-principal {
-            display: flex;
-            flex: 1;
             overflow: hidden;
         }
 
-        /* Panel izquierdo de controles */
-        .panel-control {
-            width: 360px;
-            background-color: #1a1a1a;
-            padding: 20px;
-            border-right: 1px solid #333;
-            overflow-y: auto;
+        .gmaps-top {
+            padding: 14px 16px 12px;
+            background: #fff;
+            border-bottom: 1px solid #dadce0;
+        }
+
+        .marca-fila {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .grupo-input {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-size: 13px;
-            color: #aaa;
-        }
-
-        select, input {
-            padding: 8px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 4px;
-        }
-
-        button {
-            padding: 10px;
-            background-color: #c1440e;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        button:hover {
-            background-color: #e05316;
-        }
-
-        /* Cajas de resultados */
-        .caja-resultado {
-            padding: 15px;
-            border-radius: 4px;
-            display: none;
-            font-size: 14px;
-        }
-
-        .viable {
-            background-color: #133320;
-            border: 1px solid #2ecc71;
-        }
-
-        .no-viable {
-            background-color: #3b1414;
-            border: 1px solid #e74c3c;
-        }
-
-        .caja-resultado h3 {
-            margin-bottom: 8px;
-        }
-
-        .caja-resultado ul {
-            margin-left: 18px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 10px;
         }
 
-        .caja-historica {
-            background-color: #222;
-            padding: 10px;
-            border-left: 3px solid #ff6b35;
-            font-size: 13px;
-            margin-top: 8px;
+        .marca-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #202124;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        /* Seccion para los datos de Samuel */
-        .info-astronauta {
-            background-color: #242424;
-            padding: 12px;
+        .marca-logo span { color: #d93025; }
+
+        .chip-backend {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e6f4ea;
+            color: #137333;
+        }
+
+        .buscador-rutas {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .iconos-ab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            width: 18px;
+        }
+
+        .circulo-a {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid #1a73e8;
+        }
+
+        .puntos-linea {
+            width: 2px;
+            height: 18px;
+            background: #dadce0;
+        }
+
+        .pin-b {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d93025;
+        }
+
+        .inputs-ab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .inputs-ab select {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #202124;
+            background: #f8f9fa;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .inputs-ab select:focus {
+            border-color: #1a73e8;
+            background: #fff;
+        }
+
+        .btn-invertir {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid #dadce0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 15px;
+            color: #5f6368;
+        }
+
+        .btn-invertir:hover { background: #f1f3f4; }
+
+        .barra-opciones {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .barra-opciones label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .gmaps-body {
+            padding: 12px 16px 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opcion-ruta {
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 11px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .opcion-ruta:hover { background: #f8f9fa; }
+        .opcion-ruta.seleccionada { border: 2px solid #1a73e8; background: #f4f8fe; }
+        .opcion-ruta.peligrosa.seleccionada { border-color: #d93025; background: #fef7f6; }
+
+        .ruta-fila-1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .ruta-via { font-size: 13px; font-weight: 700; color: #202124; }
+        .ruta-tiempo { font-size: 15px; font-weight: 700; color: #188038; }
+        .ruta-tiempo.rojo { color: #d93025; }
+        .ruta-sub { font-size: 12px; color: #5f6368; margin-top: 3px; }
+
+        .panel-oxigeno {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+
+        .oxigeno-top {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .barra-plss {
+            height: 8px;
+            background: #e8eaed;
+            border-radius: 99px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .relleno-plss {
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 99px;
+        }
+
+        .linea-30 {
+            position: absolute;
+            left: 30%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #202124;
+        }
+
+        .alerta-box {
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            line-height: 1.45;
+        }
+
+        .alerta-ok { background: #e6f4ea; color: #137333; }
+        .alerta-mal { background: #fce8e6; color: #c5221f; }
+        .alerta-box ul { padding-left: 16px; margin-top: 4px; }
+
+        .historia-card {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 12px;
+            line-height: 1.45;
+        }
+
+        .historia-card strong {
+            color: #b06000;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .acciones-inferiores { display: flex; gap: 8px; }
+
+        .btn-azul {
+            flex: 1;
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            padding: 9px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-azul:hover { background: #1557b0; }
+
+        .btn-gris {
+            background: #fff;
+            color: #1a73e8;
+            border: 1px solid #dadce0;
+            padding: 9px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-gris:hover { background: #f1f3f4; }
+
+        .chips-superiores {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 1000;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chip-gmaps {
+            background: #fff;
+            color: #3c4043;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .chip-gmaps.activo {
+            background: #1a73e8;
+            color: #fff;
+        }
+
+        .cuadro-globo-btn {
+            position: absolute;
+            bottom: 20px;
+            left: 408px;
+            z-index: 1000;
+            width: 78px;
+            height: 78px;
+            border-radius: 12px;
+            border: 2px solid #fff;
+            background: radial-gradient(circle at 35% 35%, #e67e22, #8e2800 70%, #090a0f 72%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            cursor: pointer;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 5px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px #000;
+        }
+
+        .cuadro-globo-btn:hover { transform: scale(1.04); }
+
+        .controles-derecha-abajo {
+            position: absolute;
+            bottom: 95px;
+            right: 12px;
+            z-index: 1000;
+        }
+
+        .btn-pegman {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #fff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-pegman:hover {
+            background: #fff3e0;
+            transform: translateY(-2px);
+        }
+
+        .globo-wrapper {
+            width: auto !important;
+            height: auto !important;
+        }
+
+        .globo-ruta-mapa {
+            display: inline-block;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.96);
+            color: #202124;
+            border: 2px solid #1a73e8;
+            border-radius: 16px;
+            padding: 4px 11px;
+            font-size: 11.5px;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45);
+            white-space: nowrap;
+        }
+
+        .waypoint-num {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #1a73e8;
+            color: #fff;
+            border: 2px solid #fff;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+            transform: translate(-50%, -50%);
+        }
+
+        .astronauta-pin {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fbbc04;
+            border: 2.5px solid #202124;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            box-shadow: 0 0 0 6px rgba(251, 188, 4, 0.35);
+            transform: translate(-50%, -50%);
+        }
+
+        .etiqueta-lugar {
+            background: rgba(15, 23, 42, 0.86);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 6px;
+            padding: 2px 7px;
+            font-size: 10.5px;
+            font-weight: 500;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+
+        .etiqueta-lugar::before { display: none; }
+
+        .itinerario-pasos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: #3c4043;
+        }
+        .paso-chip {
+            background: #e8f0fe;
+            color: #174ea6;
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .paso-chip.peligro {
+            background: #fce8e6;
+            color: #c5221f;
+        }
+
+        /* Pulido UX/UI de controles Leaflet y leyenda táctica */
+        .leaflet-control-attribution {
+            background: rgba(15, 23, 42, 0.72) !important;
+            color: #cbd5e1 !important;
+            border-radius: 8px !important;
+            padding: 2px 8px !important;
+            font-size: 10px !important;
+            margin: 0 10px 8px 0 !important;
+            backdrop-filter: blur(4px);
+        }
+        .leaflet-control-attribution a { color: #93c5fd !important; text-decoration: none; }
+        .leaflet-bar {
+            border: none !important;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35) !important;
+            border-radius: 10px !important;
+            overflow: hidden;
+        }
+        .leaflet-bar a {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #202124 !important;
+            border-bottom: 1px solid #e0e0e0 !important;
+        }
+        .leaflet-control-scale-line {
+            background: rgba(15, 23, 42, 0.75) !important;
+            color: #f8fafc !important;
+            border-color: #94a3b8 !important;
             border-radius: 4px;
-            border: 1px solid #383838;
-            font-size: 13px;
+            font-size: 10px !important;
+        }
+        .leyenda-mapa {
+            position: absolute;
+            top: 58px;
+            left: 408px;
+            background: rgba(15, 23, 42, 0.82);
+            color: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            z-index: 998;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            backdrop-filter: blur(4px);
         }
 
-        .info-astronauta h4 {
-            color: #ff6b35;
+        .menu-contextual {
+            position: absolute;
+            z-index: 2000;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+            width: 230px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            color: #202124;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .menu-item:hover { background: #f1f3f4; }
+
+        .modal-fullscreen {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            background: #0b0d10;
+            display: none;
+            flex-direction: column;
+        }
+
+        .sv-topbar {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            pointer-events: none;
+        }
+
+        .sv-card-info {
+            background: rgba(32, 33, 36, 0.92);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            pointer-events: auto;
+            max-width: 440px;
+        }
+
+        .sv-cerrar {
+            pointer-events: auto;
+            background: #fff;
+            color: #202124;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 24px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .sv-visor {
+            flex: 1;
+            width: 100%;
+            cursor: grab;
+            position: relative;
+            overflow: hidden;
+            background-color: #1f140e;
+            background-repeat: no-repeat;
+            background-size: 165% 115%;
+            background-position: 50% 50%;
+            transition: background-position 0.04s linear;
+        }
+
+        .sv-visor:active { cursor: grabbing; }
+
+        .sv-pasos-suelo {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-paso-sv {
+            background: rgba(255, 255, 255, 0.94);
+            color: #202124;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn-paso-sv:hover {
+            background: #1a73e8;
+            color: #fff;
+        }
+
+        #contenedor-globo-3d {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .lista-misiones-3d {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Mejoras NASA Space Apps: Capas, Carga/Rover, Perfil SVG, HUD vivo y Tira Perseverance */
+        .fila-equipo {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+        .fila-equipo select {
+            flex: 1;
+            padding: 5px 6px;
+            border-radius: 6px;
+            border: 1px solid #dadce0;
+            font-size: 12px;
+            background: #fff;
+        }
+        .chip-solar {
+            background: #137333 !important;
+            color: #fff !important;
+            border-color: #0d652d !important;
+        }
+        .chip-solar.tormenta {
+            background: #d93025 !important;
+            border-color: #a50e0e !important;
+            animation: pulsoAlerta 1.3s infinite;
+        }
+        @keyframes pulsoAlerta {
+            0%, 100% { box-shadow: 0 2px 6px rgba(217,48,37,0.4); }
+            50% { box-shadow: 0 0 16px rgba(217,48,37,0.95); }
+        }
+        .tarjeta-perfil {
+            background: #f8f9fa;
+            border: 1px solid #dadce0;
+            border-radius: 10px;
+            padding: 8px 10px;
+            font-size: 11.5px;
+        }
+        .metricas-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
             margin-bottom: 6px;
         }
-
-        /* Mapa a la derecha */
-        #mapa {
-            flex: 1;
-            background-color: #000;
+        .metrica-pill {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 5px 6px;
+            text-align: center;
         }
+        .metrica-pill small { display: block; color: #5f6368; font-size: 10px; }
+        .metrica-pill strong { font-size: 12.5px; color: #202124; }
+        .hud-caminata {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(17, 24, 39, 0.92);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(138, 180, 248, 0.45);
+            z-index: 1000;
+            display: none;
+            gap: 16px;
+            align-items: center;
+            font-size: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+        }
+        .sv-galeria-raw {
+            position: absolute;
+            top: 72px;
+            right: 20px;
+            width: 248px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 10px;
+            color: #fff;
+            z-index: 12;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .sv-raw-item {
+            margin-top: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .sv-raw-item img { width: 100%; height: 82px; object-fit: cover; display: block; }
+        .sv-raw-item span { display: block; padding: 4px 6px; font-size: 10.5px; color: #dadce0; background: rgba(0,0,0,0.45); }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Nexo Code - Planificador de Rutas en Marte</h1>
-        <span>NASA Space Apps Challenge</span>
-    </header>
-
-    <div class="contenedor-principal">
-        <div class="panel-control">
-            <h2>Configurar Ruta</h2>
-
-            <div class="grupo-input">
-                <label for="select-inicio">Punto de Inicio:</label>
-                <select id="select-inicio"></select>
-            </div>
-
-            <div class="grupo-input">
-                <label for="select-destino">Punto de Destino:</label>
-                <select id="select-destino"></select>
-            </div>
-
-            <div class="grupo-input">
-                <label for="input-energia">Energia disponible del astronauta:</label>
-                <input type="number" id="input-energia" value="100">
-            </div>
-
-            <button onclick="evaluarRuta()">Calcular y Evaluar Ruta</button>
-
-            <!-- Resultado de viabilidad (conectado a viabilidad.py) -->
-            <div id="caja-resultado" class="caja-resultado">
-                <h3 id="titulo-estado"></h3>
-                <ul id="lista-razones"></ul>
-                <div class="caja-historica">
-                    <strong>Comparacion historica:</strong>
-                    <p id="texto-historico"></p>
+    <aside class="gmaps-panel">
+        <div class="gmaps-top">
+            <div class="marca-fila">
+                <div class="marca-logo">
+                    <span>◉</span> Mars Maps
+                    <small style="font-weight:400;font-size:12px;color:#5f6368;">• Nexo Code</small>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid #dadce0;background:#f8f9fa;border-radius:12px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#1a73e8;">🌐 EN</button>
+                    <span id="badge-api" class="chip-backend">Conectando...</span>
                 </div>
             </div>
 
-            <!-- TODO (Samuel): Completar datos del traje e indumentaria aqui -->
-            <div class="info-astronauta">
-                <h4>Parametros del Astronauta</h4>
-                <p><strong>Traje:</strong> NASA xEMU</p>
-                <p><strong>Pendiente maxima segura:</strong> 20°</p>
-                <p><strong>Gravedad:</strong> 3.72 m/s²</p>
+            <div class="buscador-rutas">
+                <div class="iconos-ab">
+                    <div class="circulo-a"></div>
+                    <div class="puntos-linea"></div>
+                    <div class="pin-b"></div>
+                </div>
+                <div class="inputs-ab">
+                    <select id="select-inicio" onchange="recalcularDesdeUI()"></select>
+                    <select id="select-destino" onchange="recalcularDesdeUI()"></select>
+                </div>
+                <button class="btn-invertir" onclick="invertirPuntos()" title="Invertir origen y destino">⇅</button>
+            </div>
+
+            <div class="barra-opciones">
+                <label><input type="checkbox" id="check-retorno" onchange="recalcularDesdeUI()"> <span id="lbl-retorno">Ida y vuelta al Hábitat</span></label>
+                <span id="lbl-clic-der" style="color:#1a73e8;font-weight:500;">Clic derecho en el mapa = Ruta libre</span>
             </div>
         </div>
 
-        <div id="mapa"></div>
+        <div class="gmaps-body">
+            <div class="panel-oxigeno">
+                <div class="oxigeno-top">
+                    <span><span id="lbl-ox-ini">Oxígeno inicial del traje:</span> <strong id="lbl-oxigeno">100%</strong></span>
+                    <span><span id="lbl-ox-fin">Reserva final:</span> <strong id="lbl-restante">--%</strong></span>
+                </div>
+                <input type="range" id="slider-energia" min="40" max="100" value="100" style="width:100%;margin-bottom:6px;"
+                       oninput="document.getElementById('lbl-oxigeno').innerText=this.value+'%'" onchange="recalcularDesdeUI()">
+                <div class="barra-plss">
+                    <div id="barra-restante" class="relleno-plss" style="width:70%;background:#188038;"></div>
+                    <div class="linea-30" title="30% reserva mínima obligatoria NASA"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5f6368;margin-top:4px;">
+                    <span>0%</span><span>Límite emergencia NASA (30%)</span><span>100%</span>
+                </div>
+            </div>
+
+            <div class="fila-equipo">
+                <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Peso del equipo científico">
+                    <option value="0">🎒 Traje estándar (0 kg)</option>
+                    <option value="12">🧪 Kit muestras (+12 kg)</option>
+                    <option value="25">🔬 Espectrómetro (+25 kg)</option>
+                </select>
+                <label style="display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;">
+                    <input type="checkbox" id="check-rover" onchange="ejecutarCalculoGoogleMaps()"> 🤖 Rover apoyo
+                </label>
+            </div>
+
+            <div id="contenedor-alternativas" style="display:flex;flex-direction:column;gap:8px;"></div>
+
+            <div class="tarjeta-perfil">
+                <div class="metricas-grid">
+                    <div class="metrica-pill"><small>Retorno Científico</small><strong id="met-ciencia">--/100</strong></div>
+                    <div class="metrica-pill"><small>Radiación EVA</small><strong id="met-rad">-- mSv</strong></div>
+                    <div class="metrica-pill"><small>Consumo O₂</small><strong id="met-o2">-- L</strong></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;color:#5f6368;font-size:10.5px;margin-bottom:3px;">
+                    <span>Perfil Topográfico MOLA</span>
+                    <span id="lbl-desnivel">Elevación (m)</span>
+                </div>
+                <svg id="svg-perfil" viewBox="0 0 320 56" style="width:100%;height:56px;background:#fff;border-radius:6px;border:1px solid #e0e0e0;"></svg>
+                <div id="itinerario-pasos" class="itinerario-pasos"></div>
+            </div>
+
+            <div id="caja-alerta" class="alerta-box alerta-ok">
+                <strong id="titulo-alerta">Evaluando terreno...</strong>
+                <ul id="lista-razones"></ul>
+            </div>
+
+            <div class="historia-card">
+                <strong id="hist-titulo">Comparación histórica NASA</strong>
+                <span id="hist-texto">Cargando archivo de misiones marcianas...</span>
+            </div>
+
+            <div class="acciones-inferiores">
+                <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
+                <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">🧑‍🚀 Street View 360°</button>
+            </div>
+        </div>
+    </aside>
+
+    <div class="chips-superiores">
+        <button id="btn-ctx" class="chip-gmaps activo" onclick="cambiarMapaBase('ctx')">Satélite HD (5m/px)</button>
+        <button id="btn-color" class="chip-gmaps" onclick="cambiarMapaBase('color')">Color Viking</button>
+        <button id="btn-mola" class="chip-gmaps" onclick="cambiarMapaBase('mola')">Altitud MOLA</button>
+        <button id="btn-mola-overlay" class="chip-gmaps" onclick="toggleMolaOverlay()">Fusión MOLA 40%</button>
+        <button id="btn-termica" class="chip-gmaps" onclick="toggleCapaTermica()">Capa Térmica</button>
+        <button id="btn-peligros" class="chip-gmaps activo" onclick="togglePeligros()">Zonas de Riesgo</button>
+        <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
+    </div>
+
+    <div id="hud-caminata" class="hud-caminata">
+        <span>🧑‍🚀 <strong id="hud-nodo">En ruta...</strong></span>
+        <span>O₂: <strong id="hud-o2">100%</strong></span>
+        <span>Elev: <strong id="hud-elev">-2570 m</strong></span>
+        <span>Dosis: <strong id="hud-rad">0.00 mSv</strong></span>
+    </div>
+
+    <!-- MODAL REPORTE FINAL DE CAMINATA EVA -->
+    <div id="modal-reporte-eva" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.72);z-index:2500;align-items:center;justify-content:center;">
+        <div style="background:#fff;width:440px;max-width:92vw;border-radius:16px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,0.45);color:#202124;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <span id="rep-badge" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:#e6f4ea;color:#137333;">REPORTE POST-EVA</span>
+                <button onclick="cerrarReporteEVA()" style="border:none;background:none;font-size:18px;cursor:pointer;color:#5f6368;">✕</button>
+            </div>
+            <h3 id="rep-titulo" style="font-size:18px;margin-bottom:6px;">Misión EVA Completada</h3>
+            <p id="rep-subtitulo" style="font-size:12.5px;color:#5f6368;margin-bottom:10px;"></p>
+            <div id="rep-foto-box" style="margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid #dadce0;background:#1f140e;display:none;">
+                <img id="rep-foto-img" src="" alt="Vista del destino" style="width:100%;height:135px;object-fit:cover;display:block;">
+                <div id="rep-foto-cap" style="padding:4px 8px;font-size:10.5px;color:#e2e8f0;background:rgba(15,23,42,0.9);"></div>
+            </div>
+            <div id="rep-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;"></div>
+            <div id="rep-leccion" style="background:#f8f9fa;border:1px solid #dadce0;border-radius:10px;padding:10px;font-size:12px;color:#3c4043;margin-bottom:14px;"></div>
+            <div style="display:flex;gap:8px;">
+                <button class="btn-azul" onclick="cerrarReporteEVA(); abrirStreetViewActual();">🧑‍🚀 Ver destino en Street View</button>
+                <button class="btn-gris" onclick="cerrarReporteEVA()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cuadro-globo-btn" onclick="abrirGlobo3D()" title="Explorar el planeta Marte en 3D">
+        Globo 3D
+    </div>
+
+    <div class="controles-derecha-abajo" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <button class="btn-pegman" onclick="recentrarJezero()" title="Recentrar vista en todo el Cráter Jezero" style="font-size:18px;">⌖</button>
+        <button class="btn-pegman" onclick="abrirStreetViewActual()" title="Abrir Mars Street View 360° en el destino">🧑‍🚀</button>
+    </div>
+
+    <div class="leyenda-mapa">
+        <span>🟢 Hábitat</span>
+        <span>⚪ Seguro</span>
+        <span>🔴 Peligro (&gt;20° / Sin UHF)</span>
+        <span>🖱️ Clic derecho: Ruta libre</span>
+    </div>
+
+    <div id="menu-clic-derecho" class="menu-contextual">
+        <div class="menu-item" onclick="fijarPuntoLibre('origen')">🟢 Salir caminando desde aquí</div>
+        <div class="menu-item" onclick="fijarPuntoLibre('destino')">🔴 Caminar hasta este punto</div>
+        <div class="menu-item" onclick="abrirStreetViewCoordenada()">🧑‍🚀 Ver Street View 360° cercano</div>
+    </div>
+
+    <div id="mapa" class="tono-marte"></div>
+
+    <!-- MODAL 1: MARS STREET VIEW 360 -->
+    <div id="modal-streetview" class="modal-fullscreen">
+        <div class="sv-topbar">
+            <div class="sv-card-info">
+                <div style="font-size:11px;color:#fbbc04;font-weight:700;">MARS STREET VIEW 360° • CÁMARA MASTCAM-Z</div>
+                <h3 id="sv-titulo" style="font-size:16px;margin:3px 0;">Cráter Jezero</h3>
+                <p id="sv-subtitulo" style="font-size:12px;color:#dadce0;"></p>
+                <div style="margin-top:6px;font-size:11px;color:#8ab4f8;">
+                    Arrastra la imagen hacia los lados para girar 360° • Rumbo: <strong id="sv-rumbo">90° E</strong>
+                </div>
+            </div>
+            <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+        </div>
+        <div id="sv-panorama" class="sv-visor"></div>
+        <div id="sv-galeria-raw" class="sv-galeria-raw">
+            <div style="font-size:11px;font-weight:700;color:#8ab4f8;">📸 PERSEVERANCE RAW API</div>
+            <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
+        </div>
+        <div id="sv-botones-caminar" class="sv-pasos-suelo"></div>
+    </div>
+
+    <!-- MODAL 2: GLOBO 3D INTERACTIVO -->
+    <div id="modal-globo3d" class="modal-fullscreen">
+        <div class="sv-topbar">
+            <div class="sv-card-info">
+                <div style="font-size:11px;color:#fbbc04;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
+                <h3 id="globo-sub" style="font-size:16px;margin:3px 0;">Explorador Global de Misiones NASA</h3>
+                <p id="globo-desc" style="font-size:12px;color:#dadce0;">Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.</p>
+            </div>
+            <button class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
+        </div>
+        <div id="contenedor-globo-3d"></div>
+        <div class="lista-misiones-3d">
+            <button class="btn-paso-sv" onclick="aterrizarEnJezero()">📍 Perseverance (Cráter Jezero - Tu Mapa)</button>
+            <button class="btn-paso-sv" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.')">Curiosity</button>
+            <button class="btn-paso-sv" onclick="enfocarMision3D(-14.56, 175.47, 'Spirit (Cráter Gusev, 2009)', 'Atrapado permanentemente al cruzar una pendiente con arena blanda oculta.')">Spirit (Fallo Pendiente)</button>
+            <button class="btn-paso-sv" onclick="enfocarMision3D(-1.94, 354.47, 'Opportunity (Meridiani, 2018)', 'Pérdida de contacto por agotamiento energético tras tormenta global de polvo.')">Opportunity (Fallo Energía)</button>
+            <button class="btn-paso-sv" onclick="enfocarMision3D(4.50, 135.62, 'InSight (Elysium Planitia, 2022)', 'Degradación gradual de energía por acumulación de polvo en paneles.')">InSight</button>
+        </div>
     </div>
 
     <script>
         const URL_API = "http://127.0.0.1:8000";
-        let lineaRuta = null;
+        let puntosJezero = [];
+        let modoLocal = false;
+        let alternativaActiva = "segura";
+        let cacheAlternativas = {};
+        let puntoLibreOrigen = null;
+        let puntoLibreDestino = null;
+        let coordClicDerecho = null;
 
-        // 1. Iniciar el mapa de Marte
-        const mapa = L.map('mapa').setView([18.38, 77.58], 10); // Centrado en Jezero
+        let capaRutas = L.layerGroup();
+        let capaNodos = L.layerGroup();
+        let capaPeligros = L.layerGroup();
+        let capaTermica = L.layerGroup();
+        let verPeligros = true;
+        let verMolaOverlay = false;
+        let verTermica = false;
+        let tormentaSimulada = false;
+        let climaEspacial = { radiacion_msv_hora: 0.028, estado_solar: "NOMINAL", nivel_alerta: "BASAL (G0)", fuente: "MSL-RAD" };
+        let pinOrigenDrag = null;
+        let pinDestinoDrag = null;
+        let pinCaminante = null;
+        let timerCaminata = null;
 
-        L.tileLayer('https://cartocdn-gusc.global.ssl.fastly.net/opmbuilder/api/v1/map/named/opm-mars-basemap-v0-2/all/{z}/{x}/{y}.png', {
-            attribution: 'OpenPlanetaryMap / NASA'
-        }).addTo(mapa);
+        // 12 nodos geológicos distribuidos en todo el Cráter Jezero (para zoom nítido CTX 5m/px)
+        const RESPALDO_PUNTOS = [
+            { id: 1, nombre: "Base Octavia E. Butler (Hábitat)", lat: 18.4447, lng: 77.5200, elevacion_m: -2570, pendiente: 1.8, sin_comunicacion: false, query_nasa: "Perseverance landing site Jezero", valor_cientifico: "Zona plana nominal de aterrizaje y nodo central de soporte vital y enlace UHF.", vecinos: [2, 5, 9] },
+            { id: 2, nombre: "Región Séítah Sur (Dunas)", lat: 18.4050, lng: 77.4650, elevacion_m: -2585, pendiente: 9.4, sin_comunicacion: false, query_nasa: "Seitah Perseverance Mars", valor_cientifico: "Afloramientos ricos en olivino clave para datar la actividad ígnea marciana.", vecinos: [1, 3, 5, 10] },
+            { id: 3, nombre: "Colina Santa Cruz", lat: 18.3750, lng: 77.4050, elevacion_m: -2540, pendiente: 14.2, sin_comunicacion: false, query_nasa: "Santa Cruz hill Perseverance", valor_cientifico: "Promontorio de observación panorámica con regolito compactado de pendiente media.", vecinos: [2, 4, 7] },
+            { id: 4, nombre: "Acantilado Kodiak (Escarpe Delta)", lat: 18.3850, lng: 77.3350, elevacion_m: -2495, pendiente: 23.6, sin_comunicacion: false, query_nasa: "Kodiak butte Jezero delta", valor_cientifico: "Estratigrafía lacustre intacta, pero con talud inestable superior al límite humano de 20°.", vecinos: [3, 7, 11] },
+            { id: 5, nombre: "Depósito Three Forks", lat: 18.4580, lng: 77.4520, elevacion_m: -2562, pendiente: 4.5, sin_comunicacion: false, query_nasa: "Three Forks sample depot Mars", valor_cientifico: "Corredor logístico seguro donde Perseverance depositó tubos de muestras sellados.", vecinos: [1, 2, 6, 7, 9] },
+            { id: 6, nombre: "Cráter Belva (Interior Profundo)", lat: 18.5080, lng: 77.4250, elevacion_m: -2615, pendiente: 21.8, sin_comunicacion: true, query_nasa: "Belva Crater Perseverance", valor_cientifico: "Cráter de impacto que expone el subsuelo profundo; bloquea la línea de vista UHF con el hábitat.", vecinos: [5, 8, 9] },
+            { id: 7, nombre: "Hogwallow Flats (Frente Delta)", lat: 18.4450, lng: 77.3750, elevacion_m: -2530, pendiente: 11.2, sin_comunicacion: false, query_nasa: "Hogwallow Flats Perseverance", valor_cientifico: "Lutitas ricas en sulfatos y arcillas con la mayor probabilidad de preservar biofirmas.", vecinos: [3, 4, 5, 8, 11] },
+            { id: 8, nombre: "Neretva Vallis (Canal Fluvial)", lat: 18.4980, lng: 77.3150, elevacion_m: -2465, pendiente: 16.5, sin_comunicacion: false, query_nasa: "Neretva Vallis Perseverance", valor_cientifico: "Antiguo cañón de entrada de agua que alimentó el paleolago del Cráter Jezero.", vecinos: [6, 7, 11, 12] },
+            { id: 9, nombre: "Llanura Máaz (Basaltos)", lat: 18.5150, lng: 77.5050, elevacion_m: -2555, pendiente: 5.2, sin_comunicacion: false, query_nasa: "Maaz formation Perseverance", valor_cientifico: "Flujos de lava basáltica ideales para calibración radiométrica y tránsito rápido.", vecinos: [1, 5, 6] },
+            { id: 10, nombre: "Dunas Artuby Ridge", lat: 18.3600, lng: 77.5150, elevacion_m: -2590, pendiente: 12.8, sin_comunicacion: false, query_nasa: "Artuby ridge Perseverance", valor_cientifico: "Cresta rocosa que delimita el borde sur de Séítah con estratos expuestos.", vecinos: [2, 1] },
+            { id: 11, nombre: "Bright Angel (Lecho Antiguo)", lat: 18.4480, lng: 77.2980, elevacion_m: -2485, pendiente: 8.6, sin_comunicacion: false, query_nasa: "Bright Angel Perseverance Jezero", valor_cientifico: "Rocas claras ricas en sulfatos y vetas minerales descubiertas en el borde del canal.", vecinos: [4, 7, 8, 12] },
+            { id: 12, nombre: "Borde Oeste Jezero (Mirador)", lat: 18.5280, lng: 77.2450, elevacion_m: -2320, pendiente: 24.5, sin_comunicacion: true, query_nasa: "Jezero crater rim Perseverance", valor_cientifico: "Pared antigua de la corteza marciana (>3.8 Ga); ascenso extremo superior a 20°.", vecinos: [8, 11] }
+        ];
 
-        // 2. Pedir los puntos al backend (GET /puntos)
-        async function cargarPuntos() {
-            try {
-                const respuesta = await fetch(`${URL_API}/puntos`);
-                const puntos = await respuesta.json();
+        // Proyección exacta WMTS default028mm de NASA Solar System Treks (2 tiles en zoom 0 = 180° por tile)
+        const CRS_NASA_MARS = L.extend({}, L.CRS.EPSG4326, {
+            transformation: new L.Transformation(1 / 180, 1, -1 / 180, 0.5)
+        });
 
-                const selectInicio = document.getElementById("select-inicio");
-                const selectDestino = document.getElementById("select-destino");
+        const mapa = L.map("mapa", {
+            crs: CRS_NASA_MARS,
+            zoomControl: false,
+            attributionControl: false,
+            minZoom: 1,
+            maxZoom: 11,
+            maxBounds: [[-90, -180], [90, 180]],
+            maxBoundsViscosity: 1.0
+        }).setView([18.448, 77.418], 10);
 
-                puntos.forEach(punto => {
-                    // Agregar opciones a los select
-                    const textoOpcion = `${punto.nombre} (Pendiente: ${punto.pendiente}°)`;
-                    selectInicio.innerHTML += `<option value="${punto.id}">${textoOpcion}</option>`;
-                    selectDestino.innerHTML += `<option value="${punto.id}">${textoOpcion}</option>`;
+        L.control.attribution({ prefix: false, position: "bottomright" }).addTo(mapa);
+        L.control.zoom({ position: "bottomright" }).addTo(mapa);
+        L.control.scale({ position: "bottomright", imperial: false }).addTo(mapa);
 
-                    // Poner marcador en el mapa (AJUSTADO A LAT Y LNG)
-                    L.marker([punto.lat, punto.lng])
-                        .addTo(mapa)
-                        .bindPopup(`<b>${punto.nombre}</b><br>Pendiente: ${punto.pendiente}°`);
+        let capaRedGrafo = L.layerGroup().addTo(mapa);
+
+        // Capas WMTS oficiales de NASA Mars Trek ajustadas al índice exacto de matriz
+        const capaVikingBase = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 7, maxZoom: 13, noWrap: true, attribution: "NASA Mars Trek" }
+        );
+
+        const capaCtx5m = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/CTX_beta01_uncontrolled_5m_Caltech/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 11, maxZoom: 11, opacity: 0.78, noWrap: true, attribution: "NASA / Caltech CTX 5m/px" }
+        );
+
+        const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
+
+        const capaSoloViking = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 7, maxZoom: 13, noWrap: true, attribution: "NASA Viking Color" }
+        );
+
+        const capaMola = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 6, maxZoom: 13, noWrap: true, attribution: "NASA MGS MOLA" }
+        );
+
+        const capaMolaOverlay = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 6, maxZoom: 13, opacity: 0.42, noWrap: true, attribution: "Overlay Topográfico MOLA" }
+        );
+
+        let baseActiva = grupoSateliteHD;
+        baseActiva.addTo(mapa);
+        capaPeligros.addTo(mapa);
+        capaRutas.addTo(mapa);
+        capaNodos.addTo(mapa);
+
+        function cambiarMapaBase(tipo) {
+            mapa.removeLayer(baseActiva);
+            document.getElementById("btn-ctx").classList.toggle("activo", tipo === "ctx");
+            document.getElementById("btn-color").classList.toggle("activo", tipo === "color");
+            document.getElementById("btn-mola").classList.toggle("activo", tipo === "mola");
+            document.getElementById("mapa").classList.toggle("tono-marte", tipo === "ctx");
+
+            baseActiva = tipo === "ctx" ? grupoSateliteHD : (tipo === "color" ? capaSoloViking : capaMola);
+            baseActiva.addTo(mapa);
+        }
+
+        function toggleMolaOverlay() {
+            verMolaOverlay = !verMolaOverlay;
+            document.getElementById("btn-mola-overlay").classList.toggle("activo", verMolaOverlay);
+            if (verMolaOverlay) capaMolaOverlay.addTo(mapa);
+            else mapa.removeLayer(capaMolaOverlay);
+        }
+
+        function toggleCapaTermica() {
+            verTermica = !verTermica;
+            document.getElementById("btn-termica").classList.toggle("activo", verTermica);
+            if (verTermica) {
+                capaTermica.clearLayers();
+                puntosJezero.forEach(p => {
+                    // Estimación térmica diurna basada en altitud MOLA e inercia de roca/polvo
+                    const tempC = Math.round(-28 - ((p.elevacion_m + 2550) * 0.12) + (p.pendiente * 0.6));
+                    const colorT = tempC > -25 ? "#f97316" : (tempC > -35 ? "#eab308" : "#38bdf8");
+                    L.circle([p.lat, p.lng], {
+                        radius: 420,
+                        color: colorT,
+                        fillColor: colorT,
+                        fillOpacity: 0.25,
+                        weight: 1
+                    }).bindTooltip(`🌡️ Temp. superficial est.: ${tempC}°C (${p.nombre.split("(")[0].trim()})`).addTo(capaTermica);
                 });
-
-                if (puntos.length > 1) {
-                    selectDestino.selectedIndex = 1;
-                }
-            } catch (error) {
-                console.error("Error cargando los puntos desde FastAPI:", error);
+                capaTermica.addTo(mapa);
+            } else {
+                mapa.removeLayer(capaTermica);
             }
         }
 
-        // 3. Calcular ruta y evaluar viabilidad
-        async function evaluarRuta() {
-            const inicio_id = parseInt(document.getElementById("select-inicio").value);
-            const destino_id = parseInt(document.getElementById("select-destino").value);
-            const energia_astronauta = parseFloat(document.getElementById("input-energia").value);
-
+        async function cargarClimaEspacial() {
+            const btn = document.getElementById("btn-solar");
             try {
-                // Paso 1: Llamar a /calcular_ruta
-                const resRuta = await fetch(`${URL_API}/calcular_ruta`, {
+                if (!modoLocal) {
+                    const r = await fetch(`${URL_API}/clima_espacial?simular_tormenta=${tormentaSimulada}`);
+                    if (r.ok) climaEspacial = await r.json();
+                } else {
+                    climaEspacial = tormentaSimulada
+                        ? { radiacion_msv_hora: 0.85, estado_solar: "TORMENTA SOLAR", nivel_alerta: "CRÍTICO (S3)", fuente: "Simulación Offline" }
+                        : { radiacion_msv_hora: 0.028, estado_solar: "NOMINAL", nivel_alerta: "BASAL (G0)", fuente: "MSL-RAD Offline" };
+                }
+            } catch (_) {}
+
+            const esTormenta = climaEspacial.estado_solar === "TORMENTA SOLAR";
+            btn.classList.toggle("tormenta", esTormenta);
+            btn.innerText = esTormenta
+                ? `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h)`
+                : `☀️ DONKI: ${climaEspacial.estado_solar} (${climaEspacial.radiacion_msv_hora} mSv/h)`;
+        }
+
+        async function toggleSimularTormenta() {
+            tormentaSimulada = !tormentaSimulada;
+            await cargarClimaEspacial();
+            ejecutarCalculoGoogleMaps();
+        }
+
+        function togglePeligros() {
+            verPeligros = !verPeligros;
+            document.getElementById("btn-peligros").classList.toggle("activo", verPeligros);
+            if (verPeligros) capaPeligros.addTo(mapa);
+            else mapa.removeLayer(capaPeligros);
+        }
+
+        mapa.on("contextmenu", (e) => {
+            coordClicDerecho = e.latlng;
+            const menu = document.getElementById("menu-clic-derecho");
+            menu.style.left = Math.min(window.innerWidth - 240, e.containerPoint.x) + "px";
+            menu.style.top = Math.min(window.innerHeight - 130, e.containerPoint.y) + "px";
+            menu.style.display = "block";
+        });
+
+        mapa.on("click", () => {
+            document.getElementById("menu-clic-derecho").style.display = "none";
+        });
+
+        function distanciaMarcianaKm(a, b) {
+            const r = Math.PI / 180;
+            const dLat = (b.lat - a.lat) * r;
+            const dLon = (b.lng - a.lng) * r;
+            const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLon / 2) ** 2;
+            return 3396.2 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+        }
+
+        function nodoMasCercano(lat, lng) {
+            let mejor = puntosJezero[0], minD = Infinity;
+            puntosJezero.forEach(p => {
+                const d = distanciaMarcianaKm({ lat, lng }, p);
+                if (d < minD) { minD = d; mejor = p; }
+            });
+            return { nodo: mejor, distKm: minD };
+        }
+
+        function fijarPuntoLibre(rol) {
+            document.getElementById("menu-clic-derecho").style.display = "none";
+            if (!coordClicDerecho || puntosJezero.length === 0) return;
+
+            const cercano = nodoMasCercano(coordClicDerecho.lat, coordClicDerecho.lng);
+            const pendienteEst = +(cercano.distKm < 0.45 ? cercano.nodo.pendiente : 8.5).toFixed(1);
+            const objLibre = {
+                id: rol === "origen" ? 901 : 902,
+                lat: +coordClicDerecho.lat.toFixed(4),
+                lng: +coordClicDerecho.lng.toFixed(4),
+                nodoBaseId: cercano.nodo.id,
+                pendiente: pendienteEst,
+                sin_comunicacion: cercano.distKm < 0.42 && cercano.nodo.sin_comunicacion,
+                nombre: `Punto libre (${coordClicDerecho.lat.toFixed(3)}°, ${coordClicDerecho.lng.toFixed(3)}°)`
+            };
+
+            if (rol === "origen") {
+                puntoLibreOrigen = objLibre;
+                document.getElementById("select-inicio").value = String(cercano.nodo.id);
+            } else {
+                puntoLibreDestino = objLibre;
+                document.getElementById("select-destino").value = String(cercano.nodo.id);
+            }
+            ejecutarCalculoGoogleMaps();
+        }
+
+        function invertirPuntos() {
+            const s1 = document.getElementById("select-inicio");
+            const s2 = document.getElementById("select-destino");
+            const tmp = s1.value;
+            s1.value = s2.value;
+            s2.value = tmp;
+            const tmpLibre = puntoLibreOrigen;
+            puntoLibreOrigen = puntoLibreDestino;
+            puntoLibreDestino = tmpLibre;
+            ejecutarCalculoGoogleMaps();
+        }
+
+        function recalcularDesdeUI() {
+            puntoLibreOrigen = null;
+            puntoLibreDestino = null;
+            ejecutarCalculoGoogleMaps();
+        }
+
+        function dibujarNodosBase() {
+            capaNodos.clearLayers();
+            capaPeligros.clearLayers();
+            capaRedGrafo.clearLayers();
+            const s1 = document.getElementById("select-inicio");
+            const s2 = document.getElementById("select-destino");
+            s1.innerHTML = "";
+            s2.innerHTML = "";
+
+            // Dibujar corredores posibles del grafo A* muy sutiles para dar contexto espacial
+            const mapaNodos = {};
+            puntosJezero.forEach(p => mapaNodos[p.id] = p);
+            const aristasVistas = new Set();
+            puntosJezero.forEach(p => {
+                (p.vecinos || []).forEach(vId => {
+                    const key = [Math.min(p.id, vId), Math.max(p.id, vId)].join("-");
+                    if (!aristasVistas.has(key) && mapaNodos[vId]) {
+                        aristasVistas.add(key);
+                        L.polyline([[p.lat, p.lng], [mapaNodos[vId].lat, mapaNodos[vId].lng]], {
+                            color: "rgba(255, 255, 255, 0.22)",
+                            weight: 1.5,
+                            dashArray: "4, 6"
+                        }).addTo(capaRedGrafo);
+                    }
+                });
+            });
+
+            const boundsPts = [];
+            puntosJezero.forEach(p => {
+                boundsPts.push([p.lat, p.lng]);
+                const tag = p.sin_comunicacion ? " (Sin radio)" : (p.pendiente > 20 ? ` (${p.pendiente}° Peligro)` : "");
+                s1.innerHTML += `<option value="${p.id}">${p.nombre}${tag}</option>`;
+                s2.innerHTML += `<option value="${p.id}">${p.nombre}${tag}</option>`;
+
+                const peligro = p.pendiente > 20 || p.sin_comunicacion;
+                if (peligro) {
+                    L.circleMarker([p.lat, p.lng], {
+                        radius: 26,
+                        color: "#d93025",
+                        fillColor: "#ea4335",
+                        fillOpacity: 0.22,
+                        weight: 1.5,
+                        dashArray: "4,4"
+                    }).bindTooltip(p.sin_comunicacion ? "Sombra de Radio UHF" : `Pendiente crítica ${p.pendiente}°`).addTo(capaPeligros);
+                }
+
+                const m = L.circleMarker([p.lat, p.lng], {
+                    radius: 6.5,
+                    fillColor: peligro ? "#ea4335" : (p.id === 1 ? "#188038" : "#ffffff"),
+                    color: "#0f172a",
+                    weight: 2,
+                    fillOpacity: 1
+                }).addTo(capaNodos);
+
+                m.bindTooltip(p.nombre.split("(")[0].trim(), {
+                    permanent: true,
+                    direction: p.id === 2 || p.id === 3 ? "bottom" : "top",
+                    offset: p.id === 2 || p.id === 3 ? [0, 8] : [0, -8],
+                    className: "etiqueta-lugar"
+                });
+
+                m.on("mouseover", () => {
+                    m.setStyle({ radius: 9, weight: 3 });
+                });
+                m.on("mouseout", () => {
+                    m.setStyle({ radius: 6.5, weight: 2 });
+                });
+                m.on("click", () => {
+                    puntoLibreDestino = null;
+                    document.getElementById("select-destino").value = String(p.id);
+                    ejecutarCalculoGoogleMaps();
+                });
+            });
+
+            window._boundsJezero = boundsPts;
+            recentrarJezero();
+
+            s1.value = "1";
+            s2.value = "8";
+        }
+
+        function recentrarJezero() {
+            if (window._boundsJezero && window._boundsJezero.length > 0) {
+                mapa.fitBounds(window._boundsJezero, {
+                    paddingTopLeft: [425, 85],
+                    paddingBottomRight: [90, 95],
+                    maxZoom: 11
+                });
+            }
+        }
+
+        async function pedirModalidadRuta(inicio_id, destino_id, energia_astronauta, modo_seguro, ida_y_vuelta) {
+            const carga_kg = parseFloat(document.getElementById("select-carga")?.value || "0");
+            const con_rover = Boolean(document.getElementById("check-rover")?.checked);
+            const radiacion_msv_hora = climaEspacial.radiacion_msv_hora || 0.028;
+
+            let ruta, viab;
+            if (!modoLocal) {
+                const r1 = await fetch(`${URL_API}/calcular_ruta`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ inicio_id, destino_id, energia_astronauta })
+                    body: JSON.stringify({ inicio_id, destino_id, energia_astronauta, modo_seguro, ida_y_vuelta, carga_kg, con_rover, radiacion_msv_hora })
                 });
-                const datosRuta = await resRuta.json();
+                ruta = await r1.json();
+            } else {
+                ruta = calcularAEstrellaLocal(inicio_id, destino_id, modo_seguro, ida_y_vuelta, carga_kg, con_rover, radiacion_msv_hora);
+            }
 
-                // Dibujar la linea de la ruta en el mapa
-                if (lineaRuta) {
-                    mapa.removeLayer(lineaRuta);
-                }
-                // AJUSTADO A LAT Y LNG
-                const coordenadas = datosRuta.ruta_calculada.map(p => [p.lat, p.lng]);
-                lineaRuta = L.polyline(coordenadas, { color: '#ff6b35', weight: 4 }).addTo(mapa);
+            // Clonar arreglo para no mutar referencias
+            ruta.ruta_calculada = [...ruta.ruta_calculada];
 
-                // Paso 2: Llamar a /evaluar_viabilidad (tu archivo viabilidad.py)
-                const resViabilidad = await fetch(`${URL_API}/evaluar_viabilidad`, {
+            if (puntoLibreOrigen) {
+                const extraKm = distanciaMarcianaKm(puntoLibreOrigen, ruta.ruta_calculada[0]);
+                ruta.ruta_calculada.unshift(puntoLibreOrigen);
+                ruta.distancia_km = +(ruta.distancia_km + extraKm).toFixed(2);
+                ruta.kcal_totales = Math.round(ruta.kcal_totales + extraKm * 110);
+                ruta.energia_requerida = +((ruta.kcal_totales / 1800) * 100).toFixed(1);
+                ruta.pendiente_maxima = Math.max(ruta.pendiente_maxima, puntoLibreOrigen.pendiente);
+                ruta.cruza_blackout = Boolean(ruta.cruza_blackout || puntoLibreOrigen.sin_comunicacion);
+            }
+
+            if (puntoLibreDestino) {
+                const ult = ruta.ruta_calculada[ruta.ruta_calculada.length - 1];
+                const extraKm = distanciaMarcianaKm(ult, puntoLibreDestino);
+                ruta.ruta_calculada.push(puntoLibreDestino);
+                ruta.distancia_km = +(ruta.distancia_km + extraKm).toFixed(2);
+                ruta.kcal_totales = Math.round(ruta.kcal_totales + extraKm * 110);
+                ruta.energia_requerida = +((ruta.kcal_totales / 1800) * 100).toFixed(1);
+                ruta.pendiente_maxima = Math.max(ruta.pendiente_maxima, puntoLibreDestino.pendiente);
+                ruta.cruza_blackout = Boolean(ruta.cruza_blackout || puntoLibreDestino.sin_comunicacion);
+                ruta.tiempo_estimado_min = Math.round((ruta.distancia_km / 2.6) * 60);
+            }
+
+            if (!modoLocal) {
+                const r2 = await fetch(`${URL_API}/evaluar_viabilidad`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        energia_astronauta: energia_astronauta,
-                        energia_requerida: datosRuta.energia_requerida,
-                        pendiente_maxima: datosRuta.pendiente_maxima
+                        energia_astronauta,
+                        energia_requerida: ruta.energia_requerida,
+                        pendiente_maxima: ruta.pendiente_maxima,
+                        cruza_blackout: ruta.cruza_blackout,
+                        radiacion_msv: ruta.radiacion_msv || 0
                     })
                 });
-                const datosViabilidad = await resViabilidad.json();
+                viab = await r2.json();
+            } else {
+                viab = evaluarViabilidadLocal(energia_astronauta, ruta.energia_requerida, ruta.pendiente_maxima, ruta.cruza_blackout, ruta.radiacion_msv || 0);
+            }
+            return { ruta, viab };
+        }
 
-                // Paso 3: Mostrar resultado en el panel izquierdo
-                const caja = document.getElementById("caja-resultado");
-                caja.style.display = "block";
-                caja.className = "caja-resultado " + (datosViabilidad.viable ? "viable" : "no-viable");
+        async function ejecutarCalculoGoogleMaps() {
+            const inicio_id = parseInt(document.getElementById("select-inicio").value || "1");
+            const destino_id = parseInt(document.getElementById("select-destino").value || "8");
+            const energia = parseFloat(document.getElementById("slider-energia").value || "100");
+            const retorno = document.getElementById("check-retorno").checked;
 
-                document.getElementById("titulo-estado").innerText = datosViabilidad.viable 
-                    ? "Ruta Viable" 
-                    : "Ruta No Viable (Riesgo Alto)";
+            try {
+                const [opSegura, opDirecta] = await Promise.all([
+                    pedirModalidadRuta(inicio_id, destino_id, energia, true, retorno),
+                    pedirModalidadRuta(inicio_id, destino_id, energia, false, retorno)
+                ]);
 
-                const lista = document.getElementById("lista-razones");
-                lista.innerHTML = "";
-                datosViabilidad.razones.forEach(razon => {
-                    lista.innerHTML += `<li>${razon}</li>`;
-                });
+                cacheAlternativas = { segura: opSegura, directa: opDirecta };
+                const firmaA = opSegura.ruta.ruta_calculada.map(n => n.id).join("-");
+                const firmaB = opDirecta.ruta.ruta_calculada.map(n => n.id).join("-");
+                const sonDistintas = firmaA !== firmaB;
+                if (!sonDistintas) alternativaActiva = "segura";
 
-                document.getElementById("texto-historico").innerText = datosViabilidad.comparacion_historica;
-
-            } catch (error) {
-                alert("No se pudo conectar con el backend. Asegurate de tener uvicorn corriendo.");
-                console.error(error);
+                renderizarAlternativasGMaps(sonDistintas);
+            } catch (err) {
+                console.error("Pasando a motor local:", err);
+                modoLocal = true;
+                ejecutarCalculoGoogleMaps();
             }
         }
 
-        // Ejecutar al abrir la pagina
-        cargarPuntos();
+        function seleccionarAlternativa(clave) {
+            alternativaActiva = clave;
+            const firmaA = cacheAlternativas.segura.ruta.ruta_calculada.map(n => n.id).join("-");
+            const firmaB = cacheAlternativas.directa.ruta.ruta_calculada.map(n => n.id).join("-");
+            renderizarAlternativasGMaps(firmaA !== firmaB);
+        }
+
+        function renderizarAlternativasGMaps(mostrarDos) {
+            capaRutas.clearLayers();
+            if (pinCaminante) mapa.removeLayer(pinCaminante);
+            clearInterval(timerCaminata);
+
+            const cont = document.getElementById("contenedor-alternativas");
+            cont.innerHTML = "";
+
+            const en = idiomaActual === "en";
+            const lista = mostrarDos
+                ? [
+                    { k: "segura", titulo: en ? "Recommended Safe Route (A*)" : "Ruta segura recomendada (A*)", datos: cacheAlternativas.segura },
+                    { k: "directa", titulo: en ? "Direct Crater Shortcut" : "Atajo directo por cráteres", datos: cacheAlternativas.directa }
+                ]
+                : [{ k: "segura", titulo: en ? "Best Route Found" : "Mejor ruta encontrada", datos: cacheAlternativas.segura }];
+
+            [...lista].sort((a, b) => (a.k === alternativaActiva ? 1 : -1)).forEach(item => {
+                const activa = item.k === alternativaActiva;
+                const coords = item.datos.ruta.ruta_calculada.map(p => [p.lat, p.lng]);
+                const color = !activa ? "#9aa0a6" : (item.datos.viab.viable ? "#1a73e8" : "#d93025");
+
+                const polyBorde = L.polyline(coords, {
+                    color: "#0f172a",
+                    weight: activa ? 9 : 7,
+                    opacity: activa ? 0.65 : 0.25
+                }).addTo(capaRutas);
+
+                const poly = L.polyline(coords, {
+                    color,
+                    weight: activa ? 5 : 4,
+                    opacity: activa ? 0.98 : 0.72,
+                    dashArray: (!item.datos.viab.viable && activa) ? "8, 6" : null
+                }).addTo(capaRutas);
+
+                poly.on("click", () => seleccionarAlternativa(item.k));
+                polyBorde.on("click", () => seleccionarAlternativa(item.k));
+
+                if (coords.length > 1) {
+                    const idxMitad = item.k === "directa" ? 1 : Math.floor(coords.length / 2);
+                    const pA = coords[Math.max(0, idxMitad - 1)];
+                    const pB = coords[Math.min(coords.length - 1, idxMitad)];
+                    const mitad = [(pA[0] + pB[0]) / 2, (pA[1] + pB[1]) / 2];
+                    L.marker(mitad, {
+                        icon: L.divIcon({
+                            className: "globo-wrapper",
+                            iconSize: null,
+                            html: `<div class="globo-ruta-mapa" style="border-color:${color};color:${activa ? color : '#5f6368'}">${item.datos.ruta.tiempo_estimado_min} min • ${item.datos.ruta.distancia_km} km</div>`
+                        })
+                    }).on("click", () => seleccionarAlternativa(item.k)).addTo(capaRutas);
+                }
+            });
+
+            const sel = cacheAlternativas[alternativaActiva];
+            const pts = sel.ruta.ruta_calculada;
+
+            // Numerar las paradas de la ruta activa (1, 2, 3...) para mostrar orden claro de movilidad
+            pts.forEach((p, idx) => {
+                L.marker([p.lat, p.lng], {
+                    interactive: false,
+                    icon: L.divIcon({
+                        className: "globo-wrapper",
+                        iconSize: null,
+                        html: `<div class="waypoint-num" style="background:${sel.viab.viable ? '#1a73e8' : '#d93025'}">${idx + 1}</div>`
+                    })
+                }).addTo(capaRutas);
+            });
+
+            if (pts.length > 0) {
+                const pIni = pts[0];
+                const pFin = pts[pts.length - 1];
+
+                pinOrigenDrag = L.marker([pIni.lat, pIni.lng], { draggable: true, title: "Arrastra el punto de inicio" }).addTo(capaRutas);
+                pinDestinoDrag = L.marker([pFin.lat, pFin.lng], { draggable: true, title: "Arrastra el destino a cualquier cráter" }).addTo(capaRutas);
+
+                pinOrigenDrag.on("dragend", (e) => { coordClicDerecho = e.target.getLatLng(); fijarPuntoLibre("origen"); });
+                pinDestinoDrag.on("dragend", (e) => { coordClicDerecho = e.target.getLatLng(); fijarPuntoLibre("destino"); });
+            }
+
+            lista.forEach(item => {
+                const r = item.datos.ruta;
+                const v = item.datos.viab;
+                const div = document.createElement("div");
+                div.className = `opcion-ruta ${item.k === alternativaActiva ? 'seleccionada' : ''} ${!v.viable ? 'peligrosa' : ''}`;
+                div.onclick = () => seleccionarAlternativa(item.k);
+                div.innerHTML = `
+                    <div class="ruta-fila-1">
+                        <span class="ruta-via">${item.titulo}</span>
+                        <span class="ruta-tiempo ${!v.viable ? 'rojo' : ''}">${r.tiempo_estimado_min} min</span>
+                    </div>
+                    <div class="ruta-sub">${r.distancia_km} km • Pendiente máx: ${r.pendiente_maxima}° • Esfuerzo: ${r.kcal_totales} kcal</div>
+                `;
+                cont.appendChild(div);
+            });
+
+            const vAct = sel.viab;
+            document.getElementById("lbl-restante").innerText = vAct.energia_restante + "%";
+            const barra = document.getElementById("barra-restante");
+            barra.style.width = Math.min(100, Math.max(0, vAct.energia_restante)) + "%";
+            barra.style.background = vAct.energia_restante < 30 ? "#d93025" : "#188038";
+
+            const alerta = document.getElementById("caja-alerta");
+            alerta.className = "alerta-box " + (vAct.viable ? "alerta-ok" : "alerta-mal");
+            document.getElementById("titulo-alerta").innerText = vAct.viable
+                ? (idiomaActual === "en" ? "✓ Safe Marswalk for Astronaut" : "✓ Caminata segura para el astronauta")
+                : (idiomaActual === "en" ? "⚠ Hazard Route (Not Recommended)" : "⚠ Ruta peligrosa (No recomendada)");
+            document.getElementById("lista-razones").innerHTML = (vAct.razones || []).map(x => `<li>${x}</li>`).join("");
+
+            const h = vAct.detalle_historico || { mision: "Archivo Histórico NASA", leccion: vAct.comparacion_historica || "" };
+            document.getElementById("hist-titulo").innerText = h.mision;
+            document.getElementById("hist-texto").innerText = h.leccion;
+
+            // Actualizar métricas científicas, radiación, O2 y Perfil Topográfico SVG
+            document.getElementById("met-ciencia").innerText = `${sel.ruta.puntaje_cientifico ?? 65}/100`;
+            document.getElementById("met-rad").innerText = `${sel.ruta.radiacion_msv ?? 0.02} mSv`;
+            document.getElementById("met-o2").innerText = `${sel.ruta.litros_o2 ?? Math.round((sel.ruta.kcal_totales || 0) * 0.21)} L`;
+            dibujarPerfilTopografico(pts);
+
+            const itCont = document.getElementById("itinerario-pasos");
+            if (itCont) {
+                itCont.innerHTML = pts.map((p, i) => {
+                    const pel = p.pendiente > 20 || p.sin_comunicacion;
+                    const nom = p.nombre.split("(")[0].trim();
+                    return `<span class="paso-chip ${pel ? 'peligro' : ''}">${i + 1}. ${nom}</span>`;
+                }).join(" → ");
+            }
+        }
+
+        function dibujarPerfilTopografico(pts) {
+            const svg = document.getElementById("svg-perfil");
+            if (!svg || pts.length === 0) return;
+            const elevs = pts.map(p => p.elevacion_m ?? -2550);
+            const minE = Math.min(...elevs) - 15;
+            const maxE = Math.max(...elevs) + 15;
+            const spanE = Math.max(1, maxE - minE);
+            document.getElementById("lbl-desnivel").innerText = `${Math.min(...elevs)}m a ${Math.max(...elevs)}m`;
+
+            const coords = pts.map((p, i) => {
+                const x = pts.length === 1 ? 160 : Math.round((i / (pts.length - 1)) * 304) + 8;
+                const y = Math.round(48 - (((p.elevacion_m ?? -2550) - minE) / spanE) * 38);
+                return { x, y, peligro: p.pendiente > 20 || p.sin_comunicacion };
+            });
+
+            const polyPts = coords.map(c => `${c.x},${c.y}`).join(" ");
+            const areaPts = `8,54 ${polyPts} ${coords[coords.length - 1].x},54`;
+            const dots = coords.map(c => `<circle cx="${c.x}" cy="${c.y}" r="3.2" fill="${c.peligro ? '#d93025' : '#1a73e8'}" />`).join("");
+            svg.innerHTML = `
+                <polygon points="${areaPts}" fill="rgba(26,115,232,0.14)" />
+                <polyline points="${polyPts}" fill="none" stroke="#1a73e8" stroke-width="2" />
+                ${dots}
+            `;
+        }
+
+        function simularPasoAPaso() {
+            const sel = cacheAlternativas[alternativaActiva];
+            const pts = sel?.ruta?.ruta_calculada || [];
+            if (pts.length < 2) return;
+            if (pinCaminante) mapa.removeLayer(pinCaminante);
+            clearInterval(timerCaminata);
+
+            const hud = document.getElementById("hud-caminata");
+            hud.style.display = "flex";
+            const energiaIni = parseFloat(document.getElementById("slider-energia").value || "100");
+            const energiaReq = sel.ruta.energia_requerida || 0;
+            const radTotal = sel.ruta.radiacion_msv || 0;
+
+            let idx = 0;
+            const actualizarHud = (i) => {
+                const frac = i / (pts.length - 1);
+                document.getElementById("hud-nodo").innerText = pts[i].nombre.split("(")[0].trim();
+                document.getElementById("hud-o2").innerText = `${Math.max(0, +(energiaIni - energiaReq * frac).toFixed(1))}%`;
+                document.getElementById("hud-elev").innerText = `${pts[i].elevacion_m ?? -2550} m`;
+                document.getElementById("hud-rad").innerText = `${(radTotal * frac).toFixed(3)} mSv`;
+            };
+            actualizarHud(0);
+
+            pinCaminante = L.marker([pts[0].lat, pts[0].lng], {
+                icon: L.divIcon({
+                    className: "globo-wrapper",
+                    iconSize: null,
+                    html: `<div class="astronauta-pin">🧑‍🚀</div>`
+                })
+            }).addTo(mapa);
+
+            timerCaminata = setInterval(() => {
+                idx++;
+                if (idx >= pts.length) {
+                    clearInterval(timerCaminata);
+                    mostrarReporteFinalEVA(sel, energiaIni);
+                    return;
+                }
+                pinCaminante.setLatLng([pts[idx].lat, pts[idx].lng]);
+                actualizarHud(idx);
+            }, 850);
+        }
+
+        function mostrarReporteFinalEVA(sel, energiaIni) {
+            const r = sel.ruta;
+            const v = sel.viab;
+            const modal = document.getElementById("modal-reporte-eva");
+            const badge = document.getElementById("rep-badge");
+            const titulo = document.getElementById("rep-titulo");
+            const sub = document.getElementById("rep-subtitulo");
+
+            badge.innerText = v.viable ? "✅ EVA EXITOSA" : "⚠️ ALERTA CRÍTICA EN RUTA";
+            badge.style.background = v.viable ? "#e6f4ea" : "#fce8e6";
+            badge.style.color = v.viable ? "#137333" : "#c5221f";
+
+            const destNodo = r.ruta_calculada[r.ruta_calculada.length - 1] || {};
+            const dest = destNodo.nombre || "Destino";
+            titulo.innerText = v.viable ? `Llegada segura a ${dest.split("(")[0].trim()}` : `Misión comprometida hacia ${dest.split("(")[0].trim()}`;
+            sub.innerText = (v.razones || []).join(" ");
+
+            const fotoBox = document.getElementById("rep-foto-box");
+            fotoBox.style.display = "none";
+            const nodoFull = puntosJezero.find(p => p.id === destNodo.id) || destNodo;
+            if (nodoFull?.query_nasa) {
+                fetch(`${URL_API}/fotos_perseverance?query=${encodeURIComponent(nodoFull.query_nasa)}&limit=1`)
+                    .then(res => res.json())
+                    .then(d => {
+                        const urlF = d.galeria_nasa?.[0]?.url || d.raw_perseverance?.[0]?.url;
+                        if (urlF) {
+                            document.getElementById("rep-foto-img").src = urlF;
+                            document.getElementById("rep-foto-cap").innerText = `📸 Vista real NASA — ${dest.split("(")[0].trim()}`;
+                            fotoBox.style.display = "block";
+                        }
+                    }).catch(() => {});
+            }
+
+            document.getElementById("rep-grid").innerHTML = `
+                <div class="metrica-pill"><small>Distancia / Tiempo</small><strong>${r.distancia_km} km • ${r.tiempo_estimado_min} min</strong></div>
+                <div class="metrica-pill"><small>Oxígeno PLSS final</small><strong style="color:${v.energia_restante < 30 ? '#d93025' : '#137333'}">${v.energia_restante}% (de ${energiaIni}%)</strong></div>
+                <div class="metrica-pill"><small>Gasto / Consumo O₂</small><strong>${r.kcal_totales} kcal • ${r.litros_o2 ?? Math.round(r.kcal_totales * 0.21)} L</strong></div>
+                <div class="metrica-pill"><small>Ciencia / Radiación</small><strong>${r.puntaje_cientifico ?? 65}/100 • ${r.radiacion_msv ?? 0} mSv</strong></div>
+            `;
+
+            const hist = v.detalle_historico || {};
+            document.getElementById("rep-leccion").innerHTML = `<strong>${hist.mision || "Archivo NASA"}:</strong> ${hist.leccion || v.comparacion_historica || ""}`;
+            modal.style.display = "flex";
+        }
+
+        function cerrarReporteEVA() {
+            document.getElementById("modal-reporte-eva").style.display = "none";
+        }
+
+        // ================= MARS STREET VIEW 360 =================
+        let svPosX = 50, svPosY = 50, arrastrandoSV = false, prevMouseX = 0, prevMouseY = 0;
+        const visorSV = document.getElementById("sv-panorama");
+
+        visorSV.addEventListener("mousedown", e => { arrastrandoSV = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
+        window.addEventListener("mouseup", () => { arrastrandoSV = false; });
+        window.addEventListener("mousemove", e => {
+            if (!arrastrandoSV) return;
+            const dx = e.clientX - prevMouseX;
+            const dy = e.clientY - prevMouseY;
+            prevMouseX = e.clientX;
+            prevMouseY = e.clientY;
+            svPosX = Math.max(0, Math.min(100, svPosX - dx * 0.14));
+            svPosY = Math.max(0, Math.min(100, svPosY - dy * 0.12));
+            visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
+            const grados = Math.round((svPosX / 100) * 360) % 360;
+            const dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
+            document.getElementById("sv-rumbo").innerText = `${grados}° ${dirs[Math.floor(grados / 45) % 8]}`;
+        });
+
+        function abrirStreetViewActual() {
+            const idDest = parseInt(document.getElementById("select-destino").value || "1");
+            const nodo = puntosJezero.find(p => p.id === idDest) || puntosJezero[0];
+            if (nodo) mostrarStreetViewNodo(nodo);
+        }
+
+        function abrirStreetViewCoordenada() {
+            document.getElementById("menu-clic-derecho").style.display = "none";
+            if (!coordClicDerecho) return;
+            mostrarStreetViewNodo(nodoMasCercano(coordClicDerecho.lat, coordClicDerecho.lng).nodo);
+        }
+
+        async function mostrarStreetViewNodo(nodo) {
+            document.getElementById("modal-streetview").style.display = "flex";
+            document.getElementById("sv-titulo").innerText = `${nodo.nombre} • Inclinación: ${nodo.pendiente}°`;
+            document.getElementById("sv-subtitulo").innerText = nodo.valor_cientifico;
+
+            const cajaPasos = document.getElementById("sv-botones-caminar");
+            cajaPasos.innerHTML = "";
+            (nodo.vecinos || []).forEach(vId => {
+                const vec = puntosJezero.find(p => p.id === vId);
+                if (vec) {
+                    const btn = document.createElement("button");
+                    btn.className = "btn-paso-sv";
+                    btn.innerText = `⬆ Caminar hacia ${vec.nombre.split("(")[0].trim()} (${vec.pendiente}°)`;
+                    btn.onclick = () => mostrarStreetViewNodo(vec);
+                    cajaPasos.appendChild(btn);
+                }
+            });
+
+            const listaRaw = document.getElementById("sv-raw-lista");
+            listaRaw.innerHTML = "Consultando Perseverance Raw API...";
+
+            try {
+                if (!modoLocal) {
+                    const rApi = await fetch(`${URL_API}/fotos_perseverance?query=${encodeURIComponent(nodo.query_nasa)}&limit=4`);
+                    const dApi = await rApi.json();
+                    const principal = dApi.galeria_nasa?.[0]?.url || dApi.raw_perseverance?.[0]?.url;
+                    if (principal) visorSV.style.backgroundImage = `url('${principal}')`;
+
+                    if (dApi.raw_perseverance?.length) {
+                        listaRaw.innerHTML = dApi.raw_perseverance.map(f => `
+                            <div class="sv-raw-item" onclick="document.getElementById('sv-panorama').style.backgroundImage='url(${f.url})'">
+                                <img src="${f.url}" alt="${f.titulo}" />
+                                <span>Sol ${f.sol} • ${f.camara} (${f.fecha || 'Mars2020'})</span>
+                            </div>
+                        `).join("");
+                    } else {
+                        listaRaw.innerHTML = "Sin imágenes crudas recientes en caché.";
+                    }
+                    return;
+                }
+            } catch (_) {}
+
+            try {
+                const res = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(nodo.query_nasa)}&media_type=image`);
+                const data = await res.json();
+                const items = data.collection?.items || [];
+                const mejor = items.find(i => {
+                    const t = (i.data?.[0]?.title || "").toLowerCase();
+                    return !t.includes("map") && !t.includes("illustration") && !t.includes("chart");
+                }) || items[0];
+
+                if (mejor?.links?.[0]?.href) {
+                    visorSV.style.backgroundImage = `url('${mejor.links[0].href}')`;
+                }
+            } catch (_) {}
+        }
+
+        function cerrarStreetView() {
+            document.getElementById("modal-streetview").style.display = "none";
+        }
+
+        // ================= GLOBO 3D INTERACTIVO =================
+        let globoIniciado = false, esferaMarte = null, autoRotar3D = true;
+
+        function latLonAVector3(lat, lon, r = 1.018) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lon + 180) * (Math.PI / 180);
+            return new THREE.Vector3(
+                -r * Math.sin(phi) * Math.cos(theta),
+                r * Math.cos(phi),
+                r * Math.sin(phi) * Math.sin(theta)
+            );
+        }
+
+        function abrirGlobo3D() {
+            document.getElementById("modal-globo3d").style.display = "flex";
+            if (globoIniciado) return;
+            globoIniciado = true;
+
+            const cont = document.getElementById("contenedor-globo-3d");
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 1000);
+            camera.position.z = 2.9;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(cont.clientWidth, cont.clientHeight);
+            cont.appendChild(renderer.domElement);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+            const sol = new THREE.DirectionalLight(0xffeedd, 1.1);
+            sol.position.set(3, 2, 5);
+            scene.add(sol);
+
+            // Pintar los dos hemisferios reales de Marte desde NASA Mars Trek (tiles z=0, x=0 y x=1)
+            const canvasTex = document.createElement("canvas");
+            canvasTex.width = 1024;
+            canvasTex.height = 512;
+            const ctx = canvasTex.getContext("2d");
+            ctx.fillStyle = "#b34b22";
+            ctx.fillRect(0, 0, 1024, 512);
+            const texMarte = new THREE.CanvasTexture(canvasTex);
+
+            const mat = new THREE.MeshStandardMaterial({ map: texMarte, roughness: 0.88 });
+            esferaMarte = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), mat);
+            scene.add(esferaMarte);
+
+            // Pines 3D reales sobre la superficie de Marte para cada misión NASA
+            const misiones3D = [
+                { lat: 18.44, lon: 77.45, color: 0x22c55e, tam: 0.032 }, // Perseverance (Jezero)
+                { lat: -4.58, lon: 137.44, color: 0x3b82f6, tam: 0.026 }, // Curiosity
+                { lat: -14.56, lon: 175.47, color: 0xef4444, tam: 0.026 }, // Spirit
+                { lat: -1.94, lon: 354.47, color: 0xef4444, tam: 0.026 }, // Opportunity
+                { lat: 4.50, lon: 135.62, color: 0xfacc15, tam: 0.026 } // InSight
+            ];
+            misiones3D.forEach(m => {
+                const pin = new THREE.Mesh(
+                    new THREE.SphereGeometry(m.tam, 16, 16),
+                    new THREE.MeshBasicMaterial({ color: m.color })
+                );
+                pin.position.copy(latLonAVector3(m.lat, m.lon));
+                esferaMarte.add(pin);
+            });
+
+            const baseTileUrl = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/0/0/";
+            [0, 1].forEach(xIndex => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => {
+                    ctx.drawImage(img, xIndex * 512, 0, 512, 512);
+                    texMarte.needsUpdate = true;
+                };
+                img.src = baseTileUrl + xIndex + ".jpg";
+            });
+
+            let drag = false, px = 0, py = 0;
+            renderer.domElement.addEventListener("mousedown", e => { drag = true; autoRotar3D = false; px = e.clientX; py = e.clientY; });
+            window.addEventListener("mouseup", () => { drag = false; });
+            window.addEventListener("mousemove", e => {
+                if (!drag) return;
+                esferaMarte.rotation.y += (e.clientX - px) * 0.006;
+                esferaMarte.rotation.x = Math.max(-1.2, Math.min(1.2, esferaMarte.rotation.x + (e.clientY - py) * 0.006));
+                px = e.clientX;
+                py = e.clientY;
+            });
+
+            (function animar3D() {
+                requestAnimationFrame(animar3D);
+                if (!drag && autoRotar3D) esferaMarte.rotation.y += 0.0014;
+                renderer.render(scene, camera);
+            })();
+        }
+
+        function enfocarMision3D(lat, lon, titulo, desc) {
+            autoRotar3D = false;
+            if (esferaMarte) {
+                esferaMarte.rotation.x = (lat * Math.PI) / 180;
+                esferaMarte.rotation.y = -((lon + 90) * Math.PI) / 180;
+            }
+            document.getElementById("globo-sub").innerText = titulo;
+            document.getElementById("globo-desc").innerText = desc;
+        }
+
+        function aterrizarEnJezero() {
+            cerrarGlobo3D();
+            mapa.flyTo([18.448, 77.418], 11, { duration: 1.1 });
+        }
+
+        function cerrarGlobo3D() {
+            document.getElementById("modal-globo3d").style.display = "none";
+        }
+
+        // Motor local A* de respaldo por si el backend FastAPI está apagado
+        function calcularAEstrellaLocal(iniId, finId, seguro, retorno, cargaKg = 0, conRover = false, radH = 0.028) {
+            const m = {};
+            puntosJezero.forEach(p => m[p.id] = p);
+            const vis = new Set(), ant = {}, g = {};
+            puntosJezero.forEach(p => g[p.id] = Infinity);
+            g[iniId] = 0;
+
+            const factorCarga = conRover ? 0.55 : (1 + (cargaKg / 85));
+
+            while (vis.size < puntosJezero.length) {
+                let u = null, mejor = Infinity;
+                puntosJezero.forEach(p => {
+                    if (!vis.has(p.id) && g[p.id] < mejor) { mejor = g[p.id]; u = p.id; }
+                });
+                if (u === null || u === finId) break;
+                vis.add(u);
+
+                (m[u].vecinos || []).forEach(v => {
+                    if (!m[v]) return;
+                    const d = distanciaMarcianaKm(m[u], m[v]);
+                    const pend = Math.max(m[u].pendiente, m[v].pendiente);
+                    const kcal = d * 90 * (1 + Math.pow(pend / 10, 1.7)) * factorCarga;
+                    const pen = (seguro && v !== finId && (m[v].pendiente > 20 || m[v].sin_comunicacion)) ? 50000 : 0;
+                    if (g[u] + kcal + pen < g[v]) {
+                        g[v] = g[u] + kcal + pen;
+                        ant[v] = u;
+                    }
+                });
+            }
+
+            let ids = [finId], c = finId;
+            while (ant[c]) { c = ant[c]; ids.push(c); }
+            ids.reverse();
+            if (iniId === finId) ids = [iniId];
+            if (retorno && ids.length > 1) ids = ids.concat(ids.slice(0, -1).reverse());
+
+            let km = 0, kcal = 0, pMax = 0, sinRad = false, pasos = [], ciencia = 0;
+            const vistos = new Set();
+            ids.forEach((id, i) => {
+                if (i > 0) {
+                    const d = distanciaMarcianaKm(m[ids[i - 1]], m[id]);
+                    km += d;
+                    kcal += d * 90 * (1 + Math.pow(Math.max(m[ids[i - 1]].pendiente, m[id].pendiente) / 10, 1.7)) * factorCarga;
+                }
+                if (!vistos.has(id)) { vistos.add(id); ciencia += [7,8,5,2].includes(id) ? 35 : 20; }
+                pMax = Math.max(pMax, m[id].pendiente);
+                if (m[id].sin_comunicacion) sinRad = true;
+                pasos.push({ ...m[id] });
+            });
+
+            const tiempoMin = Math.round((km / (conRover ? 3.0 : 2.6)) * 60);
+            return {
+                ruta_calculada: pasos,
+                distancia_km: +km.toFixed(2),
+                tiempo_estimado_min: tiempoMin,
+                energia_requerida: +((kcal / 1800) * 100).toFixed(1),
+                kcal_totales: Math.round(kcal),
+                litros_o2: +(kcal * 0.21).toFixed(1),
+                radiacion_msv: +((tiempoMin / 60) * radH).toFixed(3),
+                puntaje_cientifico: Math.min(100, ciencia),
+                pendiente_maxima: pMax,
+                cruza_blackout: sinRad
+            };
+        }
+
+        function evaluarViabilidadLocal(disp, req, pend, sinRad, radMsv = 0) {
+            const rest = +(disp - req).toFixed(1);
+            let viable = true, razones = [];
+            if (sinRad) { viable = false; razones.push("Sombra de radio UHF: Pierdes comunicación con el Hábitat."); }
+            if (pend > 20) { viable = false; razones.push(`Pendiente de ${pend}° supera el límite seguro de 20° del traje xEMU.`); }
+            if (rest < 30) { viable = false; razones.push(`Reserva final de ${Math.max(0, rest)}% inferior al 30% exigido por la NASA.`); }
+            if (radMsv > 1.5) { viable = false; razones.push(`Dosis solar (${radMsv} mSv) supera el límite EVA (1.5 mSv) por tormenta activa.`); }
+            if (viable) razones.push(`Ruta segura (${pend}° máx.) y reserva saludable del ${rest}%.`);
+
+            const hist = sinRad
+                ? { mision: "Anomalía similar: Mars Polar Lander (1999)", leccion: "Pérdida de contacto en terreno sin línea directa de comunicación." }
+                : pend > 20
+                ? { mision: "Anomalía similar: Rover Spirit (2009)", leccion: "Atrapado permanentemente al cruzar una pendiente pronunciada." }
+                : rest < 30
+                ? { mision: "Anomalía similar: Rover Opportunity (2018)", leccion: "Agotamiento crítico de reservas energéticas sin margen de retorno." }
+                : { mision: "Referencia nominal: Perseverance (Jezero)", leccion: "Recorrido equivalente a las rutas seguras validadas en Three Forks." };
+
+            return { viable, energia_restante: Math.max(0, rest), razones, detalle_historico: hist };
+        }
+
+        let idiomaActual = "es";
+        function toggleIdioma() {
+            idiomaActual = idiomaActual === "es" ? "en" : "es";
+            const en = idiomaActual === "en";
+            document.getElementById("btn-lang").innerText = en ? "🌐 ES" : "🌐 EN";
+            document.getElementById("lbl-retorno").innerText = en ? "Round trip to Habitat" : "Ida y vuelta al Hábitat";
+            document.getElementById("lbl-clic-der").innerText = en ? "Right click on map = Free point" : "Clic derecho en el mapa = Ruta libre";
+            document.getElementById("lbl-ox-ini").innerText = en ? "Initial suit O₂:" : "Oxígeno inicial del traje:";
+            document.getElementById("lbl-ox-fin").innerText = en ? "Final reserve:" : "Reserva final:";
+            document.getElementById("btn-caminar").innerText = en ? "▶ Walk route" : "▶ Caminar ruta";
+            document.getElementById("btn-sv-abrir").innerText = en ? "🧑‍🚀 Street View 360°" : "🧑‍🚀 Street View 360°";
+            document.getElementById("btn-ctx").innerText = en ? "HD Satellite (5m/px)" : "Satélite HD (5m/px)";
+            document.getElementById("btn-color").innerText = en ? "Viking Color" : "Color Viking";
+            document.getElementById("btn-mola").innerText = en ? "MOLA Elevation" : "Altitud MOLA";
+            document.getElementById("btn-mola-overlay").innerText = en ? "MOLA Fusion 40%" : "Fusión MOLA 40%";
+            document.getElementById("btn-termica").innerText = en ? "Thermal Layer" : "Capa Térmica";
+            document.getElementById("btn-peligros").innerText = en ? "Hazard Zones" : "Zonas de Riesgo";
+            document.querySelector(".cuadro-globo-btn").innerText = en ? "3D Globe" : "Globo 3D";
+            const cargaSel = document.getElementById("select-carga");
+            if (cargaSel && cargaSel.options.length >= 3) {
+                cargaSel.options[0].text = en ? "🎒 Standard Suit (0 kg)" : "🎒 Traje estándar (0 kg)";
+                cargaSel.options[1].text = en ? "🧪 Sample Kit (+12 kg)" : "🧪 Kit muestras (+12 kg)";
+                cargaSel.options[2].text = en ? "🔬 Spectrometer (+25 kg)" : "🔬 Espectrómetro (+25 kg)";
+            }
+            const roverLbl = document.getElementById("check-rover")?.parentElement;
+            if (roverLbl) {
+                const chk = document.getElementById("check-rover").checked;
+                roverLbl.innerHTML = `<input type="checkbox" id="check-rover" onchange="ejecutarCalculoGoogleMaps()" ${chk ? "checked" : ""}> ${en ? "🤖 Rover support" : "🤖 Rover apoyo"}`;
+            }
+            const badgeApi = document.getElementById("badge-api");
+            if (badgeApi) badgeApi.innerText = modoLocal ? (en ? "Offline mode" : "Modo autónomo") : (en ? "Python live" : "Python conectado");
+            const ley = document.querySelector(".leyenda-mapa");
+            if (ley) ley.innerHTML = en
+                ? "<span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span><span>🖱️ Right click: Free route</span>"
+                : "<span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span><span>🖱️ Clic derecho: Ruta libre</span>";
+            const metLabels = document.querySelectorAll(".metrica-pill small");
+            if (metLabels.length >= 3) {
+                metLabels[0].innerText = en ? "Science Return" : "Retorno Científico";
+                metLabels[1].innerText = en ? "EVA Radiation" : "Radiación EVA";
+                metLabels[2].innerText = en ? "O₂ Consumed" : "Consumo O₂";
+            }
+            const firmaA = cacheAlternativas.segura?.ruta?.ruta_calculada?.map(n => n.id).join("-");
+            const firmaB = cacheAlternativas.directa?.ruta?.ruta_calculada?.map(n => n.id).join("-");
+            if (firmaA) renderizarAlternativasGMaps(firmaA !== firmaB);
+        }
+
+        async function iniciar() {
+            const badge = document.getElementById("badge-api");
+            try {
+                const r = await fetch(`${URL_API}/puntos`);
+                if (!r.ok) throw new Error();
+                puntosJezero = await r.json();
+                modoLocal = false;
+                badge.innerText = "Python conectado";
+            } catch (_) {
+                puntosJezero = RESPALDO_PUNTOS;
+                modoLocal = true;
+                badge.innerText = "Modo autónomo";
+                badge.style.background = "#fef7e0";
+                badge.style.color = "#b06000";
+            }
+            dibujarNodosBase();
+            await cargarClimaEspacial();
+            ejecutarCalculoGoogleMaps();
+        }
+
+        iniciar();
     </script>
 </body>
 </html>

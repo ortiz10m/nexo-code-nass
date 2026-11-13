@@ -1,45 +1,115 @@
-# backend/viabilidad.py
+from typing import Dict, List, Any
 
-def evaluar_mision(energia_astronauta: float, energia_requerida: float, pendiente_maxima: float) -> dict:
+LIMITE_PENDIENTE_SEGURA = 20.0
+RESERVA_MINIMA_PLSS = 30.0
+LIMITE_RADIACION_EVA_MSV = 1.5
+
+
+def evaluar_mision(
+    energia_astronauta: float,
+    energia_requerida: float,
+    pendiente_maxima: float,
+    cruza_blackout: bool = False,
+    radiacion_msv: float = 0.0
+) -> Dict[str, Any]:
     """
-    Evalúa si el astronauta puede completar la ruta.
-    Regla 1: La energía requerida no debe superar la energía del astronauta.
-    Regla 2: La pendiente máxima no debe superar los 20 grados (Zona No-Go).
+    Evalúa supervivencia humana bajo parámetros CSRM y soporte vital PLSS de la NASA.
     """
     es_viable = True
-    razones = []
+    nivel_riesgo = "NOMINAL"
+    razones: List[str] = []
+    energia_restante = round(energia_astronauta - energia_requerida, 1)
 
-    # 1. Validación de Energía
-    if energia_requerida > energia_astronauta:
+    # Regla 1: Zonas sin comunicación (UHF Blackout)
+    if cruza_blackout:
         es_viable = False
-        razones.append(f"Energía insuficiente. Necesitas {energia_requerida} pero tienes {energia_astronauta}.")
-    
-    # 2. Validación de Terreno (Pendientes peligrosas)
-    if pendiente_maxima > 20.0:
-        es_viable = False
-        razones.append(f"Riesgo de caída: Pendiente de {pendiente_maxima}° supera el límite seguro de 20°.")
+        nivel_riesgo = "NO-GO CRÍTICO"
+        razones.append(
+            "Pérdida de enlace UHF: La ruta ingresa en un cráter con sombra de radio sin línea de vista al hábitat."
+        )
 
-    # Si no hay razones de fallo, la misión es un éxito
-    if es_viable:
-        razones.append("Ruta segura. Terreno y energía dentro de los parámetros.")
+    # Regla 2: Estabilidad biomecánica del traje xEMU (> 20°)
+    if pendiente_maxima > LIMITE_PENDIENTE_SEGURA:
+        es_viable = False
+        nivel_riesgo = "NO-GO CRÍTICO"
+        razones.append(
+            f"Riesgo de caída en traje xEMU: Pendiente de {pendiente_maxima}° supera el límite humano seguro de 20°."
+        )
+
+    # Regla 3: Agotamiento energético y reserva reglamentaria del 30% PLSS
+    if energia_restante < 0:
+        es_viable = False
+        nivel_riesgo = "NO-GO MORTAL"
+        razones.append(
+            f"Agotamiento total PLSS: El trayecto exige {energia_requerida}% de capacidad y dispones de {energia_astronauta}%."
+        )
+    elif energia_restante < RESERVA_MINIMA_PLSS:
+        es_viable = False
+        nivel_riesgo = "NO-GO RESERVA"
+        razones.append(
+            f"Violación de protocolo EVA: Quedarías con {energia_restante}% de soporte vital (mínimo obligatorio NASA: 30%)."
+        )
+    elif energia_restante < 48.0 and es_viable:
+        nivel_riesgo = "PRECAUCIÓN"
+        razones.append(
+            f"Desgaste moderado CSRM: Reserva final de {energia_restante}%. Monitorear refrigeración líquida y fatiga."
+        )
+
+    # Regla 4: Exposición a radiación solar/cósmica (NASA DONKI / MSL-RAD)
+    if radiacion_msv > LIMITE_RADIACION_EVA_MSV:
+        es_viable = False
+        nivel_riesgo = "NO-GO RADIACIÓN"
+        razones.append(
+            f"Dosis de radiación ({radiacion_msv} mSv) supera el límite operacional EVA ({LIMITE_RADIACION_EVA_MSV} mSv) por tormenta solar activa."
+        )
+    elif radiacion_msv > 0.5 and es_viable:
+        nivel_riesgo = "PRECAUCIÓN"
+        razones.append(
+            f"Exposición solar elevada ({radiacion_msv} mSv). Se recomienda acortar tiempo en superficie."
+        )
+
+    if es_viable and nivel_riesgo == "NOMINAL":
+        razones.append(
+            f"Ruta certificada para Marswalk. Pendiente máxima ({pendiente_maxima}°) y reserva PLSS ({energia_restante}%) en rango óptimo."
+        )
 
     return {
         "viable": es_viable,
+        "nivel_riesgo": nivel_riesgo,
+        "energia_restante": max(0.0, energia_restante),
         "razones": razones
     }
 
 
-def comparar_mision_historica(energia_requerida: float) -> str:
-    """
-    Compara el riesgo de la ruta actual con datos históricos de Marte.
-    Esto le da el toque único a nuestro proyecto.
-    """
-    # TODO: Implementar lectura del JSON de misiones históricas para hacer la comparación dinámica.
-    # Por ahora, se usan valores simulados basados en la historia real.
-    
-    if energia_requerida > 80:
-        return "Misión de alto riesgo. Consumo similar a Opportunity durante la tormenta de polvo de 2018."
-    elif energia_requerida > 50:
-        return "Misión de riesgo moderado. Consumo similar a los últimos días de InSight por acumulación de polvo."
+def comparar_mision_historica(
+    energia_requerida: float,
+    pendiente_maxima: float,
+    cruza_blackout: bool,
+    energia_astronauta: float,
+    catalogo_misiones: List[Dict[str, Any]]
+) -> Dict[str, str]:
+    """Cruza los riesgos detectados con el archivo histórico de anomalías en Marte."""
+    por_codigo = {m["codigo"]: m for m in catalogo_misiones}
+    energia_restante = energia_astronauta - energia_requerida
+
+    if cruza_blackout and "blackout" in por_codigo:
+        m = por_codigo["blackout"]
+    elif pendiente_maxima > 20.0 and "pendiente" in por_codigo:
+        m = por_codigo["pendiente"]
+    elif energia_restante < 30.0 and "energia_critica" in por_codigo:
+        m = por_codigo["energia_critica"]
+    elif energia_requerida > 45.0 and "moderado" in por_codigo:
+        m = por_codigo["moderado"]
     else:
-        return "Misión de bajo riesgo. Consumo óptimo similar a los paseos de Curiosity en terrenos planos."
+        m = por_codigo.get("optimo", {
+            "mision": "Perseverance Mars 2020",
+            "sol_evento": "Operación Nominal",
+            "leccion": "Parámetros dentro de márgenes comprobados en el Cráter Jezero."
+        })
+
+    return {
+        "mision": m["mision"],
+        "sol_evento": m["sol_evento"],
+        "leccion": m["leccion"],
+        "resumen": f"{m['mision']} ({m['sol_evento']}): {m['leccion']}"
+    }
