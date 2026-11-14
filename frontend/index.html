@@ -1361,7 +1361,7 @@
 
         let capaRutas = L.layerGroup();
         let capaNodos = L.layerGroup();
-        let capaAnilloO2 = L.layerGroup().addTo(mapa);
+        let capaAnilloO2 = L.layerGroup();
         let paradasIntermedias = [];
         let capaPeligros = L.layerGroup();
         let capaTermica = L.layerGroup();
@@ -1477,6 +1477,7 @@
         capaPeligros.addTo(mapa);
         capaRutas.addTo(mapa);
         capaNodos.addTo(mapa);
+    capaAnilloO2.addTo(mapa);
 
         function cambiarMapaBase(tipo) {
             mapa.removeLayer(baseActiva);
