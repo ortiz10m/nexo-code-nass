@@ -674,9 +674,9 @@
             cursor: grab;
             position: relative;
             overflow: hidden;
-            background-color: #1f140e;
-            background-repeat: no-repeat;
-            background-size: 165% 115%;
+            background-color: #160f0b;
+            background-repeat: repeat-x;
+            background-size: 210% auto;
             background-position: 50% 50%;
             transition: background-position 0.04s linear;
         }
@@ -808,19 +808,24 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.45);
         }
         .sv-galeria-raw {
+            display: none;
             position: absolute;
-            top: 72px;
-            right: 20px;
-            width: 248px;
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255,255,255,0.2);
+            top: 106px;
+            right: 16px;
+            width: 246px;
+            background: rgba(11, 15, 25, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 12px;
             padding: 10px;
             color: #fff;
-            z-index: 12;
-            max-height: 70vh;
+            z-index: 14;
+            max-height: 64vh;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(56, 189, 248, 0.5) transparent;
         }
+        .sv-galeria-raw::-webkit-scrollbar { width: 5px; }
+        .sv-galeria-raw::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.45); border-radius: 99px; }
         .sv-raw-item {
             margin-top: 8px;
             cursor: pointer;
@@ -1030,23 +1035,40 @@
             pointer-events: none; z-index: 6;
         }
         .casco-reticula {
-            position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%);
+            position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%);
             border: 1.5px dashed rgba(34, 211, 238, 0.75); border-radius: 50%;
-            width: 110px; height: 110px; pointer-events: none; z-index: 6;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+            width: 116px; height: 116px; pointer-events: auto; cursor: crosshair; z-index: 11;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.25); transition: transform 0.2s ease, border-color 0.2s ease;
         }
+        .casco-reticula:hover { transform: translate(-50%, -50%) scale(1.07); border-color: #38bdf8; }
+        .casco-reticula.escaneando { border-style: solid; border-color: #22c55e; box-shadow: 0 0 28px rgba(34, 197, 94, 0.55); }
         .casco-ruta-holo {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) perspective(260px) rotateX(55deg);
-            width: 180px; height: 220px; pointer-events: none; z-index: 5;
-            background: linear-gradient(180deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.35) 60%, rgba(34, 211, 238, 0.65) 100%);
-            border-left: 3px solid #38bdf8; border-right: 3px solid #38bdf8;
+            width: 140px; height: 165px; pointer-events: none; z-index: 5;
+            background: linear-gradient(180deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.24) 65%, rgba(34, 211, 238, 0.5) 100%);
+            border-left: 2px solid rgba(56, 189, 248, 0.7); border-right: 2px solid rgba(56, 189, 248, 0.7);
         }
         .casco-telemetria {
-            position: absolute; top: 88px; left: 26px; z-index: 12;
-            background: rgba(11, 16, 28, 0.78); border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 10px; padding: 8px 12px; color: #e0f2fe; font-size: 11px;
-            font-family: monospace; line-height: 1.55; pointer-events: none;
+            position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 12;
+            background: rgba(11, 15, 25, 0.88); border: 1px solid rgba(56, 189, 248, 0.42);
+            border-radius: 999px; padding: 6px 16px; color: #e0f2fe; font-size: 11px;
+            font-family: ui-monospace, monospace; display: flex; gap: 14px; align-items: center;
+            white-space: nowrap; pointer-events: none; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+        @media (max-width: 1120px) { .casco-telemetria { top: auto; bottom: 84px; font-size: 10px; gap: 8px; } }
+        .sv-compass-layer {
+            position: absolute; left: 0; right: 0; top: 40%; height: 80px; pointer-events: none; z-index: 9; overflow: hidden;
+        }
+        .sv-compass-pin {
+            position: absolute; top: 12px; transform: translateX(-50%);
+            pointer-events: auto; cursor: pointer;
+            background: rgba(11, 15, 25, 0.88); border: 1px solid rgba(56, 189, 248, 0.55);
+            color: #e0f2fe; padding: 5px 11px; border-radius: 999px; font-size: 11px; font-weight: 700;
+            white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+        }
+        .sv-compass-pin.peligro {
+            border-color: rgba(239, 68, 68, 0.75); color: #fecaca; background: rgba(69, 10, 10, 0.88);
         }
 
     
@@ -1173,7 +1195,7 @@
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
             <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
-                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
+                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
                 <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
                     <div>
                         <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
@@ -1394,35 +1416,54 @@
     <!-- MODAL 1: MARS STREET VIEW 360 -->
     <div id="modal-streetview" class="modal-fullscreen">
         <div class="sv-topbar">
-            <div class="sv-card-info">
-                <div style="font-size:11px;color:#fbbc04;font-weight:700;">MARS STREET VIEW 360° • CÁMARA MASTCAM-Z</div>
-                <h3 id="sv-titulo" style="font-size:16px;margin:3px 0;">Cráter Jezero</h3>
-                <p id="sv-subtitulo" style="font-size:12px;color:#dadce0;"></p>
-                <div style="margin-top:6px;font-size:11px;color:#8ab4f8;">
-                    Arrastra la imagen hacia los lados para girar 360° • Rumbo: <strong id="sv-rumbo">90° E</strong>
+            <div class="sv-card-info" style="background:rgba(11,15,25,0.88);border:1px solid rgba(56,189,248,0.3);max-width:340px;">
+                <div style="font-size:10.5px;color:#38bdf8;font-weight:700;letter-spacing:0.6px;">MARS STREET VIEW 360° • MASTCAM-Z</div>
+                <h3 id="sv-titulo" style="font-size:15px;margin:3px 0;">Cráter Jezero</h3>
+                <p id="sv-subtitulo" style="font-size:11.5px;color:#cbd5e1;"></p>
+                <div style="margin-top:6px;font-size:11px;color:#7dd3fc;">
+                    Arrastra para girar 360° • Rumbo: <strong id="sv-rumbo">180° S</strong>
                 </div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <button id="btn-audio-eva" class="sv-cerrar" style="background:rgba(56,189,248,0.22);border:1px solid rgba(56,189,248,0.5);" onclick="toggleAudioEVA()">🔊 Audio EVA</button>
-                <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button id="btn-audio-eva" class="sv-cerrar" style="background:rgba(11,15,25,0.9);color:#f8fafc;border:1px solid rgba(56,189,248,0.5);" onclick="toggleAudioEVA()">🔊 Audio EVA</button>
+                    <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+                </div>
+                <button id="btn-toggle-raw" class="sv-cerrar" style="padding:6px 12px;font-size:11px;background:rgba(11,15,25,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.38);" onclick="toggleGaleriaRawSV()">📷 Fotos reales del sitio</button>
             </div>
         </div>
         <div id="sv-panorama" class="sv-visor"></div>
         <div id="casco-ar-overlay" class="casco-ar-overlay"></div>
         <div class="casco-hud-borde"></div>
         <div class="casco-ruta-holo"></div>
-        <div class="casco-reticula"><span style="font-size:10px;color:#67e8f9;font-weight:700;background:rgba(11,16,28,0.8);padding:2px 6px;border-radius:6px;">🎯 CRISM</span></div>
+        <div id="sv-compass-pins" class="sv-compass-layer"></div>
+        <div id="casco-reticula" class="casco-reticula" onclick="escanearRocaCasco()" title="Clic para analizar mineralogía con PIXL / SuperCam">
+            <span id="lbl-escaner-casco" style="font-size:10px;color:#7dd3fc;font-weight:700;background:rgba(11,16,28,0.88);padding:3px 8px;border-radius:999px;border:1px solid rgba(56,189,248,0.4);">🔬 PIXL / SuperCam</span>
+        </div>
+        <div id="sv-scanner-resultado" style="display:none;position:absolute;left:50%;top:64%;transform:translateX(-50%);z-index:13;background:rgba(11,15,25,0.92);border:1px solid #22c55e;border-radius:10px;padding:8px 14px;color:#e2e8f0;font-size:11.5px;max-width:340px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,0.6);"></div>
         <div id="casco-telemetria" class="casco-telemetria">
-            <div><strong>xEMU AR VISOR • JEZERO EVA</strong></div>
-            <div id="hud-casco-o2">O₂ RESERVA: 100% | RAD: 0.028 mSv/h</div>
-            <div id="hud-casco-hab">🏠 HÁBITAT: 112° ESE • LÍNEA UHF OK</div>
-            <div id="hud-casco-bio" style="color:#67e8f9;">🔬 BIOSIGNATURA: Carbonatos / Arcillas</div>
+            <span id="hud-casco-o2">O₂: 100% | RAD: 0.028 mSv/h</span>
+            <span id="hud-casco-hab">🏠 HÁBITAT: 112° ESE • UHF OK</span>
         </div>
         <div id="sv-galeria-raw" class="sv-galeria-raw">
-            <div style="font-size:11px;font-weight:700;color:#8ab4f8;">📸 PERSEVERANCE RAW API</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:700;color:#7dd3fc;">📷 FOTOS REALES DEL SITIO</span>
+                <button onclick="toggleGaleriaRawSV()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:13px;">✕</button>
+            </div>
             <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
         </div>
         <div id="sv-botones-caminar" class="sv-pasos-suelo"></div>
+    </div>
+
+    <!-- VISOR HD PLANO PARA FOTOS REALES NO-360 -->
+    <div id="sv-foto-hd-modal" class="modal-tech-overlay" style="z-index:2700;" onclick="if(event.target===this)this.style.display='none'">
+        <div class="modal-tech-card" style="width:760px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span id="sv-hd-titulo" style="font-size:12px;font-weight:700;color:#7dd3fc;">Vista HD NASA Perseverance</span>
+                <button onclick="document.getElementById('sv-foto-hd-modal').style.display='none'" style="background:none;border:none;color:#e2e8f0;font-size:18px;cursor:pointer;">✕</button>
+            </div>
+            <img id="sv-hd-img" src="" alt="Vista HD Marte" style="width:100%;max-height:70vh;object-fit:contain;border-radius:10px;background:#020617;" />
+        </div>
     </div>
 
     <!-- MODAL 3D: TERRENO DEL CRÁTER JEZERO EN 3D NÍTIDO -->
@@ -2425,13 +2466,13 @@
 
         // Galería HD verificada de NASA Mars / Perseverance (funciona también sin backend en GitHub Pages)
         const GALERIA_NASA_MARS = [
-            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~medium.jpg", titulo: "Mastcam-Z 360° Panorama (Jezero)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~medium.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~medium.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA25889/PIA25889~medium.jpg", titulo: "Cráter Belva (152 fotos Mastcam-Z)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA25287/PIA25287~medium.jpg", titulo: "Delta de Jezero (Mastcam-Z)", cam: "Mastcam-Z" }
+            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~large.jpg", titulo: "Mastcam-Z 360° Panorama (Jezero)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~large.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
+            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~large.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
+            { url: "https://images-assets.nasa.gov/image/PIA25889/PIA25889~large.jpg", titulo: "Cráter Belva (152 fotos Mastcam-Z)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA25287/PIA25287~large.jpg", titulo: "Delta de Jezero (Mastcam-Z)", cam: "Mastcam-Z" }
         ];
         function obtenerFotoNodoNASA(nodo) {
             if (!nodo) return GALERIA_NASA_MARS[0];
@@ -2441,7 +2482,55 @@
 
         // ================= MARS STREET VIEW 360 =================
         let svPosX = 50, svPosY = 50, arrastrandoSV = false, prevMouseX = 0, prevMouseY = 0;
+        let svNodoActual = null;
         const visorSV = document.getElementById("sv-panorama");
+
+        function actualizarBrujulaSV() {
+            const grados = Math.round(((svPosX % 100) + 100) % 100 / 100 * 360) % 360;
+            const dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
+            const rEl = document.getElementById("sv-rumbo");
+            if (rEl) rEl.innerText = `${grados}° ${dirs[Math.floor(grados / 45) % 8]}`;
+            document.querySelectorAll("#sv-compass-pins .sv-compass-pin").forEach(pin => {
+                const az = parseFloat(pin.dataset.az || "0");
+                let diff = ((az - grados + 540) % 360) - 180;
+                if (Math.abs(diff) <= 52) {
+                    pin.style.display = "block";
+                    pin.style.left = `${50 + (diff / 52) * 45}%`;
+                } else {
+                    pin.style.display = "none";
+                }
+            });
+        }
+
+        function toggleGaleriaRawSV() {
+            const g = document.getElementById("sv-galeria-raw");
+            if (!g) return;
+            g.style.display = g.style.display === "block" ? "none" : "block";
+        }
+
+        function abrirFotoHDPlana(url, titulo) {
+            const m = document.getElementById("sv-foto-hd-modal");
+            const img = document.getElementById("sv-hd-img");
+            const tit = document.getElementById("sv-hd-titulo");
+            if (img) img.src = url.replace("~thumb.jpg", "~large.jpg");
+            if (tit) tit.innerText = titulo || "Vista HD NASA Perseverance";
+            if (m) m.style.display = "flex";
+        }
+
+        function escanearRocaCasco() {
+            const ret = document.getElementById("casco-reticula");
+            const out = document.getElementById("sv-scanner-resultado");
+            if (!ret || !out || !svNodoActual) return;
+            ret.classList.add("escaneando");
+            out.style.display = "block";
+            out.innerHTML = `<span style="color:#38bdf8;">⚡ Escaneando espectro láser SuperCam / PIXL...</span>`;
+            setTimeout(() => {
+                ret.classList.remove("escaneando");
+                const nom = svNodoActual.nombre.split("(")[0].trim();
+                const prio = svNodoActual.pendiente > 20 ? "⚠️ Terreno inestable (>20°) — Solo observación remota" : "✅ Alta prioridad de muestreo geológico";
+                out.innerHTML = `<strong style="color:#22c55e;">🔬 ${nom} • Lectura PIXL</strong><br>${svNodoActual.valor_cientifico}<br><span style="color:#7dd3fc;font-size:10.5px;">${prio}</span>`;
+            }, 420);
+        }
 
         visorSV.addEventListener("mousedown", e => { arrastrandoSV = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
         visorSV.addEventListener("touchstart", e => { if (e.touches.length === 1) { arrastrandoSV = true; prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY; } }, { passive: true });
@@ -2451,9 +2540,10 @@
             const dx = e.touches[0].clientX - prevMouseX;
             const dy = e.touches[0].clientY - prevMouseY;
             prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY;
-            svPosX = Math.max(0, Math.min(100, svPosX - dx * 0.18));
-            svPosY = Math.max(0, Math.min(100, svPosY - dy * 0.14));
+            svPosX = svPosX - dx * 0.18;
+            svPosY = Math.max(36, Math.min(64, svPosY - dy * 0.08));
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
+            actualizarBrujulaSV();
         }, { passive: true });
         window.addEventListener("mouseup", () => { arrastrandoSV = false; });
         window.addEventListener("mousemove", e => {
@@ -2462,12 +2552,10 @@
             const dy = e.clientY - prevMouseY;
             prevMouseX = e.clientX;
             prevMouseY = e.clientY;
-            svPosX = Math.max(0, Math.min(100, svPosX - dx * 0.14));
-            svPosY = Math.max(0, Math.min(100, svPosY - dy * 0.12));
+            svPosX = svPosX - dx * 0.14;
+            svPosY = Math.max(36, Math.min(64, svPosY - dy * 0.07));
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
-            const grados = Math.round((svPosX / 100) * 360) % 360;
-            const dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
-            document.getElementById("sv-rumbo").innerText = `${grados}° ${dirs[Math.floor(grados / 45) % 8]}`;
+            actualizarBrujulaSV();
         });
 
         function abrirStreetViewActual() {
@@ -2483,28 +2571,61 @@
         }
 
         async function mostrarStreetViewNodo(nodo) {
+            svNodoActual = nodo;
             document.getElementById("modal-streetview").style.display = "flex";
+            const scanOut = document.getElementById("sv-scanner-resultado");
+            if (scanOut) scanOut.style.display = "none";
             const ov = document.getElementById("casco-ar-overlay");
             if (ov) ov.classList.toggle("alerta-tormenta", tormentaSimulada);
             const o2Txt = document.getElementById("lbl-restante")?.innerText || "63%";
             const radTxt = (climaEspacial.radiacion_msv_hora || 0.028).toFixed(3);
-            setTextoId("hud-casco-o2", `O₂ RESERVA: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? "⚠ TORMENTA SOLAR" : ""}`);
-            setTextoId("hud-casco-hab", `🏠 HÁBITAT: 112° ESE • ${nodo.sin_comunicacion ? "📵 SIN LÍNEA UHF" : "📡 UHF ACTIVA"}`);
+            const base = puntosJezero.find(x => x.id === 1) || nodo;
+            const rumboHab = nodo.id === 1 ? 0 : calcularRumboGrados(nodo, base);
+            setTextoId("hud-casco-o2", `O₂: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? "⚠ TORMENTA" : ""}`);
+            setTextoId("hud-casco-hab", `🏠 HÁBITAT: ${rumboHab}° • ${nodo.sin_comunicacion ? "📵 SIN UHF" : "📡 UHF OK"}`);
             document.getElementById("sv-titulo").innerText = `${nodo.nombre} • Inclinación: ${nodo.pendiente}°`;
             document.getElementById("sv-subtitulo").innerText = nodo.valor_cientifico;
 
-            const cajaPasos = document.getElementById("sv-botones-caminar");
-            cajaPasos.innerHTML = "";
+            // Pines cardinales flotando en su rumbo real dentro del giro 360°
+            const compassLayer = document.getElementById("sv-compass-pins");
+            compassLayer.innerHTML = "";
             (nodo.vecinos || []).forEach(vId => {
                 const vec = puntosJezero.find(p => p.id === vId);
-                if (vec) {
-                    const btn = document.createElement("button");
-                    btn.className = "btn-paso-sv";
-                    btn.innerText = `⬆ Caminar hacia ${vec.nombre.split("(")[0].trim()} (${vec.pendiente}°)`;
-                    btn.onclick = () => mostrarStreetViewNodo(vec);
-                    cajaPasos.appendChild(btn);
-                }
+                if (!vec) return;
+                const az = calcularRumboGrados(nodo, vec);
+                const distKm = distanciaMarcianaKm(nodo, vec).toFixed(2);
+                const pel = vec.pendiente > 20 || vec.sin_comunicacion;
+                const pin = document.createElement("button");
+                pin.className = `sv-compass-pin ${pel ? "peligro" : ""}`;
+                pin.dataset.az = String(az);
+                pin.innerText = pel
+                    ? `⛔ ${vec.nombre.split("(")[0].trim()} (${vec.pendiente}° NO-GO)`
+                    : `📍 ${vec.nombre.split("(")[0].trim()} • ${az}° • ${distKm} km →`;
+                pin.onclick = () => mostrarStreetViewNodo(vec);
+                compassLayer.appendChild(pin);
             });
+            actualizarBrujulaSV();
+
+            // Abajo en el suelo: SOLO 1 flecha limpia hacia la siguiente parada de la ruta activa (o retorno seguro)
+            const cajaPasos = document.getElementById("sv-botones-caminar");
+            cajaPasos.innerHTML = "";
+            const rutaPts = cacheAlternativas[alternativaActiva]?.ruta?.ruta_calculada || [];
+            const idxEnRuta = rutaPts.findIndex(r => r.id === nodo.id);
+            let sigNodo = (idxEnRuta >= 0 && idxEnRuta < rutaPts.length - 1) ? rutaPts[idxEnRuta + 1] : null;
+            if (!sigNodo) {
+                const seguros = (nodo.vecinos || []).map(id => puntosJezero.find(x => x.id === id)).filter(x => x && x.pendiente <= 20 && !x.sin_comunicacion);
+                sigNodo = seguros[0] || null;
+            }
+            if (sigNodo) {
+                const azSig = calcularRumboGrados(nodo, sigNodo);
+                const dSig = distanciaMarcianaKm(nodo, sigNodo).toFixed(2);
+                const btn = document.createElement("button");
+                btn.className = "btn-paso-sv";
+                btn.style.cssText = "background:rgba(11,15,25,0.9);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);backdrop-filter:blur(6px);";
+                btn.innerText = `🧭 Siguiente parada en ruta: ${sigNodo.nombre.split("(")[0].trim()} • ${dSig} km (${azSig}°) →`;
+                btn.onclick = () => mostrarStreetViewNodo(sigNodo);
+                cajaPasos.appendChild(btn);
+            }
 
             const listaRaw = document.getElementById("sv-raw-lista");
             listaRaw.innerHTML = "Consultando Perseverance Raw API...";
@@ -2542,17 +2663,16 @@
                     return i.links?.[0]?.href && !t.includes("map") && !t.includes("illustration") && !t.includes("chart") && !t.includes("diagram");
                 });
                 if (items.length > 0) {
-                    visorSV.style.backgroundImage = `url('${items[0].links[0].href}')`;
-                    itemsGaleria = items.slice(0, 5).map(it => ({
-                        url: it.links[0].href,
+                    itemsGaleria = items.slice(0, 4).map(it => ({
+                        url: (it.links[0].href || "").replace("~thumb.jpg", "~large.jpg"),
                         titulo: it.data?.[0]?.title || "NASA Mars Gallery",
-                        cam: "NASA Gallery"
-                    })).concat(GALERIA_NASA_MARS.slice(0, 3));
+                        cam: "NASA Gallery HD"
+                    })).concat(GALERIA_NASA_MARS.slice(0, 2));
                 }
             } catch (_) {}
 
             listaRaw.innerHTML = itemsGaleria.map(f => `
-                <div class="sv-raw-item" onclick="document.getElementById('sv-panorama').style.backgroundImage='url(${f.url})'">
+                <div class="sv-raw-item" onclick="abrirFotoHDPlana('${f.url.replace(/'/g, "")}', '${(f.titulo || "").replace(/'/g, "")}')">
                     <img src="${f.url}" alt="${f.titulo}" />
                     <span>${f.cam} • ${f.titulo.slice(0, 34)}</span>
                 </div>
