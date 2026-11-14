@@ -92,6 +92,10 @@ def get_misiones():
 def servir_jezero_hd():
     return FileResponse("frontend/jezero-hi-res.jpg")
 
+@app.get("/nexo-logo.svg")
+def servir_nexo_logo():
+    return FileResponse(BASE_DIR.parent / "frontend" / "nexo-logo.svg")
+
 @app.get("/panos/{nombre}")
 def servir_pano_local(nombre: str):
     return FileResponse(BASE_DIR.parent / "frontend" / "panos" / Path(nombre).name)

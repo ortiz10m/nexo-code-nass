@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 130" fill="none">
+  <!-- Hexagon frame with top opening for code brackets -->
+  <path d="M44 26 L20 40 L20 90 L60 114 L100 90 L100 40 L76 26" stroke="#38bdf8" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Inner cube connector lines -->
+  <path d="M20 42 L38 52 M100 42 L82 52 M20 88 L38 78 M100 88 L82 78" stroke="#0ea5e9" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Code brackets < > -->
+  <path d="M53 10 L40 18 L53 26" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M67 10 L80 18 L67 26" stroke="#f97316" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 3D Faceted X: Left (Blue/Cyan) -->
+  <polygon points="36,44 50,44 60,65 36,44" fill="#38bdf8"/>
+  <polygon points="36,44 60,65 46,65" fill="#0284c7"/>
+  <polygon points="36,86 50,86 60,65 36,86" fill="#0ea5e9"/>
+  <polygon points="36,86 60,65 46,65" fill="#0369a1"/>
+  <!-- 3D Faceted X: Right (Orange) -->
+  <polygon points="84,44 70,44 60,65 84,44" fill="#fb923c"/>
+  <polygon points="84,44 60,65 74,65" fill="#ea580c"/>
+  <polygon points="84,86 70,86 60,65 84,86" fill="#f97316"/>
+  <polygon points="84,86 60,65 74,65" fill="#c2410c"/>
+</svg>
