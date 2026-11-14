@@ -3081,8 +3081,8 @@
             t3dIniciado = true;
             const cont = document.getElementById("contenedor-terreno-3d");
             t3dScene = new THREE.Scene();
-            t3dScene.background = new THREE.Color(0x1a0e0a);
-            t3dScene.fog = new THREE.FogExp2(0x1a0e0a, 0.032);
+            t3dScene.background = new THREE.Color(0x0c111d);
+            t3dScene.fog = new THREE.FogExp2(0x161018, 0.022);
 
             t3dCamera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 200);
             t3dRenderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -3092,9 +3092,21 @@
             t3dRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
             cont.appendChild(t3dRenderer.domElement);
 
-            const ambLight = new THREE.AmbientLight(0xffdec8, 0.36);
-            t3dScene.add(ambLight);
-            const sol = new THREE.DirectionalLight(0xfff0dd, 1.85);
+            // Cúpula estelar tenue para profundidad orbital
+            const starVerts = [];
+            for (let s = 0; s < 260; s++) {
+                const th = Math.random() * Math.PI * 2;
+                const ph = Math.random() * Math.PI * 0.42;
+                const rr = 48 + Math.random() * 18;
+                starVerts.push(rr * Math.sin(ph) * Math.cos(th), rr * Math.cos(ph) + 4, rr * Math.sin(ph) * Math.sin(th));
+            }
+            const starGeo = new THREE.BufferGeometry();
+            starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starVerts, 3));
+            t3dScene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xcbd5e1, size: 0.18, transparent: true, opacity: 0.55 })));
+
+            const hemiLight = new THREE.HemisphereLight(0xffe6cc, 0x1e293b, 0.72);
+            t3dScene.add(hemiLight);
+            const sol = new THREE.DirectionalLight(0xffedd5, 1.9);
             sol.castShadow = true;
             sol.shadow.mapSize.width = 1024;
             sol.shadow.mapSize.height = 1024;
@@ -3110,16 +3122,16 @@
                 const lbl = document.getElementById("lbl-hora-sol");
                 if (lbl) lbl.innerText = `${String(Math.floor(h)).padStart(2,"0")}:${h % 1 ? "30" : "00"}`;
                 const ang = ((h - 6) / 12.5) * Math.PI;
-                sol.position.set(Math.cos(ang) * 14, Math.max(2.1, Math.sin(ang) * 13), 5.5);
+                sol.position.set(Math.cos(ang) * 14, Math.max(2.6, Math.sin(ang) * 13), 5.5);
                 const esOcaso = h >= 17.5 || h <= 7.0;
-                t3dScene.background = new THREE.Color(esOcaso ? 0x151828 : 0x1a0e0a);
-                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x1f283d : 0x26140e);
-                sol.color = new THREE.Color(esOcaso ? 0xa5d8ff : (h >= 15.5 || h <= 8.5 ? 0xffcfa3 : 0xfff0dd));
-                sol.intensity = (h >= 15.5 || h <= 8.5) ? 1.95 : 1.5;
+                t3dScene.background = new THREE.Color(esOcaso ? 0x0b1222 : 0x120e16);
+                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x142038 : 0x1d1418);
+                sol.color = new THREE.Color(esOcaso ? 0x93c5fd : (h >= 15.5 || h <= 8.5 ? 0xffd2a6 : 0xfff3e0));
+                sol.intensity = esOcaso ? 1.55 : ((h >= 15.5 || h <= 8.5) ? 2.05 : 1.7);
             };
             window.actualizarHoraSol3D(16.5);
 
-            // Malla DEM 110x110 nítida con colores reales por elevación marciana
+            // Malla DEM 110x110 luminosa para que brille la textura HD PIA24096
             const geo = new THREE.PlaneGeometry(14, 12, 110, 110);
             geo.rotateX(-Math.PI / 2);
             const pos = geo.attributes.position;
@@ -3129,9 +3141,9 @@
                 const vy = alturaJezero3D(vx, vz);
                 pos.setY(i, vy);
                 const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
-                cols[i * 3] = 0.46 + t * 0.44;
-                cols[i * 3 + 1] = 0.25 + t * 0.25;
-                cols[i * 3 + 2] = 0.16 + t * 0.15;
+                cols[i * 3] = 0.88 + t * 0.12;
+                cols[i * 3 + 1] = 0.84 + t * 0.14;
+                cols[i * 3 + 2] = 0.80 + t * 0.15;
             }
             geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
             geo.computeVertexNormals();
@@ -3140,7 +3152,7 @@
             const t3dCanvas = document.createElement("canvas");
             t3dCanvas.width = 1024; t3dCanvas.height = 1024;
             const t3dCtx = t3dCanvas.getContext("2d");
-            t3dCtx.fillStyle = "#8c4a2f"; t3dCtx.fillRect(0, 0, 1024, 1024);
+            t3dCtx.fillStyle = "#b86b43"; t3dCtx.fillRect(0, 0, 1024, 1024);
             const t3dTex = new THREE.CanvasTexture(t3dCanvas);
             t3dTex.anisotropy = Math.min(16, t3dRenderer.capabilities.getMaxAnisotropy() || 16);
             const imgVik = new Image(), imgMola = new Image();
@@ -3158,16 +3170,17 @@
             imgVik.src = "./jezero-hi-res.jpg";
             imgMola.src = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/6/25/91.jpg";
 
-            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.86, metalness: 0.04 });
+            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.82, metalness: 0.05 });
             window._t3dMeshGeo = geo;
             const terrainMesh = new THREE.Mesh(geo, mat);
             terrainMesh.castShadow = true;
             terrainMesh.receiveShadow = true;
             t3dScene.add(terrainMesh);
 
-            // Falda / bloque geológico de maqueta holográfica en los 4 bordes
+            // Maqueta geológica holográfica con corte estratificado + borde neón cian
             const baseY = -0.82;
             const skirtVerts = [];
+            const topRimPts = [];
             const pushWall = (pts) => {
                 for (let k = 0; k < pts.length - 1; k++) {
                     const a = pts[k], b = pts[k + 1];
@@ -3188,23 +3201,26 @@
                 east.push({ x: 7, y: alturaJezero3D(7, vz), z: vz });
             }
             pushWall(north); pushWall(south); pushWall(west); pushWall(east);
+            [...north, ...east, ...[...south].reverse(), ...[...west].reverse()].forEach(p => topRimPts.push(new THREE.Vector3(p.x, p.y + 0.015, p.z)));
+
             const skirtGeo = new THREE.BufferGeometry();
             skirtGeo.setAttribute("position", new THREE.Float32BufferAttribute(skirtVerts, 3));
             skirtGeo.computeVertexNormals();
-            const skirtMat = new THREE.MeshStandardMaterial({ color: 0x161114, roughness: 0.92, metalness: 0.15, side: THREE.DoubleSide });
+            const skirtMat = new THREE.MeshStandardMaterial({ color: 0x261d1c, roughness: 0.85, metalness: 0.18, side: THREE.DoubleSide });
             t3dScene.add(new THREE.Mesh(skirtGeo, skirtMat));
 
-            const basePlate = new THREE.Mesh(
-                new THREE.PlaneGeometry(14.04, 12.04),
-                new THREE.MeshBasicMaterial({ color: 0x0b1220, side: THREE.DoubleSide })
-            );
-            basePlate.rotation.x = -Math.PI / 2;
-            basePlate.position.y = baseY;
-            t3dScene.add(basePlate);
+            // Borde holográfico superior e inferior del bloque
+            const rimMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.72 });
+            t3dScene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(topRimPts), rimMat));
+            const botRimPts = [
+                new THREE.Vector3(-7, baseY, -6), new THREE.Vector3(7, baseY, -6),
+                new THREE.Vector3(7, baseY, 6), new THREE.Vector3(-7, baseY, 6)
+            ];
+            t3dScene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(botRimPts), new THREE.LineBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.5 })));
 
-            const grid = new THREE.GridHelper(14, 28, 0x38bdf8, 0x1e293b);
-            grid.position.y = baseY - 0.01;
-            grid.material.opacity = 0.25;
+            const grid = new THREE.GridHelper(18, 36, 0x38bdf8, 0x1e293b);
+            grid.position.y = baseY - 0.02;
+            grid.material.opacity = 0.24;
             grid.material.transparent = true;
             t3dScene.add(grid);
 
@@ -3268,7 +3284,7 @@
                     const vx = pos.getX(i), vz = pos.getZ(i), vy = pos.getY(i);
                     const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
                     if (modoCapa3D === 0) {
-                        colAttr.setXYZ(i, 0.42 + t * 0.42, 0.22 + t * 0.24, 0.14 + t * 0.14);
+                        colAttr.setXYZ(i, 0.88 + t * 0.12, 0.84 + t * 0.14, 0.80 + t * 0.15);
                     } else if (modoCapa3D === 1) {
                         const blanda = Math.exp(-((vx + 0.4)**2 + (vz - 0.5)**2) / 1.8);
                         colAttr.setXYZ(i, 0.2 + blanda * 0.75, 0.25 + (1 - blanda) * 0.4, 0.55 - blanda * 0.3);
@@ -3310,6 +3326,7 @@
                 );
                 t3dCamera.lookAt(0, 0.2, 0);
                 if (window._tickPulso3D) window._tickPulso3D();
+                if (window._t3dRouteCurve && window._t3dRouteOrb) { window._t3dRouteOrb.position.copy(window._t3dRouteCurve.getPointAt((Date.now() * 0.00022) % 1)); }
                 t3dRenderer.render(t3dScene, t3dCamera);
                 actualizarEtiquetasTerreno3D();
             };
@@ -3357,12 +3374,23 @@
                     }
                 }
                 const curve = new THREE.CatmullRomCurve3(vecs);
-                const tube = new THREE.TubeGeometry(curve, 80, 0.042, 8, false);
-                const matT = new THREE.MeshBasicMaterial({ color: sel.viab.viable ? 0x38bdf8 : 0xef4444 });
-                t3dRutaGroup.add(new THREE.Mesh(tube, matT));
-                const astro3D = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xfacc15, emissiveIntensity: 0.8 }));
+                const colorRuta = sel.viab.viable ? 0x38bdf8 : 0xef4444;
+                const coreColor = sel.viab.viable ? 0xe0f2fe : 0xfecaca;
+                t3dRutaGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(curve, 80, 0.024, 8, false),
+                    new THREE.MeshBasicMaterial({ color: coreColor })
+                ));
+                t3dRutaGroup.add(new THREE.Mesh(
+                    new THREE.TubeGeometry(curve, 80, 0.056, 8, false),
+                    new THREE.MeshBasicMaterial({ color: colorRuta, transparent: true, opacity: 0.28 })
+                ));
+                const astro3D = new THREE.Mesh(new THREE.SphereGeometry(0.10, 16, 16), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xfacc15, emissiveIntensity: 0.9 }));
                 astro3D.position.copy(vecs[0]).add(new THREE.Vector3(0, 0.12, 0));
                 t3dRutaGroup.add(astro3D);
+                const pulseOrb = new THREE.Mesh(new THREE.SphereGeometry(0.065, 12, 12), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                t3dRutaGroup.add(pulseOrb);
+                window._t3dRouteCurve = curve;
+                window._t3dRouteOrb = pulseOrb;
                 if (document.getElementById("check-rover")?.checked) {
                     const rover3D = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.14, 0.32), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.4 }));
                     rover3D.position.copy(vecs[Math.min(2, vecs.length - 1)]).add(new THREE.Vector3(0.2, 0.1, 0.15));
@@ -3376,13 +3404,20 @@
             const cont = document.getElementById("contenedor-terreno-3d");
             if (!layer || !cont || !t3dCamera || document.getElementById("modal-terreno3d").style.display === "none") return;
             layer.innerHTML = "";
+            const placed = [];
             t3dPins.forEach(p => {
                 const v = p.pos.clone().project(t3dCamera);
                 if (v.z > 1) return;
                 const sx = (v.x * 0.5 + 0.5) * cont.clientWidth;
-                const sy = (-v.y * 0.5 + 0.5) * cont.clientHeight;
+                let sy = (-v.y * 0.5 + 0.5) * cont.clientHeight;
+                for (let tries = 0; tries < 4; tries++) {
+                    const hit = placed.some(b => Math.abs(b.x - sx) < 92 && Math.abs(b.y - sy) < 20);
+                    if (!hit) break;
+                    sy -= 20;
+                }
+                placed.push({ x: sx, y: sy });
                 const tag = document.createElement("div");
-                tag.style.cssText = `position:absolute;left:${sx}px;top:${sy}px;transform:translate(-50%,-100%);background:rgba(11,16,28,0.86);color:${p.peligro ? '#fca5a5' : '#f8fafc'};border:1px solid ${p.peligro ? 'rgba(239,68,68,0.5)' : 'rgba(56,189,248,0.4)'};padding:2px 7px;border-radius:6px;font-size:10.5px;font-weight:600;white-space:nowrap;`;
+                tag.style.cssText = `position:absolute;left:${sx}px;top:${sy}px;transform:translate(-50%,-100%);background:rgba(11,16,28,0.84);backdrop-filter:blur(4px);color:${p.peligro ? '#fca5a5' : '#f8fafc'};border:1px solid ${p.peligro ? 'rgba(239,68,68,0.55)' : 'rgba(56,189,248,0.45)'};padding:2px 7px;border-radius:6px;font-size:10px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.45);`;
                 tag.innerText = p.nombre;
                 layer.appendChild(tag);
             });
