@@ -92,6 +92,10 @@ def get_misiones():
 def servir_jezero_hd():
     return FileResponse("frontend/jezero-hi-res.jpg")
 
+@app.get("/panos/{nombre}")
+def servir_pano_local(nombre: str):
+    return FileResponse(BASE_DIR.parent / "frontend" / "panos" / Path(nombre).name)
+
 @app.get("/app")
 def serve_frontend():
     ruta_html = BASE_DIR.parent / "frontend" / "index.html"

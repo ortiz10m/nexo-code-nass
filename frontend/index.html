@@ -674,9 +674,9 @@
             cursor: grab;
             position: relative;
             overflow: hidden;
-            background-color: #160f0b;
+            background: linear-gradient(180deg, #8c6246 0%, #c89d7c 32%, #e5c9a8 48%, #5b3e2b 58%, #3a281c 100%);
             background-repeat: repeat-x;
-            background-size: 210% auto;
+            background-size: auto 124%;
             background-position: 50% 50%;
             transition: background-position 0.04s linear;
         }
@@ -1022,8 +1022,10 @@
         /* ===== MODO CASCO xEMU (AR VISOR HUD) ===== */
         .casco-ar-overlay {
             position: absolute; inset: 0; pointer-events: none; z-index: 5;
-            background: radial-gradient(ellipse at center, transparent 58%, rgba(2, 6, 23, 0.72) 92%, rgba(0, 0, 0, 0.94) 100%);
-            box-shadow: inset 0 0 60px rgba(56, 189, 248, 0.16);
+            background:
+                radial-gradient(ellipse at 22% 16%, rgba(186, 230, 253, 0.09) 0%, transparent 38%),
+                radial-gradient(ellipse at center, transparent 58%, rgba(2, 6, 23, 0.72) 92%, rgba(0, 0, 0, 0.94) 100%);
+            box-shadow: inset 0 0 64px rgba(56, 189, 248, 0.18);
         }
         .casco-ar-overlay.alerta-tormenta {
             box-shadow: inset 0 0 80px rgba(239, 68, 68, 0.55);
@@ -2596,15 +2598,14 @@
             document.getElementById("modal-reporte-eva").style.display = "none";
         }
 
-        // Galería HD verificada de NASA Mars / Perseverance (funciona también sin backend en GitHub Pages)
+        // Panoramas 100% Perseverance en Cráter Jezero (alojados localmente: cero InSight, cero lag offline)
         const GALERIA_NASA_MARS = [
-            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~large.jpg", titulo: "Mastcam-Z 360° Panorama (Jezero)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~large.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~large.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA25889/PIA25889~large.jpg", titulo: "Cráter Belva (152 fotos Mastcam-Z)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA25287/PIA25287~large.jpg", titulo: "Delta de Jezero (Mastcam-Z)", cam: "Mastcam-Z" }
+            { url: "./panos/threeforks_pia25734.jpg", titulo: "Depósito Three Forks 360° (PIA25734)", cam: "Mastcam-Z" },
+            { url: "./panos/vanzyl_pia24836.jpg", titulo: "Van Zyl Overlook / Séítah 360° (PIA24836)", cam: "Mastcam-Z" },
+            { url: "./panos/delta_pia25172.jpg", titulo: "Frente del Delta Jezero (PIA25172)", cam: "Mastcam-Z" },
+            { url: "./panos/belva_pia25889.jpg", titulo: "Cráter Belva 360° Completo (PIA25889)", cam: "Mastcam-Z" },
+            { url: "./panos/hogwallow_pia25236.jpg", titulo: "Hogwallow Flats / Enchanted Lake (PIA25236)", cam: "Mastcam-Z" },
+            { url: "./panos/neretva_pia26347.jpg", titulo: "Neretva Vallis / Bright Angel (PIA26347)", cam: "Mastcam-Z" }
         ];
         function obtenerFotoNodoNASA(nodo) {
             if (!nodo) return GALERIA_NASA_MARS[0];
@@ -2673,7 +2674,7 @@
             const dy = e.touches[0].clientY - prevMouseY;
             prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY;
             svPosX = svPosX - dx * 0.18;
-            svPosY = Math.max(36, Math.min(64, svPosY - dy * 0.08));
+            svPosY = 50;
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
             actualizarBrujulaSV();
         }, { passive: true });
@@ -2685,7 +2686,7 @@
             prevMouseX = e.clientX;
             prevMouseY = e.clientY;
             svPosX = svPosX - dx * 0.14;
-            svPosY = Math.max(36, Math.min(64, svPosY - dy * 0.07));
+            svPosY = 50;
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
             actualizarBrujulaSV();
         });
@@ -2766,8 +2767,7 @@
                 if (!modoLocal) {
                     const rApi = await fetch(`${URL_API}/fotos_perseverance?query=${encodeURIComponent(nodo.query_nasa)}&limit=4`);
                     const dApi = await rApi.json();
-                    const principal = dApi.galeria_nasa?.[0]?.url || dApi.raw_perseverance?.[0]?.url;
-                    if (principal) visorSV.style.backgroundImage = `url('${principal}')`;
+                    visorSV.style.backgroundImage = `url('${obtenerFotoNodoNASA(nodo).url}')`;
 
                     if (dApi.raw_perseverance?.length) {
                         listaRaw.innerHTML = dApi.raw_perseverance.map(f => `
