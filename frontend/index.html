@@ -918,6 +918,16 @@
                 <span id="hero-viab-txt">🟢 Misión Segura • Llegas con buen aire</span>
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
+            <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
+                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25671/PIA25671~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.35s ease;">
+                <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
+                    <div>
+                        <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
+                        <div id="destino-foto-nom" style="font-size:13px;font-weight:700;color:#f8fafc;">Hogwallow Flats</div>
+                    </div>
+                    <span style="background:rgba(56,189,248,0.22);border:1px solid rgba(56,189,248,0.45);color:#e0f2fe;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;">🔭 360°</span>
+                </div>
+            </div>
             <div class="sec-titulo" id="sec-plss">1. Soporte Vital (Traje xEMU)</div>
             <div class="panel-oxigeno">
                 <div class="oxigeno-top">
@@ -1665,6 +1675,14 @@
             document.getElementById("met-o2").innerText = `${sel.ruta.litros_o2 ?? Math.round((sel.ruta.kcal_totales || 0) * 0.21)} L`;
             dibujarPerfilTopografico(pts);
 
+            if (pts.length > 0) {
+                const destNodo = pts[pts.length - 1];
+                const fotoInfo = obtenerFotoNodoNASA(destNodo);
+                const imgEl = document.getElementById("destino-foto-img");
+                const nomEl = document.getElementById("destino-foto-nom");
+                if (imgEl) imgEl.src = fotoInfo.url;
+                if (nomEl) nomEl.innerText = destNodo.nombre.split("(")[0].trim();
+            }
             const itCont = document.getElementById("itinerario-pasos");
             if (itCont) {
                 itCont.innerHTML = pts.map((p, i) => {
@@ -1792,11 +1810,38 @@
             document.getElementById("modal-reporte-eva").style.display = "none";
         }
 
+        // Galería HD verificada de NASA Mars / Perseverance (funciona también sin backend en GitHub Pages)
+        const GALERIA_NASA_MARS = [
+            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~medium.jpg", titulo: "Mastcam-Z 360° Panorama (Jezero)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA25671/PIA25671~medium.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~medium.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
+            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~medium.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
+            { url: "https://images-assets.nasa.gov/image/PIA24483/PIA24483~medium.jpg", titulo: "Base Octavia E. Butler", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA15691/PIA15691~medium.jpg", titulo: "Horizonte Marciano HD", cam: "Mastcam" }
+        ];
+        function obtenerFotoNodoNASA(nodo) {
+            if (!nodo) return GALERIA_NASA_MARS[0];
+            const idx = Math.abs((nodo.id || 1) - 1) % GALERIA_NASA_MARS.length;
+            return GALERIA_NASA_MARS[idx];
+        }
+
         // ================= MARS STREET VIEW 360 =================
         let svPosX = 50, svPosY = 50, arrastrandoSV = false, prevMouseX = 0, prevMouseY = 0;
         const visorSV = document.getElementById("sv-panorama");
 
         visorSV.addEventListener("mousedown", e => { arrastrandoSV = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
+        visorSV.addEventListener("touchstart", e => { if (e.touches.length === 1) { arrastrandoSV = true; prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY; } }, { passive: true });
+        visorSV.addEventListener("touchend", () => { arrastrandoSV = false; });
+        visorSV.addEventListener("touchmove", e => {
+            if (!arrastrandoSV || e.touches.length !== 1) return;
+            const dx = e.touches[0].clientX - prevMouseX;
+            const dy = e.touches[0].clientY - prevMouseY;
+            prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY;
+            svPosX = Math.max(0, Math.min(100, svPosX - dx * 0.18));
+            svPosY = Math.max(0, Math.min(100, svPosY - dy * 0.14));
+            visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
+        }, { passive: true });
         window.addEventListener("mouseup", () => { arrastrandoSV = false; });
         window.addEventListener("mousemove", e => {
             if (!arrastrandoSV) return;
@@ -1866,19 +1911,33 @@
                 }
             } catch (_) {}
 
-            try {
-                const res = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(nodo.query_nasa)}&media_type=image`);
-                const data = await res.json();
-                const items = data.collection?.items || [];
-                const mejor = items.find(i => {
-                    const t = (i.data?.[0]?.title || "").toLowerCase();
-                    return !t.includes("map") && !t.includes("illustration") && !t.includes("chart");
-                }) || items[0];
+            const fotoCurada = obtenerFotoNodoNASA(nodo);
+            visorSV.style.backgroundImage = `url('${fotoCurada.url}')`;
 
-                if (mejor?.links?.[0]?.href) {
-                    visorSV.style.backgroundImage = `url('${mejor.links[0].href}')`;
+            let itemsGaleria = [...GALERIA_NASA_MARS];
+            try {
+                const res = await fetch(`https://images-api.nasa.gov/search?q=${encodeURIComponent(nodo.query_nasa)}&media_type=image&page_size=6`);
+                const data = await res.json();
+                const items = (data.collection?.items || []).filter(i => {
+                    const t = (i.data?.[0]?.title || "").toLowerCase();
+                    return i.links?.[0]?.href && !t.includes("map") && !t.includes("illustration") && !t.includes("chart") && !t.includes("diagram");
+                });
+                if (items.length > 0) {
+                    visorSV.style.backgroundImage = `url('${items[0].links[0].href}')`;
+                    itemsGaleria = items.slice(0, 5).map(it => ({
+                        url: it.links[0].href,
+                        titulo: it.data?.[0]?.title || "NASA Mars Gallery",
+                        cam: "NASA Gallery"
+                    })).concat(GALERIA_NASA_MARS.slice(0, 3));
                 }
             } catch (_) {}
+
+            listaRaw.innerHTML = itemsGaleria.map(f => `
+                <div class="sv-raw-item" onclick="document.getElementById('sv-panorama').style.backgroundImage='url(${f.url})'">
+                    <img src="${f.url}" alt="${f.titulo}" />
+                    <span>${f.cam} • ${f.titulo.slice(0, 34)}</span>
+                </div>
+            `).join("");
         }
 
         function cerrarStreetView() {
