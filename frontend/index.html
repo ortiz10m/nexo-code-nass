@@ -696,8 +696,8 @@
             overflow: hidden;
             background: linear-gradient(180deg, #8c6246 0%, #c89d7c 32%, #e5c9a8 48%, #5b3e2b 58%, #3a281c 100%);
             background-repeat: repeat-x;
-            background-size: auto 124%;
-            background-position: 50% 50%;
+            background-size: auto 134%;
+            background-position: 50% 35%;
             transition: background-position 0.04s linear;
         }
 
@@ -2746,21 +2746,35 @@
             { url: "./panos/tubes_pia25663.jpg", titulo: "Depósito Three Forks • Tubos de Titanio (PIA25663)", cam: "Mastcam-Z" },
             { url: "./panos/rim_pia26373.jpg", titulo: "Borde del Cráter Jezero / Neretva (PIA26373)", cam: "Navcam" }
         ];
+        const PANOS_HORIZONTE_360 = [
+            { url: "./panos/threeforks_pia25734.jpg", titulo: "Three Forks 360° (PIA25734)", cam: "Mastcam-Z" },
+            { url: "./panos/vanzyl_pia24836.jpg", titulo: "Van Zyl Overlook / Séítah 360° (PIA24836)", cam: "Mastcam-Z" },
+            { url: "./panos/belva_pia25889.jpg", titulo: "Belva Crater 360° (PIA25889)", cam: "Mastcam-Z" }
+        ];
         function obtenerFotoNodoNASA(nodo) {
             if (!nodo) return GALERIA_NASA_MARS[0];
             if (nodo.id === 13) return { url: "./panos/ingenuity_pia26237.jpg", titulo: "Valinor Hills • Ingenuity (PIA26237)", cam: "Mastcam-Z" };
             const idx = Math.abs((nodo.id || 1) - 1) % GALERIA_NASA_MARS.length;
             return GALERIA_NASA_MARS[idx];
         }
+        function obtenerPanorama360Nodo(nodo) {
+            if (!nodo) return PANOS_HORIZONTE_360[0];
+            if (nodo.id === 13) return { url: "./panos/ingenuity_pia26237.jpg", titulo: "Valinor Hills • Ingenuity (PIA26237)", cam: "Mastcam-Z" };
+            if ([6, 4, 12].includes(nodo.id)) return PANOS_HORIZONTE_360[2];
+            if ([1, 2, 9, 10].includes(nodo.id)) return PANOS_HORIZONTE_360[1];
+            return PANOS_HORIZONTE_360[0];
+        }
 
         // ================= MARS STREET VIEW 360 =================
-        let svPosX = 50, svPosY = 50, arrastrandoSV = false, prevMouseX = 0, prevMouseY = 0;
+        let svPosX = 50, svPosY = 35, arrastrandoSV = false, prevMouseX = 0, prevMouseY = 0;
         let svNodoActual = null;
         const visorSV = document.getElementById("sv-panorama");
 
         function actualizarBrujulaSV() {
             const grados = Math.round(((svPosX % 100) + 100) % 100 / 100 * 360) % 360;
-            const dirs = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
+            const dirs = (typeof idiomaActual === "undefined" || idiomaActual === "en")
+                ? ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+                : ["N", "NE", "E", "SE", "S", "SO", "O", "NO"];
             const rEl = document.getElementById("sv-rumbo");
             if (rEl) rEl.innerText = `${grados}° ${dirs[Math.floor(grados / 45) % 8]}`;
             document.querySelectorAll("#sv-compass-pins .sv-compass-pin").forEach(pin => {
@@ -2856,7 +2870,7 @@
             const dy = e.touches[0].clientY - prevMouseY;
             prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY;
             svPosX = svPosX - dx * 0.18;
-            svPosY = 50;
+            svPosY = 35;
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
             actualizarBrujulaSV();
         }, { passive: true });
@@ -2868,7 +2882,7 @@
             prevMouseX = e.clientX;
             prevMouseY = e.clientY;
             svPosX = svPosX - dx * 0.14;
-            svPosY = 50;
+            svPosY = 35;
             visorSV.style.backgroundPosition = `${svPosX}% ${svPosY}%`;
             actualizarBrujulaSV();
         });
@@ -2951,23 +2965,23 @@
                 if (!modoLocal) {
                     const rApi = await fetch(`${URL_API}/fotos_perseverance?query=${encodeURIComponent(nodo.query_nasa)}&limit=4`);
                     const dApi = await rApi.json();
-                    visorSV.style.backgroundImage = `url('${obtenerFotoNodoNASA(nodo).url}')`;
+                    visorSV.style.backgroundImage = `url('${obtenerPanorama360Nodo(nodo).url}')`;
 
                     if (dApi.raw_perseverance?.length) {
                         listaRaw.innerHTML = dApi.raw_perseverance.map(f => `
-                            <div class="sv-raw-item" onclick="document.getElementById('sv-panorama').style.backgroundImage='url(${f.url})'">
+                            <div class="sv-raw-item" onclick="abrirFotoHDPlana('${(f.url || '').replace(/'/g, '')}', 'Sol ${f.sol} • ${f.camara}')">
                                 <img src="${f.url}" alt="${f.titulo}" />
                                 <span>Sol ${f.sol} • ${f.camara} (${f.fecha || 'Mars2020'})</span>
                             </div>
                         `).join("");
                     } else {
-                        listaRaw.innerHTML = "Sin imágenes crudas recientes en caché.";
+                        listaRaw.innerHTML = enSV ? "No recent raw frames in cache." : "Sin imágenes crudas recientes en caché.";
                     }
                     return;
                 }
             } catch (_) {}
 
-            const fotoCurada = obtenerFotoNodoNASA(nodo);
+            const fotoCurada = obtenerPanorama360Nodo(nodo);
             visorSV.style.backgroundImage = `url('${fotoCurada.url}')`;
 
             let itemsGaleria = [...GALERIA_NASA_MARS];
