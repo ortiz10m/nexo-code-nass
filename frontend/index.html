@@ -43,7 +43,7 @@
             max-height: calc(100vh - 24px);
             width: 384px;
             background: rgba(11, 16, 28, 0.90);
-            backdrop-filter: blur(14px);
+            
             border: 1px solid rgba(255, 255, 255, 0.14);
             color: #f1f5f9;
             border-radius: 14px;
@@ -333,7 +333,7 @@
             gap: 4px;
             flex-wrap: wrap;
             background: rgba(11, 15, 25, 0.82);
-            backdrop-filter: blur(10px);
+            
             padding: 5px;
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.14);
@@ -398,7 +398,7 @@
             background: rgba(11, 15, 25, 0.86);
             color: #f8fafc;
             border: 1px solid rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(8px);
+            
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
             cursor: pointer;
             font-size: 24px;
@@ -502,7 +502,7 @@
             padding: 2px 8px !important;
             font-size: 10px !important;
             margin: 0 10px 8px 0 !important;
-            backdrop-filter: blur(4px);
+            
         }
         .leaflet-control-attribution a { color: #93c5fd !important; text-decoration: none; }
         .leaflet-bar {
@@ -537,7 +537,7 @@
             align-items: center;
             z-index: 998;
             border: 1px solid rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(10px);
+            
             transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -998,6 +998,7 @@
     </aside>
 
     <div class="chips-superiores">
+        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;font-weight:700;">🏔️ Terreno 3D</button>
         <button id="btn-ctx" class="chip-gmaps activo" onclick="cambiarMapaBase('ctx')">Satélite HD (5m/px)</button>
         <button id="btn-color" class="chip-gmaps" onclick="cambiarMapaBase('color')">Color Viking</button>
         <button id="btn-mola" class="chip-gmaps" onclick="cambiarMapaBase('mola')">Altitud MOLA</button>
@@ -1081,6 +1082,33 @@
             <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
         </div>
         <div id="sv-botones-caminar" class="sv-pasos-suelo"></div>
+    </div>
+
+    <!-- MODAL 3D: TERRENO DEL CRÁTER JEZERO EN 3D NÍTIDO -->
+    <div id="modal-terreno3d" class="modal-fullscreen" style="background:#050814;">
+        <div class="sv-topbar" style="z-index:30;">
+            <div class="sv-card-info">
+                <div id="t3d-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">MODELO DIGITAL DE ELEVACIÓN (MOLA / HIRISE 3D)</div>
+                <h3 id="t3d-titulo" style="font-size:16px;margin:3px 0;">Cráter Jezero • Terreno 3D Interactivo</h3>
+                <p id="t3d-desc" style="font-size:12px;color:#cbd5e1;">Arrastra para inclinar y orbitar • Rueda del mouse para acercar • Ruta EVA en vivo</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button id="t3d-btn-auto" class="sv-cerrar" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.45);" onclick="toggleAutoOrbita3D()">⏯ Auto-órbita</button>
+                <button id="t3d-btn-cerrar" class="sv-cerrar" onclick="cerrarTerreno3DJezero()">✕ Volver al Mapa</button>
+            </div>
+        </div>
+        <div id="contenedor-terreno-3d" style="width:100%;height:100%;position:relative;"></div>
+        <div id="t3d-labels-layer" style="position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden;"></div>
+        <div style="position:absolute;bottom:20px;left:20px;z-index:30;background:rgba(11,16,28,0.88);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:10px 14px;color:#e2e8f0;font-size:12px;display:flex;gap:14px;align-items:center;">
+            <span>🟢 Hábitat Base</span>
+            <span>🔵 Ruta EVA Activa</span>
+            <span>🔴 Cráter / Acantilado (&gt;20°)</span>
+        </div>
+        <div style="position:absolute;right:20px;bottom:24px;z-index:30;display:flex;flex-direction:column;gap:6px;">
+            <button onclick="zoomTerreno3D(-1.2)" style="width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.9);color:#fff;font-size:18px;font-weight:700;cursor:pointer;">+</button>
+            <button onclick="zoomTerreno3D(1.2)" style="width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.9);color:#fff;font-size:18px;font-weight:700;cursor:pointer;">−</button>
+            <button onclick="resetTerreno3D()" style="width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.9);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">⟲</button>
+        </div>
     </div>
 
     <!-- MODAL 2: GLOBO 3D INTERACTIVO -->
@@ -1176,10 +1204,13 @@
 
         const mapa = L.map("mapa", {
             crs: CRS_NASA_MARS,
+            preferCanvas: true,
+            zoomAnimation: true,
+            fadeAnimation: false,
             zoomControl: false,
             attributionControl: false,
-            minZoom: 1,
-            maxZoom: 15,
+            minZoom: 2,
+            maxZoom: 14,
             maxBounds: [[-90, -180], [90, 180]],
             maxBoundsViscosity: 1.0
         }).setView([18.448, 77.418], 10);
@@ -1212,19 +1243,15 @@
         // Capas WMTS oficiales de NASA Mars Trek ajustadas al índice exacto de matriz
         const capaVikingBase = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 7, maxZoom: 15, noWrap: true, attribution: "NASA Mars Trek" }
+            { maxNativeZoom: 7, maxZoom: 14, noWrap: true, updateWhenIdle: true, keepBuffer: 2, attribution: "NASA Mars Trek" }
         );
 
         const capaCtx5m = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/CTX_beta01_uncontrolled_5m_Caltech/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 11, maxZoom: 15, opacity: 0.85, noWrap: true, attribution: "NASA / Caltech CTX 5m/px" }
+            { maxNativeZoom: 11, maxZoom: 14, opacity: 0.96, noWrap: true, updateWhenIdle: true, keepBuffer: 2, attribution: "NASA / Caltech CTX 5m/px" }
         );
 
-        const capaMolaRelieveBase = L.tileLayer(
-            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 6, maxZoom: 15, opacity: 0.45, noWrap: true, attribution: "NASA MOLA Relief" }
-        );
-        const grupoSateliteHD = L.layerGroup([capaVikingBase, capaMolaRelieveBase, capaCtx5m]);
+        const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
 
         const capaSoloViking = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
@@ -1957,6 +1984,174 @@
             );
         }
 
+        // ================= TERRENO 3D NITIDO DEL CRATER JEZERO =================
+        let t3dIniciado = false, t3dScene = null, t3dCamera = null, t3dRenderer = null;
+        let t3dRutaGroup = null, t3dAutoOrbita = true;
+        let t3dTheta = 0.65, t3dPhi = 0.92, t3dDist = 11.5;
+
+        function zoomTerreno3D(d) { t3dDist = Math.max(4.5, Math.min(20, t3dDist + d)); }
+        function resetTerreno3D() { t3dTheta = 0.65; t3dPhi = 0.92; t3dDist = 11.5; t3dAutoOrbita = true; }
+        function toggleAutoOrbita3D() { t3dAutoOrbita = !t3dAutoOrbita; }
+        function cerrarTerreno3DJezero() { document.getElementById("modal-terreno3d").style.display = "none"; }
+
+        function latLngATerreno3D(lat, lng) {
+            const x = ((lng - 77.41) / 0.22) * 5.2;
+            const z = -((lat - 18.44) / 0.14) * 4.2;
+            return { x, z };
+        }
+
+        function alturaJezero3D(x, z) {
+            // Borde oeste elevado + Delta en terraza + Cráter Belva + Canal Neretva
+            const bordeOeste = Math.max(0, (-x - 1.2)) * 0.42;
+            const cratBelva = -0.55 * Math.exp(-((x + 0.1)**2 + (z + 1.5)**2) / 0.45);
+            const mesaKodiak = 0.55 * Math.exp(-((x + 1.8)**2 + (z - 1.3)**2) / 0.5);
+            const colinaSC = 0.42 * Math.exp(-((x + 0.5)**2 + (z - 1.7)**2) / 0.55);
+            const canalNeretva = -0.32 * Math.exp(-((z + 0.35 + x * 0.15)**2) / 0.25) * (x < 0.2 ? 1 : 0);
+            const microRelieve = 0.08 * Math.sin(x * 3.1) * Math.cos(z * 2.9) + 0.04 * Math.sin(x * 7.5 + z * 6.2);
+            return bordeOeste + cratBelva + mesaKodiak + colinaSC + canalNeretva + microRelieve;
+        }
+
+        function abrirTerreno3DJezero() {
+            document.getElementById("modal-terreno3d").style.display = "flex";
+            if (!t3dIniciado) iniciarMotorTerreno3D();
+            actualizarRutaTerreno3D();
+        }
+
+        function iniciarMotorTerreno3D() {
+            t3dIniciado = true;
+            const cont = document.getElementById("contenedor-terreno-3d");
+            t3dScene = new THREE.Scene();
+            t3dScene.background = new THREE.Color(0x090d16);
+            t3dScene.fog = new THREE.FogExp2(0x1e130e, 0.035);
+
+            t3dCamera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 200);
+            t3dRenderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            t3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            t3dRenderer.setSize(cont.clientWidth, cont.clientHeight);
+            cont.appendChild(t3dRenderer.domElement);
+
+            t3dScene.add(new THREE.AmbientLight(0xffdec8, 0.65));
+            const sol = new THREE.DirectionalLight(0xfff0dd, 1.35);
+            sol.position.set(8, 12, 6);
+            t3dScene.add(sol);
+
+            // Malla DEM 110x110 nítida con colores reales por elevación marciana
+            const geo = new THREE.PlaneGeometry(14, 12, 110, 110);
+            geo.rotateX(-Math.PI / 2);
+            const pos = geo.attributes.position;
+            const cols = new Float32Array(pos.count * 3);
+            for (let i = 0; i < pos.count; i++) {
+                const vx = pos.getX(i), vz = pos.getZ(i);
+                const vy = alturaJezero3D(vx, vz);
+                pos.setY(i, vy);
+                const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
+                cols[i * 3] = 0.42 + t * 0.42;
+                cols[i * 3 + 1] = 0.22 + t * 0.24;
+                cols[i * 3 + 2] = 0.14 + t * 0.14;
+            }
+            geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
+            geo.computeVertexNormals();
+
+            const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.88, metalness: 0.05 });
+            t3dScene.add(new THREE.Mesh(geo, mat));
+
+            const grid = new THREE.GridHelper(14, 28, 0x38bdf8, 0x1e293b);
+            grid.position.y = -0.58;
+            grid.material.opacity = 0.22;
+            grid.material.transparent = true;
+            t3dScene.add(grid);
+
+            t3dRutaGroup = new THREE.Group();
+            t3dScene.add(t3dRutaGroup);
+
+            let drag = false, px = 0, py = 0;
+            t3dRenderer.domElement.addEventListener("mousedown", e => { drag = true; t3dAutoOrbita = false; px = e.clientX; py = e.clientY; });
+            window.addEventListener("mouseup", () => { drag = false; });
+            window.addEventListener("mousemove", e => {
+                if (!drag) return;
+                t3dTheta -= (e.clientX - px) * 0.006;
+                t3dPhi = Math.max(0.35, Math.min(1.38, t3dPhi - (e.clientY - py) * 0.005));
+                px = e.clientX; py = e.clientY;
+            });
+            t3dRenderer.domElement.addEventListener("wheel", e => { e.preventDefault(); zoomTerreno3D(e.deltaY * 0.008); }, { passive: false });
+            t3dRenderer.domElement.addEventListener("touchstart", e => { if (e.touches.length === 1) { drag = true; t3dAutoOrbita = false; px = e.touches[0].clientX; py = e.touches[0].clientY; } }, { passive: true });
+            t3dRenderer.domElement.addEventListener("touchend", () => { drag = false; });
+            t3dRenderer.domElement.addEventListener("touchmove", e => {
+                if (!drag || e.touches.length !== 1) return;
+                t3dTheta -= (e.touches[0].clientX - px) * 0.007;
+                t3dPhi = Math.max(0.35, Math.min(1.38, t3dPhi - (e.touches[0].clientY - py) * 0.006));
+                px = e.touches[0].clientX; py = e.touches[0].clientY;
+            }, { passive: true });
+
+            (function animT3D() {
+                requestAnimationFrame(animT3D);
+                if (!drag && t3dAutoOrbita) t3dTheta += 0.0022;
+                t3dCamera.position.set(
+                    t3dDist * Math.sin(t3dPhi) * Math.cos(t3dTheta),
+                    t3dDist * Math.cos(t3dPhi),
+                    t3dDist * Math.sin(t3dPhi) * Math.sin(t3dTheta)
+                );
+                t3dCamera.lookAt(0, 0.2, 0);
+                t3dRenderer.render(t3dScene, t3dCamera);
+                actualizarEtiquetasTerreno3D();
+            })();
+        }
+
+        let t3dPins = [];
+        function actualizarRutaTerreno3D() {
+            if (!t3dRutaGroup) return;
+            while (t3dRutaGroup.children.length) t3dRutaGroup.remove(t3dRutaGroup.children[0]);
+            t3dPins = [];
+
+            puntosJezero.forEach(pt => {
+                const { x, z } = latLngATerreno3D(pt.lat, pt.lng);
+                const y = alturaJezero3D(x, z) + 0.14;
+                const peligro = pt.pendiente > 20 || pt.sin_comunicacion;
+                const color = pt.id === 1 ? 0x22c55e : (peligro ? 0xef4444 : 0x38bdf8);
+                const pin = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshBasicMaterial({ color }));
+                pin.position.set(x, y, z);
+                t3dRutaGroup.add(pin);
+                t3dPins.push({ pos: new THREE.Vector3(x, y + 0.18, z), nombre: pt.nombre.split("(")[0].trim(), peligro });
+            });
+
+            const sel = cacheAlternativas[alternativaActiva];
+            const pts = sel?.ruta?.ruta_calculada || [];
+            if (pts.length > 1) {
+                const vecs = [];
+                for (let i = 0; i < pts.length - 1; i++) {
+                    const a = latLngATerreno3D(pts[i].lat, pts[i].lng);
+                    const b = latLngATerreno3D(pts[i + 1].lat, pts[i + 1].lng);
+                    for (let s = 0; s <= 12; s++) {
+                        const f = s / 12;
+                        const px = a.x + (b.x - a.x) * f, pz = a.z + (b.z - a.z) * f;
+                        vecs.push(new THREE.Vector3(px, alturaJezero3D(px, pz) + 0.14, pz));
+                    }
+                }
+                const curve = new THREE.CatmullRomCurve3(vecs);
+                const tube = new THREE.TubeGeometry(curve, 64, 0.045, 8, false);
+                const matT = new THREE.MeshBasicMaterial({ color: sel.viab.viable ? 0x38bdf8 : 0xef4444 });
+                t3dRutaGroup.add(new THREE.Mesh(tube, matT));
+            }
+        }
+
+        function actualizarEtiquetasTerreno3D() {
+            const layer = document.getElementById("t3d-labels-layer");
+            const cont = document.getElementById("contenedor-terreno-3d");
+            if (!layer || !cont || !t3dCamera || document.getElementById("modal-terreno3d").style.display === "none") return;
+            layer.innerHTML = "";
+            t3dPins.forEach(p => {
+                const v = p.pos.clone().project(t3dCamera);
+                if (v.z > 1) return;
+                const sx = (v.x * 0.5 + 0.5) * cont.clientWidth;
+                const sy = (-v.y * 0.5 + 0.5) * cont.clientHeight;
+                const tag = document.createElement("div");
+                tag.style.cssText = `position:absolute;left:${sx}px;top:${sy}px;transform:translate(-50%,-100%);background:rgba(11,16,28,0.86);color:${p.peligro ? '#fca5a5' : '#f8fafc'};border:1px solid ${p.peligro ? 'rgba(239,68,68,0.5)' : 'rgba(56,189,248,0.4)'};padding:2px 7px;border-radius:6px;font-size:10.5px;font-weight:600;white-space:nowrap;`;
+                tag.innerText = p.nombre;
+                layer.appendChild(tag);
+            });
+        }
+
+        // ================= MARS GLOBO 3D =================
         let camaraGlobo3D = null;
         function zoomGlobo3D(delta) {
             if (!camaraGlobo3D) return;
@@ -2217,6 +2412,7 @@
             setTextoId("btn-lang", en ? "🌐 ES" : "🌐 EN");
             setTextoId("btn-abrir-panel", en ? "☰ Plan EVA" : "☰ Planificar EVA");
             setTextoId("btn-tour", en ? "🎬 Demo Tour" : "🎬 Tour Demo");
+            setTextoId("btn-terreno3d", en ? "🏔️ 3D Terrain" : "🏔️ Terreno 3D");
             setTextoId("lbl-detalles-tec", en ? "📊 NASA Telemetry, Payload & MOLA" : "📊 Telemetría NASA, Carga y Perfil MOLA");
             setTextoId("sec-plss", en ? "1. Life Support (xEMU Suit)" : "1. Soporte Vital (Traje xEMU)");
             setTextoId("sec-equipo", en ? "2. Science Payload & Mobility" : "2. Equipo Científico y Movilidad");
