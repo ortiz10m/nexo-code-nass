@@ -58,8 +58,7 @@
             left: 12px;
             max-height: calc(100vh - 24px);
             width: 384px;
-            background: rgba(11, 16, 28, 0.90);
-            
+            background: rgba(11, 16, 28, 0.92);
             border: 1px solid rgba(255, 255, 255, 0.14);
             color: #f1f5f9;
             border-radius: 14px;
@@ -67,9 +66,14 @@
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(56, 189, 248, 0.45) transparent;
             transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
         }
+        .gmaps-panel::-webkit-scrollbar { width: 4px; }
+        .gmaps-panel::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.45); border-radius: 99px; }
         body.panel-oculto .gmaps-panel {
             transform: translateX(-420px);
             opacity: 0;
@@ -1374,9 +1378,9 @@
             </details>
         </div>
         <div style="display:flex;gap:6px;padding:0 16px 8px;">
-            <button class="btn-tech-mini" onclick="abrirCuffChecklist()" title="Libreta de muñeca Apollo/Artemis">📋 Cuff Checklist</button>
-            <button class="btn-tech-mini" onclick="abrirCajaBlanca()" title="Ecuaciones físicas auditables">🔬 Caja Blanca</button>
-            <button class="btn-tech-mini btn-chaos" onclick="abrirChaosTest()" title="Simular emergencias en vivo">⚡ Chaos Test</button>
+            <button id="btn-cuff" class="btn-tech-mini" onclick="abrirCuffChecklist()" title="Libreta de muñeca Apollo/Artemis">📋 Cuff Checklist</button>
+            <button id="btn-cajablanca" class="btn-tech-mini" onclick="abrirCajaBlanca()" title="Ecuaciones físicas auditables">🔬 Caja Blanca</button>
+            <button id="btn-chaos" class="btn-tech-mini btn-chaos" onclick="abrirChaosTest()" title="Simular emergencias en vivo">⚡ Chaos Test</button>
         </div>
         <div class="acciones-inferiores">
             <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
@@ -1573,6 +1577,11 @@
             </div>
             <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
         </div>
+        <div style="position:absolute;bottom:76px;left:50%;transform:translateX(-50%);z-index:13;display:flex;gap:8px;align-items:center;">
+            <button onclick="girarSV(-14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">◀ Girar Izq</button>
+            <button onclick="enfocarSiguienteParadaSV()" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">🎯 Siguiente Parada</button>
+            <button onclick="girarSV(14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">Girar Der ▶</button>
+        </div>
         <div id="sv-botones-caminar" class="sv-pasos-suelo"></div>
     </div>
 
@@ -1635,10 +1644,12 @@
     <!-- MODAL 2: GLOBO 3D INTERACTIVO -->
     <div id="modal-globo3d" class="modal-fullscreen">
         <div class="sv-topbar">
-            <div class="sv-card-info">
-                <div id="globo-kicker" style="font-size:11px;color:#fbbc04;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
+            <div class="sv-card-info" style="background:rgba(11,15,25,0.9);border:1px solid rgba(56,189,248,0.35);">
+                <div id="globo-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
                 <h3 id="globo-sub" style="font-size:16px;margin:3px 0;">Explorador Global de Misiones NASA</h3>
-                <p id="globo-desc" style="font-size:12px;color:#dadce0;">Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.</p>
+                <p id="globo-desc" style="font-size:12px;color:#cbd5e1;">Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.</p>
+                <div id="globo-leccion" style="margin-top:6px;font-size:11px;color:#7dd3fc;background:rgba(56,189,248,0.1);border-left:2px solid #38bdf8;padding:4px 8px;border-radius:0 6px 6px 0;display:none;"></div>
+                <button id="btn-globo-aterrizar" onclick="aterrizarEnJezero()" style="display:none;margin-top:8px;padding:6px 12px;border-radius:999px;border:1px solid #00ff9d;background:rgba(0,255,157,0.16);color:#00ff9d;font-size:11px;font-weight:800;cursor:pointer;">🚀 Descender al Mapa EVA (Jezero)</button>
             </div>
             <button id="btn-cerrar-globo" class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
         </div>
@@ -1675,11 +1686,11 @@
             <button onclick="resetVistaGlobo3D()" title="Vista orbital completa" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">⟲</button>
         </div>
         <div class="lista-misiones-3d" style="z-index:30;">
-            <button class="btn-paso-sv" onclick="aterrizarEnJezero()">📍 Perseverance (Cráter Jezero - Tu Mapa)</button>
-            <button class="btn-paso-sv" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.')">Curiosity</button>
-            <button class="btn-paso-sv" onclick="enfocarMision3D(-14.56, 175.47, 'Spirit (Cráter Gusev, 2009)', 'Atrapado permanentemente al cruzar una pendiente con arena blanda oculta.')">Spirit (Fallo Pendiente)</button>
-            <button class="btn-paso-sv" onclick="enfocarMision3D(-1.94, 354.47, 'Opportunity (Meridiani, 2018)', 'Pérdida de contacto por agotamiento energético tras tormenta global de polvo.')">Opportunity (Fallo Energía)</button>
-            <button class="btn-paso-sv" onclick="enfocarMision3D(4.50, 135.62, 'InSight (Elysium Planitia, 2022)', 'Degradación gradual de energía por acumulación de polvo en paneles.')">InSight</button>
+            <button id="btn-globo-persev" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);" onclick="enfocarMision3D(18.44, 77.45, 'Perseverance (Cráter Jezero, 2021)', 'Sitio activo de exploración humana EVA • Base Octavia E. Butler.', 'Lección EVA: Terreno deltaico seguro con corredor UHF y muestras astrobiológicas.', true)">📍 Perseverance (Jezero)</button>
+            <button id="btn-globo-cur" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.', 'Lección EVA: Energía nuclear MMRTG independiente del polvo solar.', false)">Curiosity</button>
+            <button id="btn-globo-spi" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMision3D(-14.56, 175.47, 'Spirit (Cráter Gusev, 2009)', 'Atrapado permanentemente al cruzar arena blanda oculta.', 'Lección EVA: Por esto Mars Maps bloquea taludes >20° y dunas de baja inercia térmica.', false)">Spirit (Fallo Pendiente)</button>
+            <button id="btn-globo-opp" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMision3D(-1.94, 354.47, 'Opportunity (Meridiani, 2018)', 'Pérdida de contacto por agotamiento energético tras tormenta global de polvo.', 'Lección EVA: Exige reserva mínima NASA del 30% y anillo vivo de O₂.', false)">Opportunity (Fallo Energía)</button>
+            <button id="btn-globo-ins" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fde68a;border:1px solid rgba(250,204,21,0.45);" onclick="enfocarMision3D(4.50, 135.62, 'InSight (Elysium Planitia, 2022)', 'Degradación gradual de energía por acumulación de polvo en paneles.', 'Lección EVA: Monitoreo continuo de radiación y potencia antes de cada caminata.', false)">InSight</button>
         </div>
     </div>
 
@@ -2758,22 +2769,61 @@
             if (m) m.style.display = "flex";
         }
 
+        let svAutoPan = true;
+        function girarSV(delta) {
+            svAutoPan = false;
+            svPosX += delta;
+            visorSV.style.backgroundPosition = `${svPosX}% 50%`;
+            actualizarBrujulaSV();
+        }
+        function enfocarSiguienteParadaSV() {
+            svAutoPan = false;
+            const pin = document.querySelector("#sv-compass-pins .sv-compass-pin:not(.peligro)");
+            if (pin && pin.dataset.az) {
+                svPosX = (parseFloat(pin.dataset.az) / 360) * 100;
+                visorSV.style.backgroundPosition = `${svPosX}% 50%`;
+                actualizarBrujulaSV();
+            }
+        }
+        (function loopAutoPanSV() {
+            const modal = document.getElementById("modal-streetview");
+            if (modal && modal.style.display === "flex" && svAutoPan && !arrastrandoSV) {
+                svPosX += 0.05;
+                visorSV.style.backgroundPosition = `${svPosX}% 50%`;
+                actualizarBrujulaSV();
+            }
+            requestAnimationFrame(loopAutoPanSV);
+        })();
+
         function escanearRocaCasco() {
             const ret = document.getElementById("casco-reticula");
             const out = document.getElementById("sv-scanner-resultado");
             if (!ret || !out || !svNodoActual) return;
+            try {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (AC) {
+                    const ctx = new AC();
+                    const osc = ctx.createOscillator(), g = ctx.createGain();
+                    osc.type = "triangle"; osc.frequency.setValueAtTime(640, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.18);
+                    g.gain.setValueAtTime(0.12, ctx.currentTime);
+                    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.22);
+                    osc.connect(g); g.connect(ctx.destination);
+                    osc.start(); osc.stop(ctx.currentTime + 0.23);
+                }
+            } catch (_) {}
             ret.classList.add("escaneando");
             out.style.display = "block";
             out.innerHTML = `<span style="color:#38bdf8;">⚡ Escaneando espectro láser SuperCam / PIXL...</span>`;
             setTimeout(() => {
                 ret.classList.remove("escaneando");
                 const nom = svNodoActual.nombre.split("(")[0].trim();
-                const prio = svNodoActual.pendiente > 20 ? "⚠️ Terreno inestable (>20°) — Solo observación remota" : "✅ Alta prioridad de muestreo geológico";
+                const prio = svNodoActual.pendiente > 20 ? "⚠️ Terreno inestable (>20°) — Solo observación remota" : "✅ Alta prioridad de muestreo geológico (Olivino / Carbonatos / Sulfatos)";
                 out.innerHTML = `<strong style="color:#22c55e;">🔬 ${nom} • Lectura PIXL</strong><br>${svNodoActual.valor_cientifico}<br><span style="color:#7dd3fc;font-size:10.5px;">${prio}</span>`;
             }, 420);
         }
 
-        visorSV.addEventListener("mousedown", e => { arrastrandoSV = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
+        visorSV.addEventListener("mousedown", e => { svAutoPan = false; arrastrandoSV = true; prevMouseX = e.clientX; prevMouseY = e.clientY; });
         visorSV.addEventListener("touchstart", e => { if (e.touches.length === 1) { arrastrandoSV = true; prevMouseX = e.touches[0].clientX; prevMouseY = e.touches[0].clientY; } }, { passive: true });
         visorSV.addEventListener("touchend", () => { arrastrandoSV = false; });
         visorSV.addEventListener("touchmove", e => {
@@ -2813,6 +2863,7 @@
 
         async function mostrarStreetViewNodo(nodo) {
             svNodoActual = nodo;
+            svAutoPan = true;
             document.getElementById("modal-streetview").style.display = "flex";
             const scanOut = document.getElementById("sv-scanner-resultado");
             if (scanOut) scanOut.style.display = "none";
@@ -3490,7 +3541,7 @@
             window._animGlobo3DFn();
         }
 
-        function enfocarMision3D(lat, lon, titulo, desc) {
+        function enfocarMision3D(lat, lon, titulo, desc, leccion = "", esJezero = false) {
             autoRotar3D = false;
             if (esferaMarte) {
                 esferaMarte.rotation.x = (lat * Math.PI) / 180;
@@ -3498,6 +3549,13 @@
             }
             document.getElementById("globo-sub").innerText = titulo;
             document.getElementById("globo-desc").innerText = desc;
+            const lecEl = document.getElementById("globo-leccion");
+            if (lecEl) {
+                lecEl.style.display = leccion ? "block" : "none";
+                lecEl.innerText = leccion;
+            }
+            const btnLand = document.getElementById("btn-globo-aterrizar");
+            if (btnLand) btnLand.style.display = esJezero ? "inline-block" : "none";
         }
 
         function aterrizarEnJezero() {
@@ -3648,6 +3706,20 @@
             if (ley) ley.innerHTML = en
                 ? `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span>`
                 : `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span>`;
+            setTextoId("btn-cuff", en ? "📋 Cuff Card" : "📋 Cuff Checklist");
+            setTextoId("btn-cajablanca", en ? "🔬 White-Box" : "🔬 Caja Blanca");
+            setTextoId("btn-chaos", "⚡ Chaos Test");
+            setTextoId("btn-reset-eva", en ? "↺ Reset" : "↺ Reset");
+            setTextoId("tab-ligero", en ? "🏃 Light" : "🏃 Ligero");
+            setTextoId("tab-xemu", "🧑‍🚀 xEMU");
+            setTextoId("tab-rover", en ? "🚙 With Rover" : "🚙 Con Rover");
+            setTextoId("btn-globo-persev", en ? "📍 Perseverance (Jezero)" : "📍 Perseverance (Jezero)");
+            setTextoId("btn-globo-spi", en ? "Spirit (Slope Fail)" : "Spirit (Fallo Pendiente)");
+            setTextoId("btn-globo-opp", en ? "Opportunity (Power Fail)" : "Opportunity (Fallo Energía)");
+            setTextoId("btn-globo-aterrizar", en ? "🚀 Descend to EVA Map (Jezero)" : "🚀 Descender al Mapa EVA (Jezero)");
+            setCarruselColapsado(document.body.classList.contains("carrusel-oculto"));
+            cargarClimaEspacial();
+            ejecutarCalculoGoogleMaps();
             const metLabels = document.querySelectorAll(".metrica-pill small");
             if (metLabels.length >= 3) {
                 metLabels[0].innerText = en ? "Science Return" : "Retorno Científico";
