@@ -1096,22 +1096,22 @@
     
         /* ===== BOOT SEQUENCE xEMU + MODALES CIENTIFICOS ===== */
         @keyframes bootFadeOutCSS {
-            0%, 70% { opacity: 1; visibility: visible; }
+            0%, 78% { opacity: 1; visibility: visible; }
             100% { opacity: 0; visibility: hidden; pointer-events: none; }
         }
         @keyframes bootBarFillCSS {
             0% { width: 18%; }
-            60% { width: 85%; }
-            100% { width: 100%; }
+            45% { width: 65%; }
+            85%, 100% { width: 100%; }
         }
         #boot-xemu {
             position: fixed; inset: 0; z-index: 9999;
             background: radial-gradient(circle at 50% 40%, #0f172a 0%, #030712 100%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: #e2e8f0; transition: opacity 0.35s ease;
-            animation: bootFadeOutCSS 1.95s ease forwards;
+            color: #e2e8f0; transition: opacity 0.4s ease;
+            animation: bootFadeOutCSS 2.15s ease forwards;
         }
-        #boot-xemu.oculto { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; display: none !important; }
+        #boot-xemu.oculto { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
         .boot-ring {
             width: 58px; height: 58px; border-radius: 50%;
             border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8;
@@ -4542,23 +4542,22 @@
             if (e.key === "Escape") resetModoSeguroEVA();
         });
 
-        async function precargarBootXEMU() {
+        function precargarBootXEMU() {
             const bar = document.getElementById("boot-bar");
             const st = document.getElementById("boot-status");
             const urls = ["./jezero-hi-res.jpg", ...new Set(RESPALDO_PUNTOS.map(pt => obtenerFotoNodoNASA(pt).url))];
-            if (bar) bar.style.width = "45%";
-            if (st) st.innerText = idiomaActual === "en" ? "Preloading HD mosaic & Mastcam-Z telemetry..." : "Precargando mosaico HD y telemetría Mastcam-Z...";
-            const cargas = urls.slice(0, 8).map(u => new Promise(res => {
-                const im = new Image();
-                im.onload = im.onerror = () => res();
-                im.src = u;
-            }));
-            await Promise.race([Promise.all(cargas), new Promise(r => setTimeout(r, 1250))]);
-            if (bar) bar.style.width = "100%";
-            if (st) st.innerText = idiomaActual === "en" ? "xEMU System Ready" : "Sistema xEMU listo";
+            urls.slice(0, 8).forEach(u => { const im = new Image(); im.src = u; });
+            setTimeout(() => {
+                if (bar) bar.style.width = "65%";
+                if (st) st.innerText = idiomaActual === "en" ? "Preloading HD mosaic & Mastcam-Z telemetry..." : "Precargando mosaico HD y telemetría Mastcam-Z...";
+            }, 480);
+            setTimeout(() => {
+                if (bar) bar.style.width = "100%";
+                if (st) st.innerText = idiomaActual === "en" ? "xEMU System Ready • Jezero Crater" : "Sistema xEMU listo • Cráter Jezero";
+            }, 1150);
             setTimeout(() => {
                 document.getElementById("boot-xemu")?.classList.add("oculto");
-            }, 220);
+            }, 1750);
         }
 
         async function iniciar() {
@@ -4584,7 +4583,6 @@
             await cargarClimaEspacial();
             aplicarIdioma(idiomaActual);
             elegirModoEquipo("xemu");
-            document.getElementById("boot-xemu")?.classList.add("oculto");
         }
 
         const GUIA_CONTEXTUAL_I18N = {
