@@ -710,18 +710,20 @@
             gap: 8px;
             align-items: center;
             font-size: 12px;
-            background: #f8f9fa;
-            border: 1px solid #dadce0;
+            color: #e2e8f0;
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 10px;
             padding: 8px 10px;
         }
         .fila-equipo select {
             flex: 1;
-            padding: 5px 6px;
-            border-radius: 6px;
-            border: 1px solid #dadce0;
+            padding: 6px 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             font-size: 12px;
-            background: #fff;
+            color: #f8fafc;
+            background: #0f172a;
         }
         .chip-solar {
             background: #137333 !important;
@@ -738,26 +740,27 @@
             50% { box-shadow: 0 0 16px rgba(217,48,37,0.95); }
         }
         .tarjeta-perfil {
-            background: #f8f9fa;
-            border: 1px solid #dadce0;
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #e2e8f0;
             border-radius: 10px;
-            padding: 8px 10px;
+            padding: 9px 10px;
             font-size: 11.5px;
         }
         .metricas-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 6px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .metrica-pill {
-            background: #fff;
-            border: 1px solid #e0e0e0;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 8px;
-            padding: 5px 6px;
+            padding: 6px 6px;
             text-align: center;
         }
-        .metrica-pill small { display: block; color: #5f6368; font-size: 10px; }
+        .metrica-pill small { display: block; color: #94a3b8; font-size: 10px; margin-bottom: 2px; }
         .metrica-pill strong { font-size: 12.5px; color: #f8fafc; }
         .hud-caminata {
             position: absolute;
@@ -862,6 +865,12 @@
         }
         details.tech-drawer[open] summary { margin-bottom: 10px; color: #e2e8f0; }
 
+    
+        .gmaps-body::-webkit-scrollbar { width: 5px; }
+        .gmaps-body::-webkit-scrollbar-track { background: transparent; }
+        .gmaps-body::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 99px; }
+        .acciones-inferiores button { padding: 10px 12px; font-size: 13px; white-space: nowrap; }
+
     </style>
 </head>
 <body>
@@ -869,15 +878,14 @@
     <button id="btn-abrir-panel" onclick="togglePanel()" style="display:none;position:fixed;top:14px;left:14px;z-index:1005;background:rgba(11,15,25,0.88);color:#fff;border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(10px);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.45);">☰ Planificar EVA</button>
     <aside class="gmaps-panel">
         <div class="gmaps-top">
-            <div class="marca-fila">
-                <div class="marca-logo">
+            <div class="marca-fila" style="gap:8px;">
+                <div class="marca-logo" style="white-space:nowrap;">
                     <span>◉</span> Mars Maps
-                    <small style="font-weight:400;font-size:12px;color:#5f6368;">• Nexo Code</small>
                 </div>
-                <div style="display:flex;gap:6px;align-items:center;">
-                    <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid #dadce0;background:#f8f9fa;border-radius:12px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#1a73e8;">🌐 EN</button>
-                    <span id="badge-api" class="chip-backend">Conectando...</span>
-                    <button id="btn-toggle-panel" onclick="togglePanel()" title="Ocultar tarjeta" style="border:1px solid #dadce0;background:#f8f9fa;border-radius:10px;padding:3px 7px;font-size:11px;font-weight:700;cursor:pointer;color:#3c4043;">◀</button>
+                <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
+                    <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 EN</button>
+                    <span id="badge-api" class="chip-backend" style="white-space:nowrap;font-size:10.5px;padding:4px 8px;border-radius:10px;">Conectando...</span>
+                    <button id="btn-toggle-panel" onclick="togglePanel()" title="Ocultar tarjeta" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
                 </div>
             </div>
 
@@ -1202,7 +1210,11 @@
             { maxNativeZoom: 11, maxZoom: 15, opacity: 0.85, noWrap: true, attribution: "NASA / Caltech CTX 5m/px" }
         );
 
-        const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
+        const capaMolaRelieveBase = L.tileLayer(
+            "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
+            { maxNativeZoom: 6, maxZoom: 15, opacity: 0.45, noWrap: true, attribution: "NASA MOLA Relief" }
+        );
+        const grupoSateliteHD = L.layerGroup([capaVikingBase, capaMolaRelieveBase, capaCtx5m]);
 
         const capaSoloViking = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
@@ -2245,8 +2257,9 @@
                 puntosJezero = RESPALDO_PUNTOS;
                 modoLocal = true;
                 badge.innerText = "Modo autónomo";
-                badge.style.background = "#fef7e0";
-                badge.style.color = "#b06000";
+                badge.style.background = "rgba(250, 204, 21, 0.16)";
+                badge.style.color = "#fde047";
+                badge.style.border = "1px solid rgba(250, 204, 21, 0.3)";
             }
             dibujarNodosBase();
             await cargarClimaEspacial();
