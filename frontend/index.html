@@ -2839,15 +2839,33 @@
             const AC = window.AudioContext || window.webkitAudioContext;
             if (!AC) return;
             evaAudioCtx = new AC();
+            if (evaAudioCtx.state === "suspended") evaAudioCtx.resume();
+
+            const beep = evaAudioCtx.createOscillator();
+            const beepGain = evaAudioCtx.createGain();
+            beep.type = "sine"; beep.frequency.value = 1040;
+            beepGain.gain.setValueAtTime(0.18, evaAudioCtx.currentTime);
+            beepGain.gain.exponentialRampToValueAtTime(0.001, evaAudioCtx.currentTime + 0.16);
+            beep.connect(beepGain); beepGain.connect(evaAudioCtx.destination);
+            beep.start(); beep.stop(evaAudioCtx.currentTime + 0.17);
+
             const buf = evaAudioCtx.createBuffer(1, evaAudioCtx.sampleRate * 2, evaAudioCtx.sampleRate);
             const data = buf.getChannelData(0);
-            for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.25;
+            for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.65;
             const src = evaAudioCtx.createBufferSource();
             src.buffer = buf; src.loop = true;
             const filt = evaAudioCtx.createBiquadFilter();
-            filt.type = "lowpass"; filt.frequency.value = 180;
+            filt.type = "bandpass"; filt.frequency.value = 420; filt.Q.value = 0.7;
             const gain = evaAudioCtx.createGain();
-            gain.gain.value = 0.22;
+            gain.gain.value = 0.42;
+
+            const lfo = evaAudioCtx.createOscillator();
+            const lfoGain = evaAudioCtx.createGain();
+            lfo.frequency.value = 0.28;
+            lfoGain.gain.value = 0.16;
+            lfo.connect(lfoGain); lfoGain.connect(gain.gain);
+            lfo.start();
+
             src.connect(filt); filt.connect(gain); gain.connect(evaAudioCtx.destination);
             src.start();
             evaAudioOn = true;
