@@ -1415,14 +1415,14 @@
                 <span style="display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;color:#38bdf8;letter-spacing:1px;"><img src="./nexo-logo.svg" alt="Nexo Code" style="width:20px;height:20px;"> NEXO CODE • EVA CUFF CHECKLIST</span>
                 <button onclick="document.getElementById('modal-cuff').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
             </div>
-            <h3 id="cuff-titulo" style="font-size:17px;margin-bottom:4px;">Plan Táctico de Antebrazo</h3>
+            <h3 id="cuff-titulo" style="font-size:17px;margin-bottom:4px;">EVA Tactical Cuff Plan</h3>
             <p id="cuff-sub" style="font-size:12px;color:#94a3b8;"></p>
             <div id="cuff-resumen" class="cuff-grid"></div>
-            <div style="font-size:11px;font-weight:700;color:#cbd5e1;margin:8px 0 6px;">TRAMOS, RUMBOS Y OBJETIVOS GEOLÓGICOS:</div>
+            <div id="cuff-sec-lbl" style="font-size:11px;font-weight:700;color:#cbd5e1;margin:8px 0 6px;">WAYPOINTS, BEARINGS &amp; GEOLOGICAL TARGETS:</div>
             <div id="cuff-pasos" style="display:flex;flex-direction:column;gap:6px;font-size:12px;"></div>
             <div style="display:flex;gap:8px;margin-top:14px;">
-                <button class="btn-azul" style="flex:1;" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
-                <button class="btn-gris" style="flex:1;" onclick="document.getElementById('modal-cuff').style.display='none'">Cerrar</button>
+                <button id="cuff-btn-print" class="btn-azul" style="flex:1;" onclick="window.print()">🖨️ Print / Save PDF</button>
+                <button id="cuff-btn-close" class="btn-gris" style="flex:1;" onclick="document.getElementById('modal-cuff').style.display='none'">Close</button>
             </div>
         </div>
     </div>
@@ -1431,10 +1431,10 @@
     <div id="modal-cajablanca" class="modal-tech-overlay" onclick="if(event.target===this)this.style.display='none'">
         <div class="modal-tech-card">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <span style="font-size:11px;font-weight:800;color:#22c55e;letter-spacing:1px;">TRANSPARENCIA CIENTÍFICA AUDITABLE</span>
+                <span id="cb-kicker" style="font-size:11px;font-weight:800;color:#22c55e;letter-spacing:1px;">AUDITABLE SCIENTIFIC TRANSPARENCY</span>
                 <button onclick="document.getElementById('modal-cajablanca').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
             </div>
-            <h3 style="font-size:17px;margin-bottom:10px;">Caja Blanca: Ecuaciones en Vivo</h3>
+            <h3 id="cb-titulo" style="font-size:17px;margin-bottom:10px;">White-Box: Live Physics Equations</h3>
             <div id="cb-contenido"></div>
         </div>
     </div>
@@ -1443,15 +1443,15 @@
     <div id="modal-chaos" class="modal-tech-overlay" onclick="if(event.target===this)this.style.display='none'">
         <div class="modal-tech-card" style="width:460px;border-color:rgba(239,68,68,0.5);">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                <span style="font-size:11px;font-weight:800;color:#f87171;letter-spacing:1px;">⚡ SIMULADOR DE EMERGENCIAS (CHAOS TEST)</span>
+                <span id="chaos-kicker" style="font-size:11px;font-weight:800;color:#f87171;letter-spacing:1px;">⚡ EMERGENCY SIMULATOR (CHAOS TEST)</span>
                 <button onclick="document.getElementById('modal-chaos').style.display='none'" style="background:none;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
             </div>
-            <p style="font-size:12.5px;color:#cbd5e1;margin-bottom:12px;">Dispara una falla en vivo para comprobar el recálculo físico de supervivencia:</p>
+            <p id="chaos-desc" style="font-size:12.5px;color:#cbd5e1;margin-bottom:12px;">Inject a live anomaly to verify real-time survival recalculation:</p>
             <div style="display:flex;flex-direction:column;gap:8px;">
-                <button class="btn-tech-mini btn-chaos" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('fuga_o2')">🫁 Fuga de O₂ en traje (-35% tanque inmediato)</button>
-                <button class="btn-tech-mini btn-chaos" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('tormenta')">☀️ Tormenta Solar CME (0.85 mSv/h • Alerta S3)</button>
-                <button class="btn-tech-mini" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('uhf')">📡 Pérdida de enlace UHF (Forzar corredor seguro)</button>
-                <button class="btn-tech-mini" style="padding:10px;text-align:left;color:#86efac;border-color:rgba(34,197,94,0.45);" onclick="resetModoSeguroEVA()">↺ Restaurar EVA Nominal (Modo Seguro)</button>
+                <button id="chaos-btn-o2" class="btn-tech-mini btn-chaos" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('fuga_o2')">🫁 Suit O₂ Leak (-35% immediate tank drop)</button>
+                <button id="chaos-btn-storm" class="btn-tech-mini btn-chaos" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('tormenta')">☀️ CME Solar Storm (0.85 mSv/h • Alert S3)</button>
+                <button id="chaos-btn-uhf" class="btn-tech-mini" style="padding:10px;text-align:left;" onclick="inyectarFallaChaos('uhf')">📡 UHF Link Loss (Enforce safe corridor)</button>
+                <button id="chaos-btn-reset" class="btn-tech-mini" style="padding:10px;text-align:left;color:#86efac;border-color:rgba(34,197,94,0.45);" onclick="resetModoSeguroEVA()">↺ Restore Nominal EVA (Safe Mode)</button>
             </div>
         </div>
     </div>
@@ -1466,7 +1466,7 @@
     <div id="tormenta-borde-alerta"></div>
     <div id="tour-subtitulo-bar">
         <span id="tour-subtitulo-txt" style="color:#7dd3fc;">Paso 1/3: Inserción orbital en Cráter Jezero...</span>
-        <button onclick="detenerTourJurados()" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">⏹ Detener Tour</button>
+        <button id="btn-detener-tour" onclick="detenerTourJurados()" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">⏹ Stop Tour</button>
     </div>
     <div id="leyenda-capa-activa"></div>
 
@@ -1551,10 +1551,10 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
                 <div style="display:flex;gap:8px;align-items:center;">
-                    <button id="btn-audio-eva" class="sv-cerrar" style="background:rgba(11,15,25,0.9);color:#f8fafc;border:1px solid rgba(56,189,248,0.5);" onclick="toggleAudioEVA()">🔊 Audio EVA</button>
-                    <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+                    <button id="btn-audio-eva" class="sv-cerrar" style="background:rgba(11,15,25,0.9);color:#f8fafc;border:1px solid rgba(56,189,248,0.5);" onclick="toggleAudioEVA()">🔊 EVA Audio</button>
+                    <button id="sv-btn-volver" class="sv-cerrar" onclick="cerrarStreetView()">✕ Back to Map</button>
                 </div>
-                <button id="btn-toggle-raw" class="sv-cerrar" style="padding:6px 12px;font-size:11px;background:rgba(11,15,25,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.38);" onclick="toggleGaleriaRawSV()">📷 Fotos reales del sitio</button>
+                <button id="btn-toggle-raw" class="sv-cerrar" style="padding:6px 12px;font-size:11px;background:rgba(11,15,25,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.38);" onclick="toggleGaleriaRawSV()">📷 Real Site Photos</button>
             </div>
         </div>
         <div id="sv-panorama" class="sv-visor"></div>
@@ -1572,15 +1572,15 @@
         </div>
         <div id="sv-galeria-raw" class="sv-galeria-raw">
             <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="font-size:11px;font-weight:700;color:#7dd3fc;">📷 FOTOS REALES DEL SITIO</span>
+                <span id="sv-raw-titulo" style="font-size:11px;font-weight:700;color:#7dd3fc;">📷 REAL SITE PHOTOS</span>
                 <button onclick="toggleGaleriaRawSV()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:13px;">✕</button>
             </div>
-            <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
+            <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Loading camera telemetry...</div>
         </div>
         <div style="position:absolute;bottom:76px;left:50%;transform:translateX(-50%);z-index:13;display:flex;gap:8px;align-items:center;">
-            <button onclick="girarSV(-14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">◀ Girar Izq</button>
-            <button onclick="enfocarSiguienteParadaSV()" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">🎯 Siguiente Parada</button>
-            <button onclick="girarSV(14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">Girar Der ▶</button>
+            <button id="sv-btn-izq" onclick="girarSV(-14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">◀ Turn Left</button>
+            <button id="sv-btn-sig" onclick="enfocarSiguienteParadaSV()" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">🎯 Next Stop</button>
+            <button id="sv-btn-der" onclick="girarSV(14)" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;">Turn Right ▶</button>
         </div>
         <div id="sv-botones-caminar" class="sv-pasos-suelo"></div>
     </div>
@@ -1597,41 +1597,41 @@
     </div>
 
     <!-- MODAL 3D: TERRENO DEL CRÁTER JEZERO EN 3D NÍTIDO -->
-    <div id="modal-terreno3d" class="modal-fullscreen" style="background:#050814;">
+    <div id="modal-terreno3d" class="modal-fullscreen" style="background:#1a0e0a;">
         <div class="sv-topbar" style="z-index:30;">
-            <div class="sv-card-info">
-                <div id="t3d-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">MODELO 3D: NASA MOLA / HIRISE + ESA MARS EXPRESS HRSC</div>
-                <h3 id="t3d-titulo" style="font-size:16px;margin:3px 0;">Cráter Jezero • Terreno 3D Interactivo</h3>
-                <p id="t3d-desc" style="font-size:12px;color:#cbd5e1;">Arrastra para inclinar y orbitar • Rueda del mouse para acercar • Ruta EVA en vivo</p>
+            <div class="sv-card-info" style="background:rgba(11,15,25,0.9);border:1px solid rgba(56,189,248,0.35);">
+                <div id="t3d-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">3D MODEL: NASA MOLA / HIRISE + ESA MARS EXPRESS HRSC</div>
+                <h3 id="t3d-titulo" style="font-size:16px;margin:3px 0;">Jezero Crater • Interactive 3D Terrain</h3>
+                <p id="t3d-desc" style="font-size:12px;color:#cbd5e1;">Drag to tilt &amp; orbit • Scroll to zoom • Live EVA route</p>
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
-                <button id="t3d-btn-auto" class="sv-cerrar" style="background:rgba(56,189,248,0.2);border:1px solid rgba(56,189,248,0.45);" onclick="toggleAutoOrbita3D()">⏯ Auto-órbita</button>
-                <button id="t3d-btn-cerrar" class="sv-cerrar" onclick="cerrarTerreno3DJezero()">✕ Volver al Mapa</button>
+                <button id="t3d-btn-auto" class="sv-cerrar" style="background:rgba(11,16,28,0.88);color:#ffffff;border:1px solid rgba(56,189,248,0.5);" onclick="toggleAutoOrbita3D()">⟳ Auto-orbit</button>
+                <button id="t3d-btn-cerrar" class="sv-cerrar" onclick="cerrarTerreno3DJezero()">✕ Back to Map</button>
             </div>
         </div>
         <div id="contenedor-terreno-3d" style="width:100%;height:100%;position:relative;"></div>
         <div id="t3d-labels-layer" style="position:absolute;inset:0;pointer-events:none;z-index:20;overflow:hidden;"></div>
-        <div style="position:absolute;bottom:20px;left:20px;right:76px;z-index:30;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:rgba(11,16,28,0.92);border:1px solid rgba(255,255,255,0.18);border-radius:14px;padding:10px 14px;color:#e2e8f0;font-size:11.5px;">
+        <div style="position:absolute;bottom:20px;left:20px;right:76px;z-index:30;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:rgba(11,16,28,0.92);border:1px solid rgba(56,189,248,0.28);border-radius:14px;padding:10px 14px;color:#e2e8f0;font-size:11.5px;backdrop-filter:blur(8px);">
             <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-                <span style="color:#38bdf8;font-weight:700;">✈ Vuelos:</span>
-                <button class="btn-paso-sv" onclick="volarAPunto3D(0.35, 1.15, 6.2)">🏠 Base Hábitat</button>
-                <button class="btn-paso-sv" onclick="volarAPunto3D(2.45, 1.05, 6.8)">🌊 Delta Neretva</button>
-                <button class="btn-paso-sv" onclick="volarAPunto3D(1.55, 0.85, 6.0)">🌋 Cráter Belva</button>
+                <span id="t3d-lbl-vuelos" style="color:#38bdf8;font-weight:700;">✈ Fly-to:</span>
+                <button id="t3d-btn-hab" class="btn-paso-sv" style="background:rgba(11,16,28,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.45);padding:6px 12px;font-size:11.5px;" onclick="volarAPunto3D(0.35, 1.15, 6.2)">🏠 Habitat Base</button>
+                <button id="t3d-btn-delta" class="btn-paso-sv" style="background:rgba(11,16,28,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.45);padding:6px 12px;font-size:11.5px;" onclick="volarAPunto3D(2.45, 1.05, 6.8)">📍 Neretva Delta</button>
+                <button id="t3d-btn-belva" class="btn-paso-sv" style="background:rgba(11,16,28,0.88);color:#7dd3fc;border:1px solid rgba(56,189,248,0.45);padding:6px 12px;font-size:11.5px;" onclick="volarAPunto3D(1.55, 0.85, 6.0)">🕳️ Belva Crater</button>
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
-                <span>🪨 Real</span>
-                <input id="slider-xray-3d" type="range" min="0" max="100" value="35" oninput="actualizarXRay3D(this.value)" style="width:80px;accent-color:#38bdf8;cursor:pointer;" title="Comparador Rayos X: Realista vs Topografía MOLA">
+                <span id="t3d-lbl-real">🪨 Real</span>
+                <input id="slider-xray-3d" type="range" min="0" max="100" value="35" oninput="actualizarXRay3D(this.value)" style="width:80px;accent-color:#38bdf8;cursor:pointer;" title="X-Ray Comparator: Real vs MOLA Elevation">
                 <span>🌈 MOLA</span>
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
-                <span>☀️ Sol:</span>
-                <input id="slider-sol-3d" type="range" min="6" max="18.5" step="0.5" value="12" oninput="actualizarHoraSol3D(this.value)" style="width:80px;accent-color:#f97316;cursor:pointer;" title="Hora del Sol en Marte (Amanecer → Atardecer Azul Mie)">
-                <span id="lbl-hora-sol" style="color:#fdba74;font-weight:700;">12:00</span>
+                <span id="t3d-lbl-sol">☀️ Sun:</span>
+                <input id="slider-sol-3d" type="range" min="6" max="18.5" step="0.5" value="16.5" oninput="actualizarHoraSol3D(this.value)" style="width:80px;accent-color:#f97316;cursor:pointer;" title="Mars Solar Time (Sunrise → Blue Sunset)">
+                <span id="lbl-hora-sol" style="color:#fdba74;font-weight:700;">16:30</span>
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
-                <button class="btn-paso-sv" style="background:rgba(34,211,238,0.22);border-color:#22d3ee;" onclick="dispararPulsoEscaner3D()" title="Atajo: Barra Espaciadora">📡 Pulso [Espacio]</button>
+                <button id="t3d-btn-pulso" class="btn-paso-sv" style="background:rgba(11,16,28,0.9);color:#ffffff;border:1px solid #22d3ee;padding:6px 12px;font-size:11.5px;" onclick="dispararPulsoEscaner3D()" title="Shortcut: Spacebar">📡 Pulse [Space]</button>
                 <span id="lbl-capa-3d" style="color:#67e8f9;font-weight:700;">HiRISE DEM</span>
-                <button class="btn-paso-sv" style="background:rgba(56,189,248,0.2);border-color:#38bdf8;" onclick="exportarSTLJezero()">🖨️ .STL</button>
+                <button id="t3d-btn-stl" class="btn-paso-sv" style="background:rgba(11,16,28,0.9);color:#ffffff;border:1px solid #38bdf8;padding:6px 12px;font-size:11.5px;" onclick="exportarSTLJezero()">🖨️ .STL</button>
             </div>
         </div>
         <div style="position:absolute;right:20px;bottom:24px;z-index:30;display:flex;flex-direction:column;gap:6px;">
@@ -1660,25 +1660,8 @@
             <button id="btn-g3d-mola" onclick="cambiarTexturaGlobo3D('mola')" style="padding:6px 11px;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-size:11.5px;font-weight:700;cursor:pointer;">🌈 Altitud MOLA</button>
         </div>
         <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:30;font-size:12px;backdrop-filter:blur(6px);">
-            <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">CÓDIGO DE COLORES • MISIONES</div>
-            <div style="display:flex;flex-direction:column;gap:7px;">
-                <div style="display:flex;align-items:flex-start;gap:8px;">
-                    <span style="width:11px;height:11px;border-radius:50%;background:#22c55e;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #22c55e;"></span>
-                    <div><strong>Verde — Zona Segura</strong><br><span style="color:#cbd5e1;font-size:11px;">Perseverance (Cráter Jezero). Sitio activo elegido para EVA humana.</span></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:8px;">
-                    <span style="width:11px;height:11px;border-radius:50%;background:#3b82f6;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #3b82f6;"></span>
-                    <div><strong>Azul — Operación Nominal</strong><br><span style="color:#cbd5e1;font-size:11px;">Curiosity (Cráter Gale). Ciencia continua sin fallos críticos.</span></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:8px;">
-                    <span style="width:11px;height:11px;border-radius:50%;background:#facc15;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #facc15;"></span>
-                    <div><strong>Amarillo — Precaución</strong><br><span style="color:#cbd5e1;font-size:11px;">InSight (Elysium). Degradación gradual de energía por polvo.</span></div>
-                </div>
-                <div style="display:flex;align-items:flex-start;gap:8px;">
-                    <span style="width:11px;height:11px;border-radius:50%;background:#ef4444;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #ef4444;"></span>
-                    <div><strong>Rojo — Fallo Crítico (NO-GO)</strong><br><span style="color:#cbd5e1;font-size:11px;">Spirit (&gt;20° pendiente) y Opportunity (0% energía). Base de nuestras alertas.</span></div>
-                </div>
-            </div>
+            <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">COLOR CODE • MISSIONS</div>
+            <div id="globo-ley-items" style="display:flex;flex-direction:column;gap:7px;"></div>
         </div>
                 <div style="position:absolute;right:20px;bottom:84px;z-index:30;display:flex;flex-direction:column;gap:6px;">
             <button onclick="zoomGlobo3D(-0.35)" title="Acercar" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:18px;font-weight:700;cursor:pointer;">+</button>
@@ -1686,11 +1669,11 @@
             <button onclick="resetVistaGlobo3D()" title="Vista orbital completa" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">⟲</button>
         </div>
         <div class="lista-misiones-3d" style="z-index:30;">
-            <button id="btn-globo-persev" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);" onclick="enfocarMision3D(18.44, 77.45, 'Perseverance (Cráter Jezero, 2021)', 'Sitio activo de exploración humana EVA • Base Octavia E. Butler.', 'Lección EVA: Terreno deltaico seguro con corredor UHF y muestras astrobiológicas.', true)">📍 Perseverance (Jezero)</button>
-            <button id="btn-globo-cur" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.', 'Lección EVA: Energía nuclear MMRTG independiente del polvo solar.', false)">Curiosity</button>
-            <button id="btn-globo-spi" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMision3D(-14.56, 175.47, 'Spirit (Cráter Gusev, 2009)', 'Atrapado permanentemente al cruzar arena blanda oculta.', 'Lección EVA: Por esto Mars Maps bloquea taludes >20° y dunas de baja inercia térmica.', false)">Spirit (Fallo Pendiente)</button>
-            <button id="btn-globo-opp" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMision3D(-1.94, 354.47, 'Opportunity (Meridiani, 2018)', 'Pérdida de contacto por agotamiento energético tras tormenta global de polvo.', 'Lección EVA: Exige reserva mínima NASA del 30% y anillo vivo de O₂.', false)">Opportunity (Fallo Energía)</button>
-            <button id="btn-globo-ins" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fde68a;border:1px solid rgba(250,204,21,0.45);" onclick="enfocarMision3D(4.50, 135.62, 'InSight (Elysium Planitia, 2022)', 'Degradación gradual de energía por acumulación de polvo en paneles.', 'Lección EVA: Monitoreo continuo de radiación y potencia antes de cada caminata.', false)">InSight</button>
+            <button id="btn-globo-persev" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#00ff9d;border:1px solid rgba(0,255,157,0.5);" onclick="enfocarMisionPorClave('persev')">📍 Perseverance (Jezero)</button>
+            <button id="btn-globo-cur" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#bae6fd;border:1px solid rgba(56,189,248,0.45);" onclick="enfocarMisionPorClave('cur')">Curiosity</button>
+            <button id="btn-globo-spi" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMisionPorClave('spi')">Spirit (Slope Fail)</button>
+            <button id="btn-globo-opp" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fecaca;border:1px solid rgba(239,68,68,0.5);" onclick="enfocarMisionPorClave('opp')">Opportunity (Power Fail)</button>
+            <button id="btn-globo-ins" class="btn-paso-sv" style="background:rgba(11,15,25,0.92);color:#fde68a;border:1px solid rgba(250,204,21,0.45);" onclick="enfocarMisionPorClave('ins')">InSight</button>
         </div>
     </div>
 
@@ -1920,8 +1903,9 @@
             const esTormenta = climaEspacial.estado_solar === "TORMENTA SOLAR";
             document.body.classList.toggle("tormenta-activa", esTormenta);
             btn.classList.toggle("tormenta", esTormenta);
+            const en = typeof idiomaActual !== "undefined" && idiomaActual === "en";
             btn.innerText = esTormenta
-                ? `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h) • Refugio ~6 min`
+                ? (en ? `⚡ SOLAR STORM (${climaEspacial.radiacion_msv_hora} mSv/h) • Shelter ~6 min` : `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h) • Refugio ~6 min`)
                 : `☀️ DONKI: ${climaEspacial.estado_solar} (${climaEspacial.radiacion_msv_hora} mSv/h)`;
         }
 
@@ -2873,9 +2857,10 @@
             const radTxt = (climaEspacial.radiacion_msv_hora || 0.028).toFixed(3);
             const base = puntosJezero.find(x => x.id === 1) || nodo;
             const rumboHab = nodo.id === 1 ? 0 : calcularRumboGrados(nodo, base);
-            setTextoId("hud-casco-o2", `O₂: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? "⚠ TORMENTA" : ""}`);
-            setTextoId("hud-casco-hab", `🏠 HÁBITAT: ${rumboHab}° • ${nodo.sin_comunicacion ? "📵 SIN UHF" : "📡 UHF OK"}`);
-            document.getElementById("sv-titulo").innerText = `${nodo.nombre} • Inclinación: ${nodo.pendiente}°`;
+            const enSV = idiomaActual === "en";
+            setTextoId("hud-casco-o2", `O₂: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? (enSV ? "⚠ STORM" : "⚠ TORMENTA") : ""}`);
+            setTextoId("hud-casco-hab", `🏠 ${enSV ? "HABITAT" : "HÁBITAT"}: ${rumboHab}° • ${nodo.sin_comunicacion ? (enSV ? "📵 NO UHF" : "📵 SIN UHF") : "📡 UHF OK"}`);
+            document.getElementById("sv-titulo").innerText = `${nodo.nombre} • ${enSV ? "Slope" : "Inclinación"}: ${nodo.pendiente}°`;
             document.getElementById("sv-subtitulo").innerText = nodo.valor_cientifico;
 
             // Pines cardinales flotando en su rumbo real dentro del giro 360°
@@ -2914,7 +2899,7 @@
                 const btn = document.createElement("button");
                 btn.className = "btn-paso-sv";
                 btn.style.cssText = "background:rgba(11,15,25,0.9);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);backdrop-filter:blur(6px);";
-                btn.innerText = `🧭 Siguiente parada en ruta: ${sigNodo.nombre.split("(")[0].trim()} • ${dSig} km (${azSig}°) →`;
+                btn.innerText = `🧭 ${enSV ? "Next route stop" : "Siguiente parada en ruta"}: ${sigNodo.nombre.split("(")[0].trim()} • ${dSig} km (${azSig}°) →`;
                 btn.onclick = () => mostrarStreetViewNodo(sigNodo);
                 cajaPasos.appendChild(btn);
             }
@@ -2975,7 +2960,7 @@
             const btn = document.getElementById("btn-audio-eva");
             if (evaAudioOn && evaAudioCtx) {
                 evaAudioCtx.close(); evaAudioCtx = null; evaAudioOn = false;
-                if (btn) btn.innerText = "🔊 Audio EVA";
+                if (btn) btn.innerText = idiomaActual === "en" ? "🔊 EVA Audio" : "🔊 Audio EVA";
                 return;
             }
             const AC = window.AudioContext || window.webkitAudioContext;
@@ -3011,7 +2996,7 @@
             src.connect(filt); filt.connect(gain); gain.connect(evaAudioCtx.destination);
             src.start();
             evaAudioOn = true;
-            if (btn) btn.innerText = "🔇 Silenciar EVA";
+            if (btn) btn.innerText = idiomaActual === "en" ? "🔇 Mute EVA" : "🔇 Silenciar EVA";
         }
 
         function cerrarStreetView() {
@@ -3096,31 +3081,43 @@
             t3dIniciado = true;
             const cont = document.getElementById("contenedor-terreno-3d");
             t3dScene = new THREE.Scene();
-            t3dScene.background = new THREE.Color(0x090d16);
-            t3dScene.fog = new THREE.FogExp2(0x1e130e, 0.035);
+            t3dScene.background = new THREE.Color(0x1a0e0a);
+            t3dScene.fog = new THREE.FogExp2(0x1a0e0a, 0.032);
 
             t3dCamera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 200);
             t3dRenderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
             t3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             t3dRenderer.setSize(cont.clientWidth, cont.clientHeight);
+            t3dRenderer.shadowMap.enabled = true;
+            t3dRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
             cont.appendChild(t3dRenderer.domElement);
 
-            const ambLight = new THREE.AmbientLight(0xffdec8, 0.62);
+            const ambLight = new THREE.AmbientLight(0xffdec8, 0.36);
             t3dScene.add(ambLight);
-            const sol = new THREE.DirectionalLight(0xfff0dd, 1.4);
-            sol.position.set(8, 12, 6);
+            const sol = new THREE.DirectionalLight(0xfff0dd, 1.85);
+            sol.castShadow = true;
+            sol.shadow.mapSize.width = 1024;
+            sol.shadow.mapSize.height = 1024;
+            sol.shadow.camera.near = 1;
+            sol.shadow.camera.far = 40;
+            sol.shadow.camera.left = -9;
+            sol.shadow.camera.right = 9;
+            sol.shadow.camera.top = 9;
+            sol.shadow.camera.bottom = -9;
             t3dScene.add(sol);
             window.actualizarHoraSol3D = function(hStr) {
                 const h = parseFloat(hStr);
                 const lbl = document.getElementById("lbl-hora-sol");
                 if (lbl) lbl.innerText = `${String(Math.floor(h)).padStart(2,"0")}:${h % 1 ? "30" : "00"}`;
                 const ang = ((h - 6) / 12.5) * Math.PI;
-                sol.position.set(Math.cos(ang) * 14, Math.max(1.2, Math.sin(ang) * 14), 5);
-                const esOcaso = h >= 16.5 || h <= 7.5;
-                t3dScene.background = new THREE.Color(esOcaso ? 0x101c33 : 0x26150e);
-                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x2a456b : 0x4a2618);
-                sol.color = new THREE.Color(esOcaso ? 0x93c5fd : 0xfff0dd);
+                sol.position.set(Math.cos(ang) * 14, Math.max(2.1, Math.sin(ang) * 13), 5.5);
+                const esOcaso = h >= 17.5 || h <= 7.0;
+                t3dScene.background = new THREE.Color(esOcaso ? 0x151828 : 0x1a0e0a);
+                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x1f283d : 0x26140e);
+                sol.color = new THREE.Color(esOcaso ? 0xa5d8ff : (h >= 15.5 || h <= 8.5 ? 0xffcfa3 : 0xfff0dd));
+                sol.intensity = (h >= 15.5 || h <= 8.5) ? 1.95 : 1.5;
             };
+            window.actualizarHoraSol3D(16.5);
 
             // Malla DEM 110x110 nítida con colores reales por elevación marciana
             const geo = new THREE.PlaneGeometry(14, 12, 110, 110);
@@ -3132,41 +3129,82 @@
                 const vy = alturaJezero3D(vx, vz);
                 pos.setY(i, vy);
                 const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
-                cols[i * 3] = 0.42 + t * 0.42;
-                cols[i * 3 + 1] = 0.22 + t * 0.24;
-                cols[i * 3 + 2] = 0.14 + t * 0.14;
+                cols[i * 3] = 0.46 + t * 0.44;
+                cols[i * 3 + 1] = 0.25 + t * 0.25;
+                cols[i * 3 + 2] = 0.16 + t * 0.15;
             }
             geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
             geo.computeVertexNormals();
 
-            // Textura real NASA Mars Trek + Comparador Rayos X (Viking <-> MOLA)
+            // Textura HD PIA24096 local + Comparador Rayos X (PIA24096 <-> MOLA)
             const t3dCanvas = document.createElement("canvas");
-            t3dCanvas.width = 512; t3dCanvas.height = 512;
+            t3dCanvas.width = 1024; t3dCanvas.height = 1024;
             const t3dCtx = t3dCanvas.getContext("2d");
-            t3dCtx.fillStyle = "#8c4a2f"; t3dCtx.fillRect(0, 0, 512, 512);
+            t3dCtx.fillStyle = "#8c4a2f"; t3dCtx.fillRect(0, 0, 1024, 1024);
             const t3dTex = new THREE.CanvasTexture(t3dCanvas);
+            t3dTex.anisotropy = Math.min(16, t3dRenderer.capabilities.getMaxAnisotropy() || 16);
             const imgVik = new Image(), imgMola = new Image();
             imgVik.crossOrigin = "anonymous"; imgMola.crossOrigin = "anonymous";
             let vikOk = false, molaOk = false;
             window.actualizarXRay3D = function(val) {
                 const alpha = (parseFloat(val) || 0) / 100;
-                if (vikOk) { t3dCtx.globalAlpha = 1; t3dCtx.drawImage(imgVik, 0, 0, 512, 512); }
-                if (molaOk && alpha > 0) { t3dCtx.globalAlpha = alpha; t3dCtx.drawImage(imgMola, 0, 0, 512, 512); }
+                if (vikOk) { t3dCtx.globalAlpha = 1; t3dCtx.drawImage(imgVik, 0, 0, 1024, 1024); }
+                if (molaOk && alpha > 0) { t3dCtx.globalAlpha = alpha; t3dCtx.drawImage(imgMola, 0, 0, 1024, 1024); }
                 t3dCtx.globalAlpha = 1;
                 t3dTex.needsUpdate = true;
             };
             imgVik.onload = () => { vikOk = true; window.actualizarXRay3D(document.getElementById("slider-xray-3d")?.value || 35); };
             imgMola.onload = () => { molaOk = true; window.actualizarXRay3D(document.getElementById("slider-xray-3d")?.value || 35); };
-            imgVik.src = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/7/50/183.jpg";
+            imgVik.src = "./jezero-hi-res.jpg";
             imgMola.src = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/6/25/91.jpg";
 
-            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.85, metalness: 0.04 });
+            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.86, metalness: 0.04 });
             window._t3dMeshGeo = geo;
-            t3dScene.add(new THREE.Mesh(geo, mat));
+            const terrainMesh = new THREE.Mesh(geo, mat);
+            terrainMesh.castShadow = true;
+            terrainMesh.receiveShadow = true;
+            t3dScene.add(terrainMesh);
+
+            // Falda / bloque geológico de maqueta holográfica en los 4 bordes
+            const baseY = -0.82;
+            const skirtVerts = [];
+            const pushWall = (pts) => {
+                for (let k = 0; k < pts.length - 1; k++) {
+                    const a = pts[k], b = pts[k + 1];
+                    skirtVerts.push(a.x, a.y, a.z, b.x, b.y, b.z, a.x, baseY, a.z);
+                    skirtVerts.push(b.x, b.y, b.z, b.x, baseY, b.z, a.x, baseY, a.z);
+                }
+            };
+            const segX = 56, segZ = 48;
+            const north = [], south = [], west = [], east = [];
+            for (let i = 0; i <= segX; i++) {
+                const vx = -7 + (14 * i) / segX;
+                north.push({ x: vx, y: alturaJezero3D(vx, -6), z: -6 });
+                south.push({ x: vx, y: alturaJezero3D(vx, 6), z: 6 });
+            }
+            for (let j = 0; j <= segZ; j++) {
+                const vz = -6 + (12 * j) / segZ;
+                west.push({ x: -7, y: alturaJezero3D(-7, vz), z: vz });
+                east.push({ x: 7, y: alturaJezero3D(7, vz), z: vz });
+            }
+            pushWall(north); pushWall(south); pushWall(west); pushWall(east);
+            const skirtGeo = new THREE.BufferGeometry();
+            skirtGeo.setAttribute("position", new THREE.Float32BufferAttribute(skirtVerts, 3));
+            skirtGeo.computeVertexNormals();
+            const skirtMat = new THREE.MeshStandardMaterial({ color: 0x161114, roughness: 0.92, metalness: 0.15, side: THREE.DoubleSide });
+            t3dScene.add(new THREE.Mesh(skirtGeo, skirtMat));
+
+            const basePlate = new THREE.Mesh(
+                new THREE.PlaneGeometry(14.04, 12.04),
+                new THREE.MeshBasicMaterial({ color: 0x0b1220, side: THREE.DoubleSide })
+            );
+            basePlate.rotation.x = -Math.PI / 2;
+            basePlate.position.y = baseY;
+            t3dScene.add(basePlate);
 
             const grid = new THREE.GridHelper(14, 28, 0x38bdf8, 0x1e293b);
-            grid.position.y = -0.58;
-            grid.material.opacity = 0.22;
+            grid.position.y = baseY - 0.01;
+            grid.material.opacity = 0.25;
             grid.material.transparent = true;
             t3dScene.add(grid);
 
@@ -3286,13 +3324,23 @@
 
             puntosJezero.forEach(pt => {
                 const { x, z } = latLngATerreno3D(pt.lat, pt.lng);
-                const y = alturaJezero3D(x, z) + 0.14;
+                const yBase = alturaJezero3D(x, z);
+                const yHead = yBase + 0.34;
                 const peligro = pt.pendiente > 20 || pt.sin_comunicacion;
                 const color = pt.id === 1 ? 0x22c55e : (peligro ? 0xef4444 : 0x38bdf8);
-                const pin = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshBasicMaterial({ color }));
-                pin.position.set(x, y, z);
+                const stem = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.012, 0.012, 0.34, 8),
+                    new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.72 })
+                );
+                stem.position.set(x, yBase + 0.17, z);
+                t3dRutaGroup.add(stem);
+                const pin = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.065, 16, 16),
+                    new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.85, roughness: 0.2 })
+                );
+                pin.position.set(x, yHead, z);
                 t3dRutaGroup.add(pin);
-                t3dPins.push({ pos: new THREE.Vector3(x, y + 0.18, z), nombre: pt.nombre.split("(")[0].trim(), peligro });
+                t3dPins.push({ pos: new THREE.Vector3(x, yHead + 0.16, z), nombre: pt.nombre.split("(")[0].trim(), peligro });
             });
 
             const sel = cacheAlternativas[alternativaActiva];
@@ -3302,17 +3350,17 @@
                 for (let i = 0; i < pts.length - 1; i++) {
                     const a = latLngATerreno3D(pts[i].lat, pts[i].lng);
                     const b = latLngATerreno3D(pts[i + 1].lat, pts[i + 1].lng);
-                    for (let s = 0; s <= 12; s++) {
-                        const f = s / 12;
+                    for (let s = 0; s <= 16; s++) {
+                        const f = s / 16;
                         const px = a.x + (b.x - a.x) * f, pz = a.z + (b.z - a.z) * f;
-                        vecs.push(new THREE.Vector3(px, alturaJezero3D(px, pz) + 0.14, pz));
+                        vecs.push(new THREE.Vector3(px, alturaJezero3D(px, pz) + 0.34, pz));
                     }
                 }
                 const curve = new THREE.CatmullRomCurve3(vecs);
-                const tube = new THREE.TubeGeometry(curve, 64, 0.045, 8, false);
+                const tube = new THREE.TubeGeometry(curve, 80, 0.042, 8, false);
                 const matT = new THREE.MeshBasicMaterial({ color: sel.viab.viable ? 0x38bdf8 : 0xef4444 });
                 t3dRutaGroup.add(new THREE.Mesh(tube, matT));
-                const astro3D = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+                const astro3D = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xfacc15, emissiveIntensity: 0.8 }));
                 astro3D.position.copy(vecs[0]).add(new THREE.Vector3(0, 0.12, 0));
                 t3dRutaGroup.add(astro3D);
                 if (document.getElementById("check-rover")?.checked) {
@@ -3653,10 +3701,37 @@
             return { viable, energia_restante: Math.max(0, rest), razones, detalle_historico: hist };
         }
 
-        let idiomaActual = "es";
+        const MISIONES_GLOBO_I18N = {
+            persev: { lat: 18.44, lon: 77.45, esJezero: true,
+                es: ["Perseverance (Cráter Jezero, 2021)", "Sitio activo de exploración humana EVA • Base Octavia E. Butler.", "Lección EVA: Terreno deltaico seguro con corredor UHF y muestras astrobiológicas."],
+                en: ["Perseverance (Jezero Crater, 2021)", "Active human EVA exploration site • Octavia E. Butler Base.", "EVA Lesson: Safe deltaic terrain with UHF corridor & astrobiology samples."] },
+            cur: { lat: -4.58, lon: 137.44, esJezero: false,
+                es: ["Curiosity (Cráter Gale, 2012)", "Operativo ascendiendo el Monte Sharp sin fallos críticos.", "Lección EVA: Energía nuclear MMRTG independiente del polvo solar."],
+                en: ["Curiosity (Gale Crater, 2012)", "Nominal ascent up Mount Sharp with zero critical failures.", "EVA Lesson: Nuclear MMRTG power independent of solar dust storms."] },
+            spi: { lat: -14.56, lon: 175.47, esJezero: false,
+                es: ["Spirit (Cráter Gusev, 2009)", "Atrapado permanentemente al cruzar arena blanda oculta.", "Lección EVA: Por esto Mars Maps bloquea taludes >20° y dunas de baja inercia térmica."],
+                en: ["Spirit (Gusev Crater, 2009)", "Permanently trapped in hidden soft regolith sand.", "EVA Lesson: Why Mars Maps blocks >20° slopes and low thermal-inertia dunes."] },
+            opp: { lat: -1.94, lon: 354.47, esJezero: false,
+                es: ["Opportunity (Meridiani, 2018)", "Pérdida de contacto por agotamiento energético tras tormenta global de polvo.", "Lección EVA: Exige reserva mínima NASA del 30% y anillo vivo de O₂."],
+                en: ["Opportunity (Meridiani, 2018)", "Lost contact after power depletion during global dust storm.", "EVA Lesson: Enforces NASA 30% minimum O₂ reserve & live safety ring."] },
+            ins: { lat: 4.50, lon: 135.62, esJezero: false,
+                es: ["InSight (Elysium Planitia, 2022)", "Degradación gradual de energía por acumulación de polvo en paneles.", "Lección EVA: Monitoreo continuo de radiación y potencia antes de cada caminata."],
+                en: ["InSight (Elysium Planitia, 2022)", "Gradual power degradation due to dust accumulation on solar arrays.", "EVA Lesson: Continuous radiation & power monitoring prior to every EVA."] }
+        };
+        function enfocarMisionPorClave(k) {
+            const m = MISIONES_GLOBO_I18N[k];
+            if (!m) return;
+            const t = idiomaActual === "en" ? m.en : m.es;
+            enfocarMision3D(m.lat, m.lon, t[0], t[1], t[2], m.esJezero);
+        }
+
+        let idiomaActual = "en";
         function setTextoId(id, txt) { const el = document.getElementById(id); if (el) el.innerText = txt; }
         function toggleIdioma() {
-            idiomaActual = idiomaActual === "es" ? "en" : "es";
+            aplicarIdioma(idiomaActual === "es" ? "en" : "es");
+        }
+        function aplicarIdioma(lang) {
+            idiomaActual = lang;
             const en = idiomaActual === "en";
             document.documentElement.lang = idiomaActual;
             setTextoId("btn-lang", en ? "🌐 ES" : "🌐 EN");
@@ -3716,10 +3791,55 @@
             setTextoId("tab-ligero", en ? "🏃 Light" : "🏃 Ligero");
             setTextoId("tab-xemu", "🧑‍🚀 xEMU");
             setTextoId("tab-rover", en ? "🚙 With Rover" : "🚙 Con Rover");
-            setTextoId("btn-globo-persev", en ? "📍 Perseverance (Jezero)" : "📍 Perseverance (Jezero)");
+            setTextoId("btn-globo-persev", "📍 Perseverance (Jezero)");
             setTextoId("btn-globo-spi", en ? "Spirit (Slope Fail)" : "Spirit (Fallo Pendiente)");
             setTextoId("btn-globo-opp", en ? "Opportunity (Power Fail)" : "Opportunity (Fallo Energía)");
             setTextoId("btn-globo-aterrizar", en ? "🚀 Descend to EVA Map (Jezero)" : "🚀 Descender al Mapa EVA (Jezero)");
+            setTextoId("btn-g3d-viking", en ? "🪨 Viking Color" : "🪨 Color Viking");
+            setTextoId("btn-g3d-mola", en ? "🌈 MOLA Elevation" : "🌈 Altitud MOLA");
+            const leyItems = document.getElementById("globo-ley-items");
+            if (leyItems) {
+                leyItems.innerHTML = en ? `
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#22c55e;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #22c55e;"></span><div><strong>Green — Safe Zone</strong><br><span style="color:#cbd5e1;font-size:11px;">Perseverance (Jezero Crater). Active human EVA landing site.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#3b82f6;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #3b82f6;"></span><div><strong>Blue — Nominal Ops</strong><br><span style="color:#cbd5e1;font-size:11px;">Curiosity (Gale Crater). Continuous science without critical faults.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#facc15;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #facc15;"></span><div><strong>Yellow — Caution</strong><br><span style="color:#cbd5e1;font-size:11px;">InSight (Elysium). Gradual power loss from dust accumulation.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#ef4444;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #ef4444;"></span><div><strong>Red — Critical Fault (NO-GO)</strong><br><span style="color:#cbd5e1;font-size:11px;">Spirit (&gt;20° slope) &amp; Opportunity (0% power). Basis of our alerts.</span></div></div>` : `
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#22c55e;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #22c55e;"></span><div><strong>Verde — Zona Segura</strong><br><span style="color:#cbd5e1;font-size:11px;">Perseverance (Cráter Jezero). Sitio activo elegido para EVA humana.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#3b82f6;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #3b82f6;"></span><div><strong>Azul — Operación Nominal</strong><br><span style="color:#cbd5e1;font-size:11px;">Curiosity (Cráter Gale). Ciencia continua sin fallos críticos.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#facc15;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #facc15;"></span><div><strong>Amarillo — Precaución</strong><br><span style="color:#cbd5e1;font-size:11px;">InSight (Elysium). Degradación gradual de energía por polvo.</span></div></div>
+                    <div style="display:flex;align-items:flex-start;gap:8px;"><span style="width:11px;height:11px;border-radius:50%;background:#ef4444;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #ef4444;"></span><div><strong>Rojo — Fallo Crítico (NO-GO)</strong><br><span style="color:#cbd5e1;font-size:11px;">Spirit (&gt;20° pendiente) y Opportunity (0% energía). Base de nuestras alertas.</span></div></div>`;
+            }
+            setTextoId("t3d-kicker", en ? "3D MODEL: NASA MOLA / HIRISE + ESA MARS EXPRESS HRSC" : "MODELO 3D: NASA MOLA / HIRISE + ESA MARS EXPRESS HRSC");
+            setTextoId("t3d-titulo", en ? "Jezero Crater • Interactive 3D Terrain" : "Cráter Jezero • Terreno 3D Interactivo");
+            setTextoId("t3d-desc", en ? "Drag to tilt & orbit • Scroll to zoom • Live EVA route" : "Arrastra para inclinar y orbitar • Rueda del mouse para acercar • Ruta EVA en vivo");
+            setTextoId("t3d-btn-auto", en ? "⟳ Auto-orbit" : "⟳ Auto-órbita");
+            setTextoId("t3d-btn-cerrar", en ? "✕ Back to Map" : "✕ Volver al Mapa");
+            setTextoId("t3d-lbl-vuelos", en ? "✈ Fly-to:" : "✈ Vuelos:");
+            setTextoId("t3d-btn-hab", en ? "🏠 Habitat Base" : "🏠 Base Hábitat");
+            setTextoId("t3d-btn-delta", en ? "📍 Neretva Delta" : "📍 Delta Neretva");
+            setTextoId("t3d-btn-belva", en ? "🕳️ Belva Crater" : "🕳️ Cráter Belva");
+            setTextoId("t3d-lbl-real", en ? "🪨 Real" : "🪨 Real");
+            setTextoId("t3d-lbl-sol", en ? "☀️ Sun:" : "☀️ Sol:");
+            setTextoId("t3d-btn-pulso", en ? "📡 Pulse [Space]" : "📡 Pulso [Espacio]");
+            setTextoId("sv-btn-volver", en ? "✕ Back to Map" : "✕ Volver al mapa");
+            setTextoId("btn-audio-eva", evaAudioOn ? (en ? "🔇 Mute EVA" : "🔇 Silenciar EVA") : (en ? "🔊 EVA Audio" : "🔊 Audio EVA"));
+            setTextoId("btn-toggle-raw", en ? "📷 Real Site Photos" : "📷 Fotos reales del sitio");
+            setTextoId("sv-raw-titulo", en ? "📷 REAL SITE PHOTOS" : "📷 FOTOS REALES DEL SITIO");
+            setTextoId("sv-btn-izq", en ? "◀ Turn Left" : "◀ Girar Izq");
+            setTextoId("sv-btn-sig", en ? "🎯 Next Stop" : "🎯 Siguiente Parada");
+            setTextoId("sv-btn-der", en ? "Turn Right ▶" : "Girar Der ▶");
+            setTextoId("cuff-sec-lbl", en ? "WAYPOINTS, BEARINGS & GEOLOGICAL TARGETS:" : "TRAMOS, RUMBOS Y OBJETIVOS GEOLÓGICOS:");
+            setTextoId("cuff-btn-print", en ? "🖨️ Print / Save PDF" : "🖨️ Imprimir / Guardar PDF");
+            setTextoId("cuff-btn-close", en ? "Close" : "Cerrar");
+            setTextoId("cb-kicker", en ? "AUDITABLE SCIENTIFIC TRANSPARENCY" : "TRANSPARENCIA CIENTÍFICA AUDITABLE");
+            setTextoId("cb-titulo", en ? "White-Box: Live Physics Equations" : "Caja Blanca: Ecuaciones en Vivo");
+            setTextoId("chaos-kicker", en ? "⚡ EMERGENCY SIMULATOR (CHAOS TEST)" : "⚡ SIMULADOR DE EMERGENCIAS (CHAOS TEST)");
+            setTextoId("chaos-desc", en ? "Inject a live anomaly to verify real-time survival recalculation:" : "Dispara una falla en vivo para comprobar el recálculo físico de supervivencia:");
+            setTextoId("chaos-btn-o2", en ? "🫁 Suit O₂ Leak (-35% immediate tank drop)" : "🫁 Fuga de O₂ en traje (-35% tanque inmediato)");
+            setTextoId("chaos-btn-storm", en ? "☀️ CME Solar Storm (0.85 mSv/h • Alert S3)" : "☀️ Tormenta Solar CME (0.85 mSv/h • Alerta S3)");
+            setTextoId("chaos-btn-uhf", en ? "📡 UHF Link Loss (Enforce safe corridor)" : "📡 Pérdida de enlace UHF (Forzar corredor seguro)");
+            setTextoId("chaos-btn-reset", en ? "↺ Restore Nominal EVA (Safe Mode)" : "↺ Restaurar EVA Nominal (Modo Seguro)");
+            setTextoId("btn-detener-tour", en ? "⏹ Stop Tour" : "⏹ Detener Tour");
             setCarruselColapsado(document.body.classList.contains("carrusel-oculto"));
             cargarClimaEspacial();
             ejecutarCalculoGoogleMaps();
@@ -3946,7 +4066,7 @@
             }
             dibujarNodosBase();
             await cargarClimaEspacial();
-            ejecutarCalculoGoogleMaps();
+            aplicarIdioma(idiomaActual);
         }
 
         iniciar();
