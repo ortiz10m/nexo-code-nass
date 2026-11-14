@@ -927,6 +927,45 @@
             50% { box-shadow: 0 0 0 9px rgba(255, 255, 255, 0), 0 4px 14px rgba(0, 0, 0, 0.6); }
         }
 
+    
+        /* ===== Carrusel visual de lugares estilo NASA Eyes / Google Earth ===== */
+        #carrusel-lugares {
+            position: absolute;
+            bottom: 58px;
+            left: 410px;
+            right: 72px;
+            z-index: 995;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 4px 2px 6px;
+            scroll-behavior: smooth;
+            transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #carrusel-lugares::-webkit-scrollbar { height: 5px; }
+        #carrusel-lugares::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 99px; }
+        body.panel-oculto #carrusel-lugares { left: 108px; }
+        .lugar-card {
+            flex: 0 0 176px;
+            background: rgba(11, 16, 28, 0.90);
+            border: 1.5px solid rgba(255, 255, 255, 0.16);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+        }
+        .lugar-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+        .lugar-card.activo { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
+        .lugar-card.peligro.activo { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
+        .lugar-card-img { width: 100%; height: 64px; object-fit: cover; display: block; transform: scale(1.18); }
+        .lugar-card-body { padding: 7px 9px 8px; }
+        .lugar-card-nom { font-size: 11.5px; font-weight: 700; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lugar-card-meta { font-size: 10px; margin-top: 2px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        @media (max-width: 768px) {
+            #carrusel-lugares { display: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -1116,6 +1155,8 @@
         <span>🔴 Peligro (&gt;20° / Sin UHF)</span>
         <span>🖱️ Clic derecho: Ruta libre</span>
     </div>
+
+    <div id="carrusel-lugares"></div>
 
     <div id="menu-clic-derecho" class="menu-contextual">
         <div class="menu-item" onclick="fijarPuntoLibre('origen')">🟢 Salir caminando desde aquí</div>
@@ -1563,6 +1604,43 @@
             s2.value = "7";
         }
 
+        function renderizarCarruselLugares(destIdActivo) {
+            const cont = document.getElementById("carrusel-lugares");
+            if (!cont || !puntosJezero.length) return;
+            const en = idiomaActual === "en";
+            const sitios = puntosJezero.filter(pt => pt.id !== 1);
+            cont.innerHTML = sitios.map(pt => {
+                const pel = pt.pendiente > 20 || pt.sin_comunicacion;
+                const foto = obtenerFotoNodoNASA(pt).url;
+                const nom = pt.nombre.split("(")[0].trim();
+                const estado = pel
+                    ? (pt.sin_comunicacion ? (en ? "📵 No UHF" : "📵 Sin UHF") : `⚠ ${pt.pendiente}°`)
+                    : (en ? `✅ ${pt.pendiente}° Safe` : `✅ ${pt.pendiente}° Seguro`);
+                const act = pt.id === destIdActivo ? "activo" : "";
+                return `
+                    <div class="lugar-card ${pel ? "peligro" : ""} ${act}" onclick="seleccionarLugarCarrusel(${pt.id})">
+                        <div style="overflow:hidden;height:64px;"><img class="lugar-card-img" src="${foto}" alt="${nom}" loading="lazy"></div>
+                        <div class="lugar-card-body">
+                            <div class="lugar-card-nom">${nom}</div>
+                            <div class="lugar-card-meta" style="color:${pel ? "#fca5a5" : "#86efac"};">
+                                <span>${estado}</span>
+                                <span style="color:#94a3b8;">${pt.elevacion_m ?? -2500}m</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function seleccionarLugarCarrusel(id) {
+            puntoLibreDestino = null;
+            const s2 = document.getElementById("select-destino");
+            if (s2) s2.value = String(id);
+            ejecutarCalculoGoogleMaps();
+            const pt = puntosJezero.find(x => x.id === id);
+            if (pt) mapa.panTo([pt.lat, pt.lng], { animate: true, duration: 0.6 });
+        }
+
         function togglePanel() {
             const oculto = document.body.classList.toggle("panel-oculto");
             const btnAbrir = document.getElementById("btn-abrir-panel");
@@ -1732,6 +1810,11 @@
                     icon: L.divIcon({ className: "poi-wrap", iconSize: [0, 0], html: '<div class="pin-ab pin-b">B</div>' })
                 }).addTo(capaRutas);
                 Object.values(window._poiMarkers || {}).forEach(mk => mk.getElement()?.classList.remove("en-ruta"));
+                pinCaminante = L.marker([pIni.lat, pIni.lng], {
+                    zIndexOffset: 1100,
+                    interactive: false,
+                    icon: L.divIcon({ className: "globo-wrapper", iconSize: null, html: '<div class="astronauta-pin" title="Astronauta EVA">🧑‍🚀</div>' })
+                }).addTo(capaRutas);
                 pts.forEach(pt => window._poiMarkers?.[pt.id]?.getElement()?.classList.add("en-ruta"));
 
                 pinOrigenDrag.on("dragend", (e) => { coordClicDerecho = e.target.getLatLng(); fijarPuntoLibre("origen"); });
@@ -1795,6 +1878,7 @@
                 if (imgEl) imgEl.src = fotoInfo.url;
                 if (nomEl) nomEl.innerText = destNodo.nombre.split("(")[0].trim();
             }
+            renderizarCarruselLugares(pts[pts.length - 1]?.id);
             const itCont = document.getElementById("itinerario-pasos");
             if (itCont) {
                 itCont.innerHTML = pts.map((p, i) => {
