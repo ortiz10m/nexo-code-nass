@@ -32,7 +32,8 @@
 
         /* Tono cálido marciano equilibrado sin quemar blancos */
         .capa-ctx {
-            filter: sepia(0.36) hue-rotate(-24deg) saturate(1.22) contrast(1.06) brightness(0.92);
+            mix-blend-mode: soft-light;
+            filter: contrast(1.15);
         }
         #mapa.zoom-lejos .poi:not(.en-ruta):not(:hover) .poi-lbl {
             display: none;
@@ -1323,7 +1324,7 @@
         // CTX global 5 m/px (servicio oficial que usa NASA Mars Trek por dentro: tiles 512 px)
         const capaCtx5m = L.tileLayer(
             "https://astro.arcgis.com/arcgis/rest/services/OnMars/CTX/MapServer/tile/{z}/{y}/{x}",
-            { tileSize: 512, zoomOffset: -1, minZoom: 8, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
+            { tileSize: 512, zoomOffset: -1, minZoom: 8, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, opacity: 0.48, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
         );
 
         const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
