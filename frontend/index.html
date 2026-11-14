@@ -32,7 +32,9 @@
 
         /* Tono cálido marciano equilibrado sin quemar blancos */
         .capa-jezero-hd {
-            filter: contrast(1.08) saturate(1.14) brightness(0.92);
+            filter: hue-rotate(-14deg) saturate(0.86) contrast(1.06) brightness(0.86);
+            -webkit-mask-image: radial-gradient(ellipse 68% 66% at 50% 50%, #000 50%, transparent 97%);
+            mask-image: radial-gradient(ellipse 68% 66% at 50% 50%, #000 50%, transparent 97%);
         }
         .mars-tactical-overlay {
             position: fixed; inset: 0; pointer-events: none; z-index: 400;
@@ -1394,7 +1396,7 @@
             inertiaDeceleration: 2600,
             zoomControl: false,
             attributionControl: false,
-            minZoom: 2,
+            minZoom: 7,
             maxZoom: 14,
             maxBounds: [[-90, -180], [90, 180]],
             maxBoundsViscosity: 1.0
@@ -1438,7 +1440,7 @@
         // Mosaico oficial NASA/JPL-Caltech PIA24096 del Cráter Jezero completo (cero costuras, nitidez local)
         const capaCtx5m = L.imageOverlay(
             "./jezero-hi-res.jpg",
-            [[18.28, 77.16], [18.62, 77.62]],
+            [[18.02, 76.92], [18.88, 78.02]],
             { opacity: 0.96, className: "capa-jezero-hd", attribution: "NASA/JPL-Caltech Jezero Crater (PIA24096)" }
         );
 
@@ -2099,7 +2101,7 @@
             { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~medium.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
             { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
             { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~medium.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA24483/PIA24483~medium.jpg", titulo: "Base Octavia E. Butler", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~medium.jpg", titulo: "Base Octavia E. Butler", cam: "Mastcam-Z" },
             { url: "https://images-assets.nasa.gov/image/PIA15691/PIA15691~medium.jpg", titulo: "Horizonte Marciano HD", cam: "Mastcam" }
         ];
         function obtenerFotoNodoNASA(nodo) {
