@@ -42,12 +42,12 @@
 
         /* Top bar */
         .hud-top {
-            position: fixed; top: 0; left: 0; right: 0; height: 56px;
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 36px;
-            background: rgba(5, 8, 15, 0.92);
+            padding: 0 32px;
+            background: rgba(5, 8, 15, 0.95);
             backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--hairline);
+            border-bottom: 1px solid rgba(56, 189, 248, 0.35);
             z-index: 100;
         }
         .hud-brand {
@@ -55,9 +55,39 @@
             font-weight: 900; font-size: 15px; letter-spacing: 1.5px; text-transform: uppercase;
         }
         .hud-brand img { width: 26px; height: 26px; }
-        .hud-brand span.sub {
-            color: #cbd5e1; font-family: var(--mono); font-size: 12px; font-weight: 600;
-            padding-left: 12px; border-left: 1px solid var(--hairline);
+        .deck-badge {
+            background: rgba(245, 158, 11, 0.16);
+            border: 1px solid rgba(245, 158, 11, 0.55);
+            color: #fcd34d;
+            font-family: var(--mono);
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 5px 11px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+        .top-slide-indicator {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            padding: 5px 14px; border-radius: 8px;
+        }
+        .top-slide-text {
+            font-family: var(--mono); font-size: 13px; font-weight: 900;
+            color: var(--cyan); letter-spacing: 1.2px;
+        }
+        .num-tabs { display: flex; gap: 4px; }
+        .num-tab {
+            width: 26px; height: 24px; border-radius: 5px;
+            border: 1px solid var(--hairline);
+            background: rgba(5, 8, 15, 0.8);
+            color: var(--muted); font-family: var(--mono); font-size: 11.5px; font-weight: 800;
+            cursor: pointer; transition: all 0.18s;
+        }
+        .num-tab:hover { border-color: var(--cyan); color: #fff; }
+        .num-tab.active {
+            background: var(--cyan); color: #05080f; border-color: var(--cyan);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
         }
         .hud-actions { display: flex; align-items: center; gap: 10px; }
         .hud-pill {
@@ -70,9 +100,18 @@
         }
         .hud-pill:hover { border-color: var(--cyan); color: #fff; }
         .hud-pill.primary {
-            background: var(--cyan); color: #05080f; border-color: var(--cyan); font-weight: 800;
+            background: var(--cyan); color: #05080f; border-color: var(--cyan); font-weight: 900;
         }
         .hud-pill.primary:hover { background: #7dd3fc; }
+        .btn-next-big {
+            font-family: var(--mono); font-size: 13px; font-weight: 900;
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: #04130d; border: 1px solid #34d399;
+            padding: 8px 18px; border-radius: 6px; cursor: pointer;
+            box-shadow: 0 0 18px rgba(16, 185, 129, 0.35);
+            transition: transform 0.15s ease, filter 0.15s ease;
+        }
+        .btn-next-big:hover { transform: translateX(2px); filter: brightness(1.1); }
 
         /* Slide viewport */
         .deck { position: relative; width: 100vw; height: 100vh; z-index: 2; }
@@ -444,9 +483,14 @@
         <div class="hud-brand">
             <img src="./nexo-logo.svg" alt="Nexo Code">
             <span>NEXO-ARES</span>
-            <span class="sub">NASA SPACE APPS • MARS EVA SURVIVAL OS • TEAM NEXO CODE</span>
+            <span class="deck-badge">📊 7-SLIDE PRESENTATION DECK</span>
+        </div>
+        <div class="top-slide-indicator">
+            <span id="top-slide-counter" class="top-slide-text">SLIDE 1 OF 7</span>
+            <div id="top-num-tabs" class="num-tabs"></div>
         </div>
         <div class="hud-actions">
+            <button class="btn-next-big" onclick="cambiarSlide(1)">NEXT SLIDE →</button>
             <a class="hud-pill primary" href="./index.html">🚀 Launch Live Simulator</a>
         </div>
     </header>
@@ -461,12 +505,21 @@
                 <div class="s1-bg"></div>
                 <div class="s1-main">
                     <div>
-                        <div class="s1-tag">01 // MISSION BRIEFING • JEZERO CRATER (18.44°N, 77.45°E)</div>
+                        <div class="s1-tag">SLIDE 1 OF 7 // EXECUTIVE MISSION BRIEFING • JEZERO CRATER</div>
                         <h1 class="s1-title">NEXO-ARES</h1>
                         <div class="s1-subtitle">Astronaut Routing &amp; Extravehicular Survival Operating System</div>
                         <p class="s1-lead">
                             Satellite maps show where rocks are—<strong>not whether an astronaut inside a pressurized NASA xEMU spacesuit will survive walking there</strong>. <strong>NEXO-ARES</strong> fuses real NASA/JPL telemetry with deterministic biomedical physics so astronauts explore Jezero Crater and return alive.
                         </p>
+                        <div style="margin-top:16px;padding:14px 18px;background:rgba(16,185,129,0.12);border-left:4px solid var(--green);border-radius:0 8px 8px 0;">
+                            <div style="font-family:var(--mono);font-size:11.5px;color:var(--green);font-weight:900;letter-spacing:1px;">★ CORE VALUE PROPOSITION // THE NEXO-ARES BREAKTHROUGH</div>
+                            <div style="font-size:14.5px;color:#f8fafc;margin-top:4px;line-height:1.45;">
+                                Unlike passive orbital viewers (<em>Mars Trek</em>) or hallucinating AI wrappers, <strong>NEXO-ARES is the first deterministic life-support navigation OS</strong>: uniting true Martian geodesy, xEMU metabolic O₂ physics, &gt;20° slope lockout, live DONKI radiation, 3D <code>.STL</code> terrain printing, and a 360° AR helmet visor.
+                            </div>
+                        </div>
+                        <div style="margin-top:16px;display:flex;gap:12px;align-items:center;">
+                            <button class="btn-next-big" style="padding:12px 24px;font-size:14px;" onclick="cambiarSlide(1)">▶ START 7-SLIDE PRESENTATION (NEXT SLIDE →)</button>
+                        </div>
                     </div>
 
                     <div class="s1-right-cards">
@@ -1007,28 +1060,37 @@
 
     <!-- BOTTOM NAVIGATION BAR -->
     <footer class="hud-bottom">
-        <div style="font-family:var(--mono);font-size:12.5px;color:#cbd5e1;font-weight:700;">
-            <span id="slide-counter" style="color:var(--cyan);">01 // 07</span>
-            <span style="margin-left:14px;">Use ◀ ▶ Arrow Keys or buttons to navigate</span>
+        <div style="font-family:var(--mono);font-size:13px;color:#f8fafc;font-weight:800;display:flex;align-items:center;gap:12px;">
+            <span id="slide-counter" style="background:rgba(56,189,248,0.18);border:1px solid var(--cyan);color:var(--cyan);padding:4px 12px;border-radius:6px;">SLIDE 1 OF 7</span>
+            <span style="color:#cbd5e1;font-size:12px;">Interactive 7-Slide Presentation • Use ◀ ▶ Arrow Keys or click Next Slide</span>
         </div>
         <div class="nav-dots" id="nav-dots"></div>
         <div class="nav-controls">
-            <button class="nav-btn" onclick="cambiarSlide(-1)">◀ PREV</button>
-            <button class="nav-btn" onclick="cambiarSlide(1)">NEXT ▶</button>
+            <button class="nav-btn" onclick="cambiarSlide(-1)">← PREV SLIDE</button>
+            <button class="btn-next-big" onclick="cambiarSlide(1)">NEXT SLIDE →</button>
         </div>
     </footer>
 
     <script>
         const slides = Array.from(document.querySelectorAll(".slide"));
         const dotsWrap = document.getElementById("nav-dots");
+        const topTabsWrap = document.getElementById("top-num-tabs");
         const counterEl = document.getElementById("slide-counter");
+        const topCounterEl = document.getElementById("top-slide-counter");
         let idxActual = 0;
 
         function renderDots() {
             dotsWrap.innerHTML = slides.map((_, i) =>
-                `<button class="nav-dot ${i === idxActual ? "active" : ""}" onclick="irASlide(${i})" title="Slide ${i + 1}"></button>`
+                `<button class="nav-dot ${i === idxActual ? "active" : ""}" onclick="irASlide(${i})" title="Slide ${i + 1} of ${slides.length}"></button>`
             ).join("");
-            counterEl.innerText = `0${idxActual + 1} // 0${slides.length}`;
+            if (topTabsWrap) {
+                topTabsWrap.innerHTML = slides.map((_, i) =>
+                    `<button class="num-tab ${i === idxActual ? "active" : ""}" onclick="irASlide(${i})" title="Go to Slide ${i + 1}">${i + 1}</button>`
+                ).join("");
+            }
+            const label = `SLIDE ${idxActual + 1} OF ${slides.length}`;
+            counterEl.innerText = label;
+            if (topCounterEl) topCounterEl.innerText = label;
         }
 
         function irASlide(n) {
