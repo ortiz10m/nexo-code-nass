@@ -2586,6 +2586,7 @@
         }
 
         async function ejecutarCalculoGoogleMaps() {
+            if (!puntosJezero || !puntosJezero.length) puntosJezero = RESPALDO_PUNTOS;
             const inicio_id = parseInt(document.getElementById("select-inicio").value || "1");
             const destino_id = parseInt(document.getElementById("select-destino").value || "8");
             const energia = parseFloat(document.getElementById("slider-energia").value || "100");
@@ -2614,8 +2615,10 @@
                 renderizarAlternativasGMaps(sonDistintas);
             } catch (err) {
                 console.error("Pasando a motor local:", err);
-                modoLocal = true;
-                ejecutarCalculoGoogleMaps();
+                if (!modoLocal) {
+                    modoLocal = true;
+                    return ejecutarCalculoGoogleMaps();
+                }
             }
         }
 
@@ -4653,8 +4656,7 @@
                 if (bar) bar.style.display = "none";
             });
         });
-        elegirModoEquipo("xemu");
-        iniciar();
+        iniciar().then(() => elegirModoEquipo("xemu"));
     </script>
 </body>
 </html>
