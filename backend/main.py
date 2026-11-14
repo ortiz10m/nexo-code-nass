@@ -17,7 +17,7 @@ from viabilidad import evaluar_mision, comparar_mision_historica
 from nasa_apis import obtener_clima_espacial, obtener_fotos_perseverance
 
 app = FastAPI(
-    title="Nexo Code - Marswalk Tactical Survival API",
+    title="NEXO-ARES - Tactical Mars EVA Survival API",
     version="2.0.0"
 )
 
@@ -73,7 +73,7 @@ class EvaluacionRequest(BaseModel):
 def read_root():
     return {
         "status": "ok",
-        "proyecto": "Nexo Code - Neiva, Colombia",
+        "proyecto": "NEXO-ARES by Nexo Code - Neiva, Colombia",
         "motor": "A* Geodésico Marciano + CSRM Viabilidad Humana"
     }
 
