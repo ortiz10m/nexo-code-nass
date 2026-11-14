@@ -252,21 +252,38 @@
         .alerta-box ul { padding-left: 16px; margin-top: 4px; }
 
         .historia-card {
-            background: #fff8e1;
-            border: 1px solid #ffe082;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
             border-radius: 10px;
             padding: 10px 12px;
             font-size: 12px;
             line-height: 1.45;
+            color: #334155;
         }
 
         .historia-card strong {
-            color: #b06000;
+            color: #0f172a;
             display: block;
             margin-bottom: 2px;
         }
 
-        .acciones-inferiores { display: flex; gap: 8px; }
+        .sec-titulo {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: -4px;
+        }
+
+        .acciones-inferiores {
+            display: flex;
+            gap: 8px;
+            padding: 10px 16px;
+            border-top: 1px solid #e2e8f0;
+            background: #fff;
+            flex-shrink: 0;
+        }
 
         .btn-azul {
             flex: 1;
@@ -789,6 +806,7 @@
         </div>
 
         <div class="gmaps-body">
+            <div class="sec-titulo" id="sec-plss">1. Soporte Vital (Traje xEMU)</div>
             <div class="panel-oxigeno">
                 <div class="oxigeno-top">
                     <span><span id="lbl-ox-ini">Oxígeno inicial del traje:</span> <strong id="lbl-oxigeno">100%</strong></span>
@@ -842,11 +860,10 @@
                 <strong id="hist-titulo">Comparación histórica NASA</strong>
                 <span id="hist-texto">Cargando archivo de misiones marcianas...</span>
             </div>
-
-            <div class="acciones-inferiores">
-                <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
-                <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">🧑‍🚀 Street View 360°</button>
-            </div>
+        </div>
+        <div class="acciones-inferiores">
+            <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">? Caminar ruta</button>
+            <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">????? Street View 360?</button>
         </div>
     </aside>
 
@@ -1295,7 +1312,7 @@
             recentrarJezero();
 
             s1.value = "1";
-            s2.value = "8";
+            s2.value = "7";
         }
 
         function recentrarJezero() {
