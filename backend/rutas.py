@@ -4,7 +4,7 @@ from typing import Dict, List, Any
 
 # Radio ecuatorial real de Marte en kilómetros (NASA Planetary Fact Sheet)
 RADIO_MARTE_KM = 3396.2
-CAPACIDAD_PLSS_KCAL = 1800.0
+CAPACIDAD_PLSS_KCAL = 3600.0
 VELOCIDAD_BASE_KMH = 3.2
 
 

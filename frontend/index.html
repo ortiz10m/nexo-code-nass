@@ -805,6 +805,7 @@
                 </div>
             </div>
 
+            <div class="sec-titulo" id="sec-equipo">2. Equipo Científico y Movilidad</div>
             <div class="fila-equipo">
                 <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Peso del equipo científico">
                     <option value="0">🎒 Traje estándar (0 kg)</option>
@@ -1333,7 +1334,7 @@
                 ruta.ruta_calculada.unshift(puntoLibreOrigen);
                 ruta.distancia_km = +(ruta.distancia_km + extraKm).toFixed(2);
                 ruta.kcal_totales = Math.round(ruta.kcal_totales + extraKm * 110);
-                ruta.energia_requerida = +((ruta.kcal_totales / 1800) * 100).toFixed(1);
+                ruta.energia_requerida = +((ruta.kcal_totales / 3600) * 100).toFixed(1);
                 ruta.pendiente_maxima = Math.max(ruta.pendiente_maxima, puntoLibreOrigen.pendiente);
                 ruta.cruza_blackout = Boolean(ruta.cruza_blackout || puntoLibreOrigen.sin_comunicacion);
             }
@@ -1344,7 +1345,7 @@
                 ruta.ruta_calculada.push(puntoLibreDestino);
                 ruta.distancia_km = +(ruta.distancia_km + extraKm).toFixed(2);
                 ruta.kcal_totales = Math.round(ruta.kcal_totales + extraKm * 110);
-                ruta.energia_requerida = +((ruta.kcal_totales / 1800) * 100).toFixed(1);
+                ruta.energia_requerida = +((ruta.kcal_totales / 3600) * 100).toFixed(1);
                 ruta.pendiente_maxima = Math.max(ruta.pendiente_maxima, puntoLibreDestino.pendiente);
                 ruta.cruza_blackout = Boolean(ruta.cruza_blackout || puntoLibreDestino.sin_comunicacion);
                 ruta.tiempo_estimado_min = Math.round((ruta.distancia_km / 2.6) * 60);
@@ -1905,7 +1906,7 @@
                 ruta_calculada: pasos,
                 distancia_km: +km.toFixed(2),
                 tiempo_estimado_min: tiempoMin,
-                energia_requerida: +((kcal / 1800) * 100).toFixed(1),
+                energia_requerida: +((kcal / 3600) * 100).toFixed(1),
                 kcal_totales: Math.round(kcal),
                 litros_o2: +(kcal * 0.21).toFixed(1),
                 radiacion_msv: +((tiempoMin / 60) * radH).toFixed(3),
