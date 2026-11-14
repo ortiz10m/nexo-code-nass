@@ -31,9 +31,15 @@
         }
 
         /* Tono cálido marciano equilibrado sin quemar blancos */
-        .capa-ctx {
-            mix-blend-mode: soft-light;
-            filter: contrast(1.15);
+        .capa-jezero-hd {
+            filter: contrast(1.08) saturate(1.14) brightness(0.92);
+        }
+        .mars-tactical-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 400;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 64px 64px;
         }
         #mapa.zoom-lejos .poi:not(.en-ruta):not(:hover) .poi-lbl {
             display: none;
@@ -1200,6 +1206,7 @@
     </div>
 
     <div id="mapa" class="tono-marte"></div>
+    <div class="mars-tactical-overlay"></div>
 
     <!-- MODAL 1: MARS STREET VIEW 360 -->
     <div id="modal-streetview" class="modal-fullscreen">
@@ -1428,10 +1435,11 @@
             { maxNativeZoom: 7, maxZoom: 14, noWrap: true, keepBuffer: 3, attribution: "NASA Mars Trek • ESA Mars Express HRSC" }
         );
 
-        // CTX global 5 m/px (servicio oficial que usa NASA Mars Trek por dentro: tiles 512 px)
-        const capaCtx5m = L.tileLayer(
-            "https://astro.arcgis.com/arcgis/rest/services/OnMars/CTX/MapServer/tile/{z}/{y}/{x}",
-            { tileSize: 512, zoomOffset: -1, minZoom: 8, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, opacity: 0.48, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
+        // Mosaico oficial NASA/JPL-Caltech PIA24096 del Cráter Jezero completo (cero costuras, nitidez local)
+        const capaCtx5m = L.imageOverlay(
+            "./jezero-hi-res.jpg",
+            [[18.28, 77.16], [18.62, 77.62]],
+            { opacity: 0.96, className: "capa-jezero-hd", attribution: "NASA/JPL-Caltech Jezero Crater (PIA24096)" }
         );
 
         const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);

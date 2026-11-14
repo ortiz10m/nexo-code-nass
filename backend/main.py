@@ -88,6 +88,10 @@ def get_misiones():
     return cargar_json("misiones_historicas.json")
 
 
+@app.get("/jezero-hi-res.jpg")
+def servir_jezero_hd():
+    return FileResponse("frontend/jezero-hi-res.jpg")
+
 @app.get("/app")
 def serve_frontend():
     ruta_html = BASE_DIR.parent / "frontend" / "index.html"
