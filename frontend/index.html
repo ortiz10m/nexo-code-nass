@@ -2043,6 +2043,7 @@
         window._bloqueoVistaHasta = 0;
 
         function cancelarAccionesEnCurso(detenerCaminata = false) {
+            if (typeof teclasMapa !== "undefined") teclasMapa.clear();
             (window._tourTimers || []).forEach(id => clearTimeout(id));
             window._tourTimers = [];
             const tourBar = document.getElementById("tour-subtitulo-bar");
@@ -2139,16 +2140,23 @@
             lbl.innerText = `${paradasIntermedias.length} parada(s) intermedia(s)`;
         }
 
-        // Loop 60 FPS para mover el mapa 2D con WASD cuando los modales 3D están cerrados
+        // Loop 60 FPS para mover el mapa 2D con WASD (protegido contra atajos Ctrl/Shift/Alt y pérdida de foco)
         const teclasMapa = new Set();
+        window.addEventListener("blur", () => teclasMapa.clear());
+        document.addEventListener("visibilitychange", () => { if (document.hidden) teclasMapa.clear(); });
         window.addEventListener("keydown", e => {
+            if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) { teclasMapa.clear(); return; }
             if (["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement?.tagName)) return;
-            if (document.getElementById("modal-terreno3d")?.style.display === "flex") return;
-            if (document.getElementById("modal-globo3d")?.style.display === "flex") return;
+            const modalesAbiertos = ["modal-terreno3d", "modal-globo3d", "modal-streetview", "modal-reporte-eva", "modal-cuff", "modal-cajablanca", "modal-chaos"]
+                .some(id => document.getElementById(id)?.style.display === "flex");
+            if (modalesAbiertos) { teclasMapa.clear(); return; }
             const k = e.key.toLowerCase();
             if (["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"].includes(k)) teclasMapa.add(k);
         });
-        window.addEventListener("keyup", e => teclasMapa.delete(e.key.toLowerCase()));
+        window.addEventListener("keyup", e => {
+            if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) { teclasMapa.clear(); return; }
+            teclasMapa.delete(e.key.toLowerCase());
+        });
         (function loopPan60FPS() {
             if (teclasMapa.size > 0) {
                 let dx = 0, dy = 0;
@@ -3025,6 +3033,7 @@
                 t3dTarget = { theta, phi, dist };
             };
             window.addEventListener("keydown", e => {
+                if (e.ctrlKey || e.metaKey || e.altKey) return;
                 if (document.getElementById("modal-terreno3d").style.display !== "flex") return;
                 const k = e.key.toLowerCase();
                 if (k === "a" || k === "arrowleft") { t3dAutoOrbita = false; t3dTarget = null; t3dTheta -= 0.06; }
