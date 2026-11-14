@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1252,12 +1252,12 @@
     <div id="boot-xemu">
         <div class="boot-ring"></div>
         <div style="font-size:11px;letter-spacing:2px;color:#38bdf8;font-weight:700;">xEMU TELEMETRY OS • JEZERO CRATER</div>
-        <div id="boot-status" style="font-size:13px;color:#cbd5e1;margin-top:6px;">Inicializando mosaico orbital NASA/JPL...</div>
+        <div id="boot-status" style="font-size:13px;color:#cbd5e1;margin-top:6px;">Initializing NASA/JPL orbital mosaic...</div>
         <div class="boot-bar-wrap"><div id="boot-bar" class="boot-bar-fill"></div></div>
     </div>
 
 
-    <button id="btn-abrir-panel" onclick="togglePanel()" style="display:none;position:fixed;top:14px;left:14px;z-index:1005;background:rgba(11,15,25,0.88);color:#fff;border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(10px);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.45);">☰ Planificar EVA</button>
+    <button id="btn-abrir-panel" onclick="togglePanel()" style="display:none;position:fixed;top:14px;left:14px;z-index:1005;background:rgba(11,15,25,0.88);color:#fff;border:1px solid rgba(255,255,255,0.22);backdrop-filter:blur(10px);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,0.45);">☰ Plan EVA</button>
     <aside class="gmaps-panel">
         <div class="gmaps-top">
             <div class="marca-fila" style="gap:8px;">
@@ -1266,8 +1266,8 @@
                     <div style="line-height:1.1;">Mars Maps<small style="display:block;font-size:9.5px;color:#94a3b8;font-weight:600;margin-top:1px;">by Nexo Code</small></div>
                 </div>
                 <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
-                    <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 EN</button>
-                    <span id="badge-api" class="chip-backend" style="white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:10px;max-width:110px;overflow:hidden;text-overflow:ellipsis;">Conectando...</span>
+                    <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 ES</button>
+                    <span id="badge-api" class="chip-backend" style="white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:10px;max-width:110px;overflow:hidden;text-overflow:ellipsis;">Connecting...</span>
                     <button id="btn-toggle-panel" onclick="togglePanel()" title="Ocultar tarjeta" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
                 </div>
             </div>
@@ -1286,23 +1286,23 @@
             </div>
 
             <div class="barra-opciones">
-                <label><input type="checkbox" id="check-retorno" onchange="recalcularDesdeUI()"> <span id="lbl-retorno">Ida y vuelta al Hábitat</span></label>
-                <span id="lbl-clic-der" style="color:#38bdf8;font-weight:500;">Clic derecho = Ruta libre</span>
+                <label><input type="checkbox" id="check-retorno" onchange="recalcularDesdeUI()"> <span id="lbl-retorno">Round trip to Habitat</span></label>
+                <span id="lbl-clic-der" style="color:#38bdf8;font-weight:500;">Right click on map = Free point</span>
             </div>
             <div class="escenario-pills">
-                <button id="btn-esc-segura" class="escenario-btn" onclick="activarEscenarioDemo('segura')" title="Ruta segura validada">✅ Ruta Segura</button>
-                <button id="btn-esc-peligro" class="escenario-btn" onclick="activarEscenarioDemo('peligro')" title="Prueba de alerta en cráter peligroso">⚠ Zona Crítica</button>
-                <button id="btn-esc-tormenta" class="escenario-btn" onclick="activarEscenarioDemo('tormenta')" title="Simular tormenta solar NASA DONKI">🌪 Tormenta</button>
+                <button id="btn-esc-segura" class="escenario-btn" onclick="activarEscenarioDemo('segura')" title="Ruta segura validada">✅ Safe Route</button>
+                <button id="btn-esc-peligro" class="escenario-btn" onclick="activarEscenarioDemo('peligro')" title="Prueba de alerta en cráter peligroso">⚠ Hazard Zone</button>
+                <button id="btn-esc-tormenta" class="escenario-btn" onclick="activarEscenarioDemo('tormenta')" title="Simular tormenta solar NASA DONKI">🌪 Storm</button>
             </div>
         </div>
 
         <div class="gmaps-body">
             <div id="hero-viabilidad" class="estado-hero go">
-                <span id="hero-viab-txt">🟢 Misión Segura • Llegas con buen aire</span>
+                <span id="hero-viab-txt">🟢 SAFE EVA • Good air margin</span>
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
             <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
-                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~large.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
+                <img id="destino-foto-img" src="./panos/delta_pia25172.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
                 <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
                     <div>
                         <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
@@ -1311,20 +1311,20 @@
                     <span style="background:rgba(56,189,248,0.22);border:1px solid rgba(56,189,248,0.45);color:#e0f2fe;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;">🔭 360°</span>
                 </div>
             </div>
-            <div class="sec-titulo" id="sec-plss">1. Soporte Vital (Traje xEMU)</div>
+            <div class="sec-titulo" id="sec-plss">1. Life Support (xEMU Suit)</div>
             <div style="display:flex;gap:5px;margin-bottom:-4px;">
-                <button class="escenario-btn" id="tab-ligero" onclick="elegirModoEquipo('ligero')">🏃 Ligero</button>
+                <button class="escenario-btn" id="tab-ligero" onclick="elegirModoEquipo('ligero')">🏃 Light</button>
                 <button class="escenario-btn" id="tab-xemu" onclick="elegirModoEquipo('xemu')">🧑‍🚀 xEMU</button>
-                <button class="escenario-btn" id="tab-rover" onclick="elegirModoEquipo('rover')">🚙 Con Rover</button>
+                <button class="escenario-btn" id="tab-rover" onclick="elegirModoEquipo('rover')">🚙 With Rover</button>
             </div>
             <div id="chip-paradas" style="display:none;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.35);border-radius:8px;padding:4px 8px;font-size:11px;color:#7dd3fc;">
                 <span id="lbl-paradas-cnt">0 paradas extra</span>
-                <button onclick="limpiarParadas()" style="background:none;border:none;color:#f87171;font-weight:700;cursor:pointer;font-size:11px;">✕ Limpiar</button>
+                <button id="btn-limpiar-paradas" onclick="limpiarParadas()" style="background:none;border:none;color:#f87171;font-weight:700;cursor:pointer;font-size:11px;">✕ Clear</button>
             </div>
             <div class="panel-oxigeno">
                 <div class="oxigeno-top">
-                    <span><span id="lbl-ox-ini">Oxígeno inicial del traje:</span> <strong id="lbl-oxigeno">100%</strong></span>
-                    <span><span id="lbl-ox-fin">Reserva final:</span> <strong id="lbl-restante">--%</strong></span>
+                    <span><span id="lbl-ox-ini">Initial suit O₂:</span> <strong id="lbl-oxigeno">100%</strong></span>
+                    <span><span id="lbl-ox-fin">Final reserve:</span> <strong id="lbl-restante">--%</strong></span>
                 </div>
                 <input type="range" id="slider-energia" min="40" max="100" value="100" style="width:100%;margin-bottom:6px;"
                        oninput="document.getElementById('lbl-oxigeno').innerText=this.value+'%'; actualizarAnilloO2(this.value)" onchange="recalcularDesdeUI()">
@@ -1333,14 +1333,14 @@
                     <div class="linea-30" title="30% reserva mínima obligatoria NASA"></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5f6368;margin-top:4px;">
-                    <span>0%</span><span id="lbl-limite-nasa">Límite emergencia NASA (30%)</span><span>100%</span>
+                    <span>0%</span><span id="lbl-limite-nasa">NASA emergency limit (30%)</span><span>100%</span>
                 </div>
             </div>
 
             <details class="tech-drawer" id="drawer-tecnico">
-                <summary><span id="lbl-detalles-tec">📊 Telemetría NASA, Carga y Perfil MOLA</span><span>▾</span></summary>
+                <summary><span id="lbl-detalles-tec">📊 NASA Telemetry, Payload &amp; MOLA</span><span>▾</span></summary>
                 <div style="display:flex;flex-direction:column;gap:10px;">
-            <div class="sec-titulo" id="sec-equipo">2. Equipo Científico y Movilidad</div>
+            <div class="sec-titulo" id="sec-equipo">2. Science Payload &amp; Mobility</div>
             <div class="fila-equipo">
                 <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Peso del equipo científico">
                     <option value="0">🎒 Traje estándar (0 kg)</option>
@@ -1384,21 +1384,21 @@
             </details>
         </div>
         <div style="display:flex;gap:6px;padding:0 16px 8px;">
-            <button id="btn-cuff" class="btn-tech-mini" onclick="abrirCuffChecklist()" title="Libreta de muñeca Apollo/Artemis">📋 Cuff Checklist</button>
-            <button id="btn-cajablanca" class="btn-tech-mini" onclick="abrirCajaBlanca()" title="Ecuaciones físicas auditables">🔬 Caja Blanca</button>
+            <button id="btn-cuff" class="btn-tech-mini" onclick="abrirCuffChecklist()" title="Libreta de muñeca Apollo/Artemis">📋 Cuff Card</button>
+            <button id="btn-cajablanca" class="btn-tech-mini" onclick="abrirCajaBlanca()" title="Ecuaciones físicas auditables">🔬 White-Box</button>
             <button id="btn-chaos" class="btn-tech-mini btn-chaos" onclick="abrirChaosTest()" title="Simular emergencias en vivo">⚡ Chaos Test</button>
         </div>
         <div class="acciones-inferiores">
-            <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
+            <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Walk route</button>
             <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">🧑‍🚀 Street View 360°</button>
         </div>
     </aside>
 
     <div class="chips-superiores">
-        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🪐 Globo 3D</button>
-        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:rgba(56,189,248,0.16);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);font-weight:600;">🏔️ Terreno 3D</button>
+        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🪐 3D Globe</button>
+        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:rgba(56,189,248,0.16);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);font-weight:600;">🏔️ 3D Terrain</button>
         <div style="position:relative;">
-            <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Capas ▾</button>
+            <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Layers ▾</button>
             <div id="menu-capas" style="display:none;position:absolute;top:42px;right:0;flex-direction:column;gap:4px;background:rgba(11,16,28,0.96);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:6px;min-width:175px;box-shadow:0 8px 24px rgba(0,0,0,0.6);z-index:1100;">
                 <button id="btn-ctx" class="chip-gmaps activo" style="text-align:left;" onclick="cambiarMapaBase('ctx')">Satélite HD (5m/px)</button>
                 <button id="btn-color" class="chip-gmaps" style="text-align:left;" onclick="cambiarMapaBase('color')">Color Viking</button>
@@ -1408,8 +1408,8 @@
                 <button id="btn-peligros" class="chip-gmaps activo" style="text-align:left;" onclick="togglePeligros()">Zonas de Riesgo</button>
             </div>
         </div>
-        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🎬 Tour Demo</button>
-        <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
+        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🎬 Demo Tour</button>
+        <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Loading...</button>
         <button id="btn-reset-eva" class="chip-gmaps" onclick="resetModoSeguroEVA()" title="Modo Seguro (Tecla Esc): detiene animaciones y vuelve a Base" style="background:rgba(11,15,25,0.88);color:#94a3b8;border:1px solid rgba(148,163,184,0.3);font-weight:600;">↺ Reset</button>
     </div>
 
@@ -1536,9 +1536,9 @@
     <div id="carrusel-lugares"></div>
 
     <div id="menu-clic-derecho" class="menu-contextual">
-        <div class="menu-item" onclick="fijarPuntoLibre('origen')">🟢 Salir caminando desde aquí</div>
-        <div class="menu-item" onclick="fijarPuntoLibre('destino')">🔴 Caminar hasta este punto</div>
-        <div class="menu-item" onclick="abrirStreetViewCoordenada()">🧑‍🚀 Ver Street View 360° cercano</div>
+        <div id="ctx-origen" class="menu-item" onclick="fijarPuntoLibre('origen')">🟢 Start walking from here</div>
+        <div id="ctx-destino" class="menu-item" onclick="fijarPuntoLibre('destino')">🔴 Walk to this point</div>
+        <div id="ctx-sv" class="menu-item" onclick="abrirStreetViewCoordenada()">🧑‍🚀 Open nearby 360° Street View</div>
     </div>
 
     <div id="mapa" class="tono-marte"></div>
@@ -1549,10 +1549,10 @@
         <div class="sv-topbar">
             <div class="sv-card-info" style="background:rgba(11,15,25,0.88);border:1px solid rgba(56,189,248,0.3);max-width:340px;">
                 <div style="font-size:10.5px;color:#38bdf8;font-weight:700;letter-spacing:0.6px;">MARS STREET VIEW 360° • MASTCAM-Z</div>
-                <h3 id="sv-titulo" style="font-size:15px;margin:3px 0;">Cráter Jezero</h3>
+                <h3 id="sv-titulo" style="font-size:15px;margin:3px 0;">Jezero Crater</h3>
                 <p id="sv-subtitulo" style="font-size:11.5px;color:#cbd5e1;"></p>
                 <div style="margin-top:6px;font-size:11px;color:#7dd3fc;">
-                    Arrastra para girar 360° • Rumbo: <strong id="sv-rumbo">180° S</strong>
+                    <span id="sv-lbl-rumbo">Drag to pan 360° • Bearing:</span> <strong id="sv-rumbo">180° S</strong>
                 </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
@@ -4000,6 +4000,11 @@
             setTextoId("rep-btn-360", en ? "AR 360° HELMET VISOR — INSPECT SITE" : "VISOR CASCO AR 360° — INSPECCIONAR SITIO");
             setTextoId("rep-btn-cuff", en ? "EVA CUFF CHECKLIST" : "PLAN DE MUÑECA EVA");
             setTextoId("rep-btn-close", en ? "Close" : "Cerrar");
+            setTextoId("ctx-origen", en ? "🟢 Start walking from here" : "🟢 Salir caminando desde aquí");
+            setTextoId("ctx-destino", en ? "🔴 Walk to this point" : "🔴 Caminar hasta este punto");
+            setTextoId("ctx-sv", en ? "🧑‍🚀 Open nearby 360° Street View" : "🧑‍🚀 Ver Street View 360° cercano");
+            setTextoId("sv-lbl-rumbo", en ? "Drag to pan 360° • Bearing:" : "Arrastra para girar 360° • Rumbo:");
+            setTextoId("btn-limpiar-paradas", en ? "✕ Clear" : "✕ Limpiar");
             if (puntosJezero.length) dibujarNodosBase(true);
             actualizarChipParadas();
             setCarruselColapsado(document.body.classList.contains("carrusel-oculto"));
@@ -4178,7 +4183,8 @@
                 const sl = document.getElementById("slider-energia");
                 if (sl) {
                     sl.value = String(Math.max(25, parseFloat(sl.value || "100") - 35));
-                    document.getElementById("lbl-energia-ini").innerText = sl.value + "%";
+                    const lblOx = document.getElementById("lbl-oxigeno");
+                    if (lblOx) lblOx.innerText = sl.value + "%";
                 }
                 actualizarAnilloO2();
                 ejecutarCalculoGoogleMaps();
@@ -4187,8 +4193,9 @@
                 await cargarClimaEspacial();
                 ejecutarCalculoGoogleMaps();
             } else if (tipo === "uhf") {
-                const chk = document.getElementById("check-segura");
-                if (chk) chk.checked = true;
+                alternativaActiva = "segura";
+                const s2 = document.getElementById("select-destino");
+                if (s2) s2.value = "8";
                 ejecutarCalculoGoogleMaps();
             }
         }
@@ -4200,17 +4207,22 @@
                 if (el) el.style.display = "none";
             });
             paradasIntermedias = [];
+            puntoLibreOrigen = null;
             puntoLibreDestino = null;
+            alternativaActiva = "segura";
             actualizarChipParadas();
             if (tormentaSimulada) {
                 tormentaSimulada = false;
                 cargarClimaEspacial();
             }
             const sl = document.getElementById("slider-energia");
-            if (sl) { sl.value = "100"; document.getElementById("lbl-energia-ini").innerText = "100%"; }
-            const s1 = document.getElementById("select-origen"); if (s1) s1.value = "1";
+            if (sl) {
+                sl.value = "100";
+                const lblOx = document.getElementById("lbl-oxigeno");
+                if (lblOx) lblOx.innerText = "100%";
+            }
+            const s1 = document.getElementById("select-inicio"); if (s1) s1.value = "1";
             const s2 = document.getElementById("select-destino"); if (s2) s2.value = "7";
-            const chk = document.getElementById("check-segura"); if (chk) chk.checked = true;
             setCarruselColapsado(false);
             actualizarAnilloO2(100);
             ejecutarCalculoGoogleMaps();
@@ -4226,7 +4238,7 @@
             const st = document.getElementById("boot-status");
             const urls = ["./jezero-hi-res.jpg", ...new Set(RESPALDO_PUNTOS.map(pt => obtenerFotoNodoNASA(pt).url))];
             if (bar) bar.style.width = "45%";
-            if (st) st.innerText = "Precargando mosaico HD y telemetría Mastcam-Z...";
+            if (st) st.innerText = idiomaActual === "en" ? "Preloading HD mosaic & Mastcam-Z telemetry..." : "Precargando mosaico HD y telemetría Mastcam-Z...";
             const cargas = urls.slice(0, 8).map(u => new Promise(res => {
                 const im = new Image();
                 im.onload = im.onerror = () => res();
@@ -4234,7 +4246,7 @@
             }));
             await Promise.race([Promise.all(cargas), new Promise(r => setTimeout(r, 1250))]);
             if (bar) bar.style.width = "100%";
-            if (st) st.innerText = "Sistema xEMU listo";
+            if (st) st.innerText = idiomaActual === "en" ? "xEMU System Ready" : "Sistema xEMU listo";
             setTimeout(() => {
                 document.getElementById("boot-xemu")?.classList.add("oculto");
             }, 220);
