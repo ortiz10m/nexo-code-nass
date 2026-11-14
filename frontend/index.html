@@ -1261,7 +1261,7 @@
                 </div>
                 <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
                     <button id="btn-lang" onclick="toggleIdioma()" style="border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 EN</button>
-                    <span id="badge-api" class="chip-backend" style="white-space:nowrap;font-size:10.5px;padding:4px 8px;border-radius:10px;">Conectando...</span>
+                    <span id="badge-api" class="chip-backend" style="white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:10px;max-width:110px;overflow:hidden;text-overflow:ellipsis;">Conectando...</span>
                     <button id="btn-toggle-panel" onclick="togglePanel()" title="Ocultar tarjeta" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
                 </div>
             </div>
@@ -1284,9 +1284,9 @@
                 <span id="lbl-clic-der" style="color:#38bdf8;font-weight:500;">Clic derecho = Ruta libre</span>
             </div>
             <div class="escenario-pills">
-                <button class="escenario-btn" onclick="activarEscenarioDemo('segura')" title="Ruta segura validada">✅ Ruta Segura</button>
-                <button class="escenario-btn" onclick="activarEscenarioDemo('peligro')" title="Prueba de alerta en cráter peligroso">⚠ Zona Crítica</button>
-                <button class="escenario-btn" onclick="activarEscenarioDemo('tormenta')" title="Simular tormenta solar NASA DONKI">🌪 Tormenta</button>
+                <button id="btn-esc-segura" class="escenario-btn" onclick="activarEscenarioDemo('segura')" title="Ruta segura validada">✅ Ruta Segura</button>
+                <button id="btn-esc-peligro" class="escenario-btn" onclick="activarEscenarioDemo('peligro')" title="Prueba de alerta en cráter peligroso">⚠ Zona Crítica</button>
+                <button id="btn-esc-tormenta" class="escenario-btn" onclick="activarEscenarioDemo('tormenta')" title="Simular tormenta solar NASA DONKI">🌪 Tormenta</button>
             </div>
         </div>
 
@@ -3700,8 +3700,11 @@
                 const chk = document.getElementById("check-rover").checked;
                 roverLbl.innerHTML = `<input type="checkbox" id="check-rover" onchange="ejecutarCalculoGoogleMaps()" ${chk ? "checked" : ""}> ${en ? "🤖 Rover support" : "🤖 Rover apoyo"}`;
             }
+            setTextoId("btn-esc-segura", en ? "✅ Safe Route" : "✅ Ruta Segura");
+            setTextoId("btn-esc-peligro", en ? "⚠ Hazard Zone" : "⚠ Zona Crítica");
+            setTextoId("btn-esc-tormenta", en ? "🌪 Storm" : "🌪 Tormenta");
             const badgeApi = document.getElementById("badge-api");
-            if (badgeApi) badgeApi.innerText = modoLocal ? (en ? "Offline mode" : "Modo autónomo") : (en ? "Python live" : "Python conectado");
+            if (badgeApi) badgeApi.innerText = modoLocal ? (en ? "🛡️ Offline OK" : "🛡️ Caché OK") : (en ? "Python live" : "Python conectado");
             const ley = document.querySelector(".leyenda-mapa");
             if (ley) ley.innerHTML = en
                 ? `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span>`
@@ -3936,7 +3939,7 @@
             } catch (_) {
                 puntosJezero = RESPALDO_PUNTOS;
                 modoLocal = true;
-                badge.innerText = "🛡️ Caché local verificada";
+                badge.innerText = "🛡️ Caché OK";
                 badge.style.background = "rgba(56, 189, 248, 0.16)";
                 badge.style.color = "#7dd3fc";
                 badge.style.border = "1px solid rgba(56, 189, 248, 0.35)";
