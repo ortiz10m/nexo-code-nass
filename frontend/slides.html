@@ -464,10 +464,6 @@
         </div>
         <div class="hud-actions">
             <button id="btn-lang-slides" class="hud-pill" onclick="toggleIdiomaSlides()">🌐 EN / ES</button>
-            <button class="hud-pill" onclick="abrirGuion()">
-                <span data-lang="es">🎙️ Guion Jurado (60s)</span>
-                <span data-lang="en">🎙️ 60s Pitch Script</span>
-            </button>
             <a class="hud-pill primary" href="./index.html">
                 <span data-lang="es">🚀 Abrir Simulador en Vivo</span>
                 <span data-lang="en">🚀 Launch Live Simulator</span>
@@ -712,68 +708,68 @@
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">1. Distancia Real Marciana (Haversine)</span>
-                            <span class="s3-eq-title" data-lang="en">1. True Martian Distance (Haversine)</span>
-                            <span class="s3-eq-badge">Radio Marte = 3,396.19 km</span>
+                            <span class="s3-eq-title" data-lang="es">1. Geodesia Esférica Marciana (Haversine)</span>
+                            <span class="s3-eq-title" data-lang="en">1. Martian Spherical Geodesy (Haversine)</span>
+                            <span class="s3-eq-badge">R_Marte = 3,396.19 km</span>
                         </div>
-                        <div class="s3-eq-formula">Distancia = Geodesia Esférica con Radio de Marte (no de la Tierra)</div>
+                        <div class="s3-eq-formula">d = 2 · 3,396.19 km · arcsin( √[ sin²(Δφ/2) + cos(φ₁)·cos(φ₂)·sin²(Δλ/2) ] )</div>
                     </div>
                     <div class="s3-explain" data-lang="es">
-                        <strong>🗣️ Cómo explicarlo al jurado:</strong> "Marte mide la mitad que la Tierra (3,396 km vs 6,371 km). Si usáramos Google Maps normal, mediría mal los kilómetros y el astronauta se quedaría sin oxígeno. Nuestro motor usa la curvatura exacta de Marte."
+                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Marte tiene la mitad del radio de la Tierra (3,396 km vs. 6,371 km). Los mapas terrestres distorsionan las distancias marcianas; nuestro motor aplica la curvatura planetaria real para calcular cada metro con precisión milimétrica.
                     </div>
                     <div class="s3-explain" data-lang="en">
-                        <strong>🗣️ How to explain to judges:</strong> "Mars is half the size of Earth (3,396 km vs 6,371 km). Standard web maps distort Martian distances. Our engine uses the true spherical radius of Mars so oxygen math is exact to the meter."
+                        <strong>⚡ EVA Survival Impact:</strong> Mars has half the radius of Earth (3,396 km vs. 6,371 km). Standard terrestrial GIS distorts Martian distances; our solver applies true planetary curvature for meter-accurate oxygen budgeting.
                     </div>
                 </div>
 
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">2. Consumo Humano de Oxígeno (Física xEMU)</span>
-                            <span class="s3-eq-title" data-lang="en">2. Human Metabolic Oxygen Burn (xEMU)</span>
+                            <span class="s3-eq-title" data-lang="es">2. Gasto Metabólico de Oxígeno (Traje xEMU)</span>
+                            <span class="s3-eq-title" data-lang="en">2. Metabolic Oxygen Burn (NASA xEMU Suit)</span>
                             <span class="s3-eq-badge" style="color:var(--green);">Reserva ≥ 30% O₂</span>
                         </div>
-                        <div class="s3-eq-formula">Gasto O₂ = Distancia × Penalización por Subida (&gt;15°) × Peso Muestras</div>
+                        <div class="s3-eq-formula">O₂_req = Σ [ d_km · 3.8% · (1 + max(0, θ - 15°) · 0.14) · f_carga · f_rover ]</div>
                     </div>
                     <div class="s3-explain" data-lang="es">
-                        <strong>🗣️ Cómo explicarlo al jurado:</strong> "No es lo mismo caminar en plano que subir una colina cargando 25 kg de rocas. Si la pendiente pasa de 15°, el esfuerzo pulmonar se dispara; y si pasa de 20°, bloqueamos la ruta para evitar que el traje vuelque."
+                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Subir pendientes superiores a 15° cargando muestras geológicas (+12 kg a +25 kg) dispara el consumo pulmonar. Si el talud supera los 20°, el algoritmo bloquea el paso para evitar la pérdida de centro de gravedad del traje presurizado.
                     </div>
                     <div class="s3-explain" data-lang="en">
-                        <strong>🗣️ How to explain to judges:</strong> "Walking flat is easy; climbing a steep dune carrying 25 kg of rocks spikes lung oxygen burn. Above 15° we penalize O₂ burn; above 20° we lock the route so the rigid suit never tips over."
+                        <strong>⚡ EVA Survival Impact:</strong> Climbing slopes above 15° with geological payloads (+12 kg to +25 kg) spikes pulmonary O₂ burn. Above 20°, the solver hard-locks the node to prevent pressurized suit center-of-gravity tipping.
                     </div>
                 </div>
 
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">3. Línea de Vista de Radio UHF (401.5 MHz)</span>
-                            <span class="s3-eq-title" data-lang="en">3. UHF Radio Line-of-Sight (401.5 MHz)</span>
+                            <span class="s3-eq-title" data-lang="es">3. Horizonte de Línea de Vista Radio UHF (401.5 MHz)</span>
+                            <span class="s3-eq-title" data-lang="en">3. UHF Radio Line-of-Sight Horizon (401.5 MHz)</span>
                             <span class="s3-eq-badge" style="color:var(--amber);">Enlace con Hábitat</span>
                         </div>
-                        <div class="s3-eq-formula">Señal UHF = Bloqueada si el astronauta baja a un cráter profundo</div>
+                        <div class="s3-eq-formula">d_horizonte = √( 2 · R_Marte · h_antena ) • Bloqueo por depresión &gt; 20°</div>
                     </div>
                     <div class="s3-explain" data-lang="es">
-                        <strong>🗣️ Cómo explicarlo al jurado:</strong> "En Marte no hay red celular; la radio del traje necesita ver la antena del Hábitat. Si el astronauta baja al fondo del Cráter Belva (-2,615 m), las paredes tapan la señal y el sistema lo desvía por fuera."
+                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Sin satélites repetidores locales, el transceptor UHF del traje requiere línea de vista con la antena del Hábitat. Al detectar depresiones profundas como el Cráter Belva (-2,615 m), el modo seguro redirige al astronauta por fuera de la sombra radial.
                     </div>
                     <div class="s3-explain" data-lang="en">
-                        <strong>🗣️ How to explain to judges:</strong> "There are no cell towers on Mars; the suit radio requires line-of-sight to the Habitat antenna. Inside deep craters like Belva (-2,615 m), walls block UHF, so our Safe Mode routes around them."
+                        <strong>⚡ EVA Survival Impact:</strong> Without local relay towers, the suit UHF transceiver requires direct line-of-sight to the Habitat mast. Deep depressions like Belva Crater (-2,615 m) block signal, triggering automatic safe-corridor rerouting.
                     </div>
                 </div>
 
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">4. Dosis de Radiación Solar (NASA DONKI)</span>
-                            <span class="s3-eq-title" data-lang="en">4. Solar Radiation Dose (NASA DONKI)</span>
-                            <span class="s3-eq-badge" style="color:var(--red);">Tormenta: 0.85 mSv/h</span>
+                            <span class="s3-eq-title" data-lang="es">4. Dosimetría de Radiación Ionizante (NASA DONKI)</span>
+                            <span class="s3-eq-title" data-lang="en">4. Ionizing Radiation Dosimetry (NASA DONKI)</span>
+                            <span class="s3-eq-badge" style="color:var(--red);">Alerta CME: 0.85 mSv/h</span>
                         </div>
-                        <div class="s3-eq-formula">Dosis Acumulada = Horas de Caminata × Radiación Solar en Vivo</div>
+                        <div class="s3-eq-formula">Dosis_EVA = ( t_min / 60 ) · Flujo_DONKI   [Nominal: 0.028 mSv/h]</div>
                     </div>
                     <div class="s3-explain" data-lang="es">
-                        <strong>🗣️ Cómo explicarlo al jurado:</strong> "Marte no tiene campo magnético global. Conectamos con la API DONKI de la NASA: si estalla una tormenta solar (0.85 mSv/h), la pantalla parpadea en rojo y ordena abortar al refugio en menos de 6 minutos."
+                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Marte carece de magnetosfera global. Conectado a la telemetría espacial de NASA DONKI y MSL-RAD, ante una eyección de masa coronal (0.85 mSv/h) el sistema activa alerta roja y calcula el retorno de emergencia a refugio en menos de 6 minutos.
                     </div>
                     <div class="s3-explain" data-lang="en">
-                        <strong>🗣️ How to explain to judges:</strong> "Mars lacks a global magnetosphere. Connected to NASA DONKI, if a solar storm hits (0.85 mSv/h), the HUD flashes red and triggers an immediate 6-minute emergency abort to shelter."
+                        <strong>⚡ EVA Survival Impact:</strong> Mars lacks a global magnetosphere. Linked to NASA DONKI and MSL-RAD telemetry, a Coronal Mass Ejection (0.85 mSv/h) triggers immediate red-alert abort routing to shelter within 6 minutes.
                     </div>
                 </div>
             </div>
@@ -967,10 +963,10 @@
                         <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="es">🔥 Inyección de Fallas Críticas en Vivo</h3>
                         <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="en">🔥 Live Critical Fault Injection Console</h3>
                         <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="es">
-                            Para demostrar al jurado que el sistema no es una animación pregrabada, el botón <strong>⚡ Chaos Test</strong> permite disparar 3 emergencias reales en cualquier segundo: el anillo verde de autonomía se encoge al instante y el algoritmo recalcula la ruta de aborto hacia el Hábitat.
+                            En misiones reales las anomalías ocurren sin previo aviso. El módulo <strong>⚡ Chaos Test</strong> inyecta 3 emergencias críticas en tiempo real: el anillo verde de autonomía se contrae al instante y el algoritmo recalcula la ruta de aborto hacia el Hábitat.
                         </p>
                         <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="en">
-                            To prove to judges that nothing is pre-scripted, the <strong>⚡ Chaos Test</strong> button injects 3 live emergencies at any second—instantly shrinking the green autonomy ring and recalculating an emergency abort path to the Habitat.
+                            In surface missions, anomalies strike without warning. The <strong>⚡ Chaos Test</strong> module injects 3 live critical emergencies—instantly shrinking the green autonomy ring and recalculating an emergency abort path to the Habitat.
                         </p>
                     </div>
                     <div class="s5-mini-grid">
@@ -1002,10 +998,10 @@
                     <span class="slide-coords">AUDITORÍA TÉCNICA • CERO ERRORES</span>
                 </div>
                 <h2 class="slide-headline" data-lang="es">
-                    Por Qué Le Ganamos a Visores Pasivos y a <span class="accent">Chatbots de IA.</span>
+                    Benchmark Aeroespacial: Visores Pasivos vs. <span class="accent">NEXO-ARES.</span>
                 </h2>
                 <h2 class="slide-headline" data-lang="en">
-                    Why We Beat Passive Viewers and <span class="accent">Generic AI Chatbots.</span>
+                    Aerospace Benchmark: Passive Viewers vs. <span class="accent">NEXO-ARES.</span>
                 </h2>
             </div>
 
@@ -1177,28 +1173,6 @@
         </div>
     </footer>
 
-    <!-- PITCH SCRIPT MODAL -->
-    <div id="modal-guion" onclick="if(event.target===this)cerrarGuion()">
-        <div class="guion-box">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                <span style="font-family:var(--mono);font-size:14px;color:var(--cyan);font-weight:900;">
-                    🎙️ GUION DE SUSTENTACIÓN EN 60 SEGUNDOS — NEXO-ARES
-                </span>
-                <button class="hud-pill" onclick="cerrarGuion()">✕ Cerrar</button>
-            </div>
-            <div style="font-size:15.5px;line-height:1.65;color:#f1f5f9;display:flex;flex-direction:column;gap:12px;">
-                <p data-lang="es"><strong>1. El Problema (0:00 - 0:15):</strong> "En 2009 la NASA perdió al rover Spirit en una trampa de arena; en 2018 Opportunity murió sin energía; y en 2024 el helicóptero Ingenuity chocó en las dunas de Jezero. Cuando los primeros humanos caminen en Marte, un error de ruta no costará un robot: costará una vida humana."</p>
-                <p data-lang="en"><strong>1. The Problem (0:00 - 0:15):</strong> "In 2009, NASA lost Spirit in a sand trap; in 2018, Opportunity died with zero power; in 2024, Ingenuity crashed on smooth dunes. When humans walk on Mars, a routing mistake won't cost a robot—it will cost a human life."</p>
-
-                <p data-lang="es"><strong>2. Nuestra Solución (0:15 - 0:35):</strong> "Por eso creamos <strong>NEXO-ARES</strong>, el primer Sistema Operativo de Supervivencia EVA. A diferencia de visores pasivos como Mars Trek o chatbots de IA que inventan datos, nuestro motor usa física real de Caja Blanca: calcula la curvatura exacta de Marte, el gasto pulmonar de oxígeno en el traje xEMU, las sombras de radio UHF y las tormentas solares de la API NASA DONKI."</p>
-                <p data-lang="en"><strong>2. Our Solution (0:15 - 0:35):</strong> "That's why we built <strong>NEXO-ARES</strong>, the first EVA Survival Operating System. Unlike passive viewers like Mars Trek or hallucinating AI chatbots, our engine runs White-Box physics: true Martian geodesy, xEMU metabolic oxygen burn, UHF radio line-of-sight, and live NASA DONKI solar storms."</p>
-
-                <p data-lang="es"><strong>3. Demostración y Cierre (0:35 - 1:00):</strong> "Integramos 4 motores: Globo 3D, Mapa Táctico con 7 capas, Mesa Holográfica que exporta maquetas <code>.STL</code> para impresoras 3D y Visor de Casco 360° con láser PIXL. Incluso permite inyectar fugas de oxígeno en vivo e imprimir la libreta de muñeca del astronauta. Antes de pisar el polvo rojo, NEXO-ARES camina la ruta."</p>
-                <p data-lang="en"><strong>3. Live Demo &amp; Close (0:35 - 1:00):</strong> "We unified 4 engines: 3D Globe, 7-layer Tactical Map, 3D Holotable with <code>.STL</code> export, and a 360° Helmet Visor with PIXL laser. Judges can even inject live O₂ leaks and print the astronaut's wrist checklist. Before human boots touch the red dust, NEXO-ARES walks the path."</p>
-            </div>
-        </div>
-    </div>
-
     <script>
         const slides = Array.from(document.querySelectorAll(".slide"));
         const dotsWrap = document.getElementById("nav-dots");
@@ -1231,15 +1205,7 @@
             if (btn) btn.innerText = idiomaSlides === "es" ? "🌐 EN / ES" : "🌐 ES / EN";
         }
 
-        function abrirGuion() {
-            document.getElementById("modal-guion").style.display = "flex";
-        }
-        function cerrarGuion() {
-            document.getElementById("modal-guion").style.display = "none";
-        }
-
         window.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") { cerrarGuion(); return; }
             if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); cambiarSlide(1); }
             if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); cambiarSlide(-1); }
         });
