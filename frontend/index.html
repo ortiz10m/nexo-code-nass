@@ -31,8 +31,8 @@
         }
 
         /* Tono cálido marciano equilibrado sin quemar blancos */
-        .tono-marte .leaflet-tile-pane {
-            filter: sepia(0.18) saturate(1.12) contrast(1.05) brightness(0.95);
+        .capa-ctx {
+            filter: sepia(0.62) saturate(1.65) hue-rotate(-10deg) contrast(1.08) brightness(0.96);
         }
 
         /* Panel izquierdo colapsable estilo NASA Mars Trek Dark Glass */
@@ -871,6 +871,55 @@
         .gmaps-body::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.35); border-radius: 99px; }
         .acciones-inferiores button { padding: 10px 12px; font-size: 13px; white-space: nowrap; }
 
+    
+        /* ===== Lugares del mapa: iconos grandes y etiquetas legibles ===== */
+        .poi-wrap { background: none !important; border: none !important; }
+        .poi { position: relative; width: 0; height: 0; }
+        .poi-ico {
+            position: absolute; left: -17px; top: -17px;
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; line-height: 1;
+            background: rgba(11, 16, 28, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.6);
+            transition: transform 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+        }
+        .poi:hover .poi-ico { transform: scale(1.18); }
+        .poi-base .poi-ico { left: -20px; top: -20px; width: 40px; height: 40px; font-size: 19px; border-color: #22c55e; box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.28), 0 4px 14px rgba(0, 0, 0, 0.6); }
+        .poi-riesgo .poi-ico { border-color: #ef4444; box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.25), 0 4px 12px rgba(0, 0, 0, 0.6); }
+        .en-ruta .poi-ico { border-color: #38bdf8; background: #0c3a5c; box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.3), 0 4px 14px rgba(0, 0, 0, 0.6); }
+        .poi-lbl {
+            position: absolute; white-space: nowrap;
+            background: rgba(11, 16, 28, 0.9); color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 3px 9px; border-radius: 8px;
+            font-size: 12px; font-weight: 600; letter-spacing: 0.1px;
+            pointer-events: none;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+        }
+        .en-ruta .poi-lbl { border-color: rgba(56, 189, 248, 0.6); color: #e0f2fe; }
+        .poi-riesgo .poi-lbl { color: #fecaca; }
+        .lbl-right { left: 25px; top: -12px; }
+        .lbl-left { right: 25px; top: -12px; }
+        .lbl-top { bottom: 25px; left: 0; transform: translateX(-50%); }
+        .lbl-bottom { top: 25px; left: 0; transform: translateX(-50%); }
+        .pin-ab {
+            width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 800; color: #fff;
+            border: 3px solid #fff; cursor: grab;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+            animation: pulsoAB 1.8s ease-in-out infinite;
+        }
+        .pin-a { background: #16a34a; }
+        .pin-b { background: #2563eb; }
+        @keyframes pulsoAB {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6); }
+            50% { box-shadow: 0 0 0 9px rgba(255, 255, 255, 0), 0 4px 14px rgba(0, 0, 0, 0.6); }
+        }
+
     </style>
 </head>
 <body>
@@ -1209,9 +1258,13 @@
 
         const mapa = L.map("mapa", {
             crs: CRS_NASA_MARS,
-            preferCanvas: true,
+            preferCanvas: false,
             zoomAnimation: true,
-            fadeAnimation: false,
+            fadeAnimation: true,
+            zoomSnap: 0.25,
+            zoomDelta: 0.5,
+            wheelPxPerZoomLevel: 110,
+            inertiaDeceleration: 2600,
             zoomControl: false,
             attributionControl: false,
             minZoom: 2,
@@ -1248,12 +1301,13 @@
         // Capas WMTS oficiales de NASA Mars Trek ajustadas al índice exacto de matriz
         const capaVikingBase = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 7, maxZoom: 14, noWrap: true, updateWhenIdle: true, keepBuffer: 2, attribution: "NASA Mars Trek" }
+            { maxNativeZoom: 7, maxZoom: 14, noWrap: true, keepBuffer: 3, attribution: "NASA Mars Trek" }
         );
 
+        // CTX global 5 m/px (servicio oficial que usa NASA Mars Trek por dentro: tiles 512 px)
         const capaCtx5m = L.tileLayer(
-            "https://trek.nasa.gov/tiles/Mars/EQ/CTX_beta01_uncontrolled_5m_Caltech/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 11, maxZoom: 14, opacity: 0.96, noWrap: true, updateWhenIdle: true, keepBuffer: 2, attribution: "NASA / Caltech CTX 5m/px" }
+            "https://astro.arcgis.com/arcgis/rest/services/OnMars/CTX/MapServer/tile/{z}/{y}/{x}",
+            { tileSize: 512, zoomOffset: -1, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
         );
 
         const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
@@ -1447,36 +1501,37 @@
                 const peligro = p.pendiente > 20 || p.sin_comunicacion;
                 if (peligro) {
                     L.circleMarker([p.lat, p.lng], {
-                        radius: 26,
-                        color: "#d93025",
-                        fillColor: "#ea4335",
-                        fillOpacity: 0.22,
+                        radius: 30,
+                        color: "#f87171",
+                        fillColor: "#ef4444",
+                        fillOpacity: 0.14,
                         weight: 1.5,
-                        dashArray: "4,4"
+                        dashArray: "5,5",
+                        interactive: false
                     }).bindTooltip(p.sin_comunicacion ? "Sombra de Radio UHF" : `Pendiente crítica ${p.pendiente}°`).addTo(capaPeligros);
                 }
 
-                const m = L.circleMarker([p.lat, p.lng], {
-                    radius: 6.5,
-                    fillColor: peligro ? "#ea4335" : (p.id === 1 ? "#188038" : "#ffffff"),
-                    color: "#0f172a",
-                    weight: 2,
-                    fillOpacity: 1
+                const ICONOS_POI = { 1: "🏠", 2: "🏜️", 3: "⛰️", 4: "⚠️", 5: "📦", 6: "⚠️", 7: "🪨", 8: "🌊", 9: "🌋", 10: "🏜️", 11: "💎", 12: "⚠️" };
+                const DIR_LBL = { 1: "right", 2: "bottom", 3: "bottom", 4: "left", 5: "top", 6: "top", 7: "top", 8: "right", 9: "right", 10: "right", 11: "left", 12: "top" };
+                const tipoPoi = p.id === 1 ? "poi-base" : (peligro ? "poi-riesgo" : "poi-ciencia");
+                const nombreCorto = p.nombre.split("(")[0].trim();
+                const m = L.marker([p.lat, p.lng], {
+                    riseOnHover: true,
+                    zIndexOffset: p.id === 1 ? 500 : 0,
+                    icon: L.divIcon({
+                        className: "poi-wrap",
+                        iconSize: [0, 0],
+                        html: `<div class="poi ${tipoPoi}"><div class="poi-ico">${ICONOS_POI[p.id] || "📍"}</div><div class="poi-lbl lbl-${DIR_LBL[p.id] || "right"}">${nombreCorto}</div></div>`
+                    })
                 }).addTo(capaNodos);
+                window._poiMarkers = window._poiMarkers || {};
+                window._poiMarkers[p.id] = m;
 
-                m.bindTooltip(p.nombre.split("(")[0].trim(), {
-                    permanent: (p.id === 1 || p.id === 7),
-                    direction: p.id === 1 ? "right" : "left",
-                    offset: p.id === 1 ? [10, 0] : [-10, 0],
-                    className: "etiqueta-lugar"
-                });
+                m.bindTooltip(
+                    `<strong>${nombreCorto}</strong><br>Pendiente ${p.pendiente}° • ${p.sin_comunicacion ? "📵 Sin radio UHF" : "📡 Con radio"}<br><span style="opacity:.8">Clic = ir aquí</span>`,
+                    { direction: "top", offset: [0, -22], className: "etiqueta-lugar", opacity: 1 }
+                );
 
-                m.on("mouseover", () => {
-                    m.setStyle({ radius: 9, weight: 3 });
-                });
-                m.on("mouseout", () => {
-                    m.setStyle({ radius: 6.5, weight: 2 });
-                });
                 m.on("click", () => {
                     puntoLibreDestino = null;
                     document.getElementById("select-destino").value = String(p.id);
@@ -1505,7 +1560,7 @@
                 mapa.fitBounds(window._boundsJezero, {
                     paddingTopLeft: esMovil ? [20, 62] : [oculto ? 40 : 425, 85],
                     paddingBottomRight: esMovil ? [20, oculto ? 40 : Math.round(window.innerHeight * 0.48)] : [90, 95],
-                    maxZoom: esMovil ? 10 : 11
+                    maxZoom: esMovil ? 10.5 : 11.25
                 });
             }
         }
@@ -1651,8 +1706,16 @@
                 const pIni = pts[0];
                 const pFin = pts[pts.length - 1];
 
-                pinOrigenDrag = L.marker([pIni.lat, pIni.lng], { draggable: true, title: "Arrastra el punto de inicio" }).addTo(capaRutas);
-                pinDestinoDrag = L.marker([pFin.lat, pFin.lng], { draggable: true, title: "Arrastra el destino a cualquier cráter" }).addTo(capaRutas);
+                pinOrigenDrag = L.marker([pIni.lat, pIni.lng], {
+                    draggable: true, zIndexOffset: 1000, title: "Arrastra el punto de inicio",
+                    icon: L.divIcon({ className: "poi-wrap", iconSize: [0, 0], html: '<div class="pin-ab pin-a">A</div>' })
+                }).addTo(capaRutas);
+                pinDestinoDrag = L.marker([pFin.lat, pFin.lng], {
+                    draggable: true, zIndexOffset: 1000, title: "Arrastra el destino a cualquier cráter",
+                    icon: L.divIcon({ className: "poi-wrap", iconSize: [0, 0], html: '<div class="pin-ab pin-b">B</div>' })
+                }).addTo(capaRutas);
+                Object.values(window._poiMarkers || {}).forEach(mk => mk.getElement()?.classList.remove("en-ruta"));
+                pts.forEach(pt => window._poiMarkers?.[pt.id]?.getElement()?.classList.add("en-ruta"));
 
                 pinOrigenDrag.on("dragend", (e) => { coordClicDerecho = e.target.getLatLng(); fijarPuntoLibre("origen"); });
                 pinDestinoDrag.on("dragend", (e) => { coordClicDerecho = e.target.getLatLng(); fijarPuntoLibre("destino"); });
