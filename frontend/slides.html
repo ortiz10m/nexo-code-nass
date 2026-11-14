@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mars Maps — Nexo Code | NASA Space Apps 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet" />
+    <title>Mars Maps — Nexo Code | Pitch Deck (7 Slides)</title>
+    <link rel="icon" type="image/svg+xml" href="./nexo-logo.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --bg: #f5f6f8;
-            --surface: #ffffff;
-            --ink: #0f172a;
-            --muted: #475569;
-            --line: #e2e8f0;
-            --nasa: #0b3d91;
-            --mars: #d94e28;
-            --green: #15803d;
-            --red: #dc2626;
+            --bg: #050814;
+            --card: rgba(11, 16, 28, 0.9);
+            --ink: #f8fafc;
+            --muted: #94a3b8;
+            --cyan: #38bdf8;
+            --green: #00ff9d;
+            --amber: #f59e0b;
+            --red: #ff2a55;
+            --border: rgba(56, 189, 248, 0.28);
         }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #e2e8f0;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: radial-gradient(circle at 50% 20%, #0f172a 0%, #030712 100%);
             color: var(--ink);
             height: 100vh;
             overflow: hidden;
@@ -28,9 +29,9 @@
             flex-direction: column;
         }
         .topbar {
-            height: 46px;
-            background: #0f172a;
-            color: #fff;
+            height: 48px;
+            background: rgba(11, 15, 25, 0.95);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -38,580 +39,401 @@
             z-index: 30;
         }
         .topbar-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; }
-        .badge-nasa {
-            background: var(--mars);
-            color: #fff;
+        .badge-team {
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--cyan);
+            border: 1px solid rgba(56, 189, 248, 0.4);
             padding: 3px 10px;
-            border-radius: 6px;
+            border-radius: 999px;
             font-size: 11px;
-            font-weight: 800;
+            font-weight: 700;
         }
         .controls { display: flex; align-items: center; gap: 8px; }
         .btn-nav {
-            background: #334155;
-            color: #fff;
-            border: none;
+            background: rgba(30, 41, 59, 0.9);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.3);
             padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .btn-nav:hover { background: #475569; }
-        .btn-pdf {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 12px;
             font-weight: 700;
             cursor: pointer;
         }
-
+        .btn-nav:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-pdf {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: #030712;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
         .deck {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 16px;
+            min-height: 0;
         }
         .slide {
             display: none;
             width: 100%;
             max-width: 1180px;
             aspect-ratio: 16 / 9;
-            background: var(--bg);
-            border-radius: 14px;
+            background: radial-gradient(circle at 80% 15%, rgba(56, 189, 248, 0.1) 0%, transparent 45%),
+                        radial-gradient(circle at 15% 85%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+                        #070b16;
+            border: 1px solid var(--border);
+            border-radius: 18px;
             padding: 34px 44px 24px;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.72);
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
         }
-        .slide.active { display: flex; animation: slideIn 0.28s ease-out; }
-        @keyframes slideIn {
+        .slide.active { display: flex; animation: fadeUp 0.25s ease-out; }
+        @keyframes fadeUp {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .slide-header { margin-bottom: 14px; }
         .kicker {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
-            color: var(--mars);
-            margin-bottom: 4px;
+            color: var(--cyan);
+            margin-bottom: 6px;
         }
-        h1 { font-size: 46px; font-weight: 800; line-height: 1.06; color: var(--ink); letter-spacing: -0.8px; }
-        h2 { font-size: 32px; font-weight: 800; line-height: 1.12; color: var(--ink); letter-spacing: -0.4px; }
-        .sub { font-size: 16.5px; color: var(--muted); line-height: 1.45; margin-top: 8px; }
-
-        .main-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            min-height: 0;
-        }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; }
-        .card {
-            background: var(--surface);
-            border: 1.5px solid var(--line);
-            border-radius: 12px;
-            padding: 20px 22px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .card h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; color: var(--ink); display: flex; align-items: center; gap: 8px; }
-        .card p, .card li { font-size: 16.5px; font-weight: 500; color: #1e293b; line-height: 1.5; }
-        .card ul { padding-left: 20px; display: flex; flex-direction: column; gap: 9px; }
-        .kpi { font-family: 'JetBrains Mono', monospace; font-size: 38px; font-weight: 800; color: var(--nasa); line-height: 1; margin-bottom: 4px; }
-
-        .tag {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12.5px;
-            font-weight: 700;
-            margin-right: 6px;
-        }
-        .tag.mars { background: #ffedd5; color: #c2410c; }
-
-        /* Real Mars Globe Visual on Slide 1 */
-        .mars-hero {
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            padding: 20px;
-            color: #fff;
-        }
-        .mars-orb {
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #fb923c, #c2410c 55%, #431407 95%);
-            box-shadow: 0 0 50px rgba(217, 78, 40, 0.45), inset -26px -18px 42px rgba(0,0,0,0.65);
-            position: relative;
-            animation: floatSlow 5s ease-in-out infinite;
-        }
-        .orbit-track {
-            position: absolute;
-            width: 295px;
-            height: 295px;
-            border: 2px dashed rgba(56, 189, 248, 0.5);
-            border-radius: 50%;
-            animation: spin 16s linear infinite;
-        }
-        .orbit-sat {
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #38bdf8;
-            box-shadow: 0 0 12px #38bdf8;
-        }
-        @keyframes floatSlow { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-
-        /* Animated SVG route (screen only so PDF always prints full route) */
-        @media screen {
-            .route-anim {
-                stroke-dasharray: 420;
-                stroke-dashoffset: 420;
-                animation: drawRoute 3.2s ease-in-out infinite;
-            }
-        }
-        @keyframes drawRoute { 0%{stroke-dashoffset:420} 65%,100%{stroke-dashoffset:0} }
-
-        /* Isometric Stack */
-        .iso-box {
-            background: #0f172a;
+        h1 { font-size: 46px; font-weight: 800; line-height: 1.06; letter-spacing: -0.8px; }
+        h2 { font-size: 31px; font-weight: 800; line-height: 1.12; letter-spacing: -0.4px; }
+        .sub { font-size: 15.5px; color: #cbd5e1; line-height: 1.45; margin-top: 6px; }
+        .sub-es { font-size: 13px; color: var(--muted); margin-top: 3px; }
+        .grid-2 { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 22px; flex: 1; align-items: center; min-height: 0; margin: 14px 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; align-items: stretch; margin: 16px 0; }
+        .glass-card {
+            background: var(--card);
+            border: 1px solid rgba(148, 163, 184, 0.22);
             border-radius: 14px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            perspective: 900px;
-            padding: 16px;
-        }
-        .iso-layer {
-            width: 310px;
-            height: 74px;
-            border-radius: 12px;
-            transform: rotateX(54deg) rotateZ(-18deg);
-            margin-top: -18px;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 18px;
-            color: #fff;
-            font-size: 13.5px;
-            font-weight: 800;
-            box-shadow: 0 14px 24px rgba(0,0,0,0.5);
-            border: 1.5px solid rgba(255,255,255,0.3);
         }
-
-        .bar-track { height: 16px; background: #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: 6px; }
-        .bar-fill { height: 100%; border-radius: 10px; }
-
-        .footer-slide {
+        .glass-card.cyan { border-color: rgba(56, 189, 248, 0.45); }
+        .glass-card.green { border-color: rgba(0, 255, 157, 0.45); }
+        .glass-card.red { border-color: rgba(255, 42, 85, 0.5); }
+        .bullets { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .bullets li {
+            background: rgba(15, 23, 42, 0.85);
+            border-left: 3px solid var(--cyan);
+            padding: 11px 14px;
+            border-radius: 0 10px 10px 0;
+            font-size: 14.5px;
+            line-height: 1.4;
+        }
+        .bullets li strong { color: #ffffff; display: block; margin-bottom: 2px; }
+        .bullets li span { color: #94a3b8; font-size: 12.5px; }
+        .slide-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: #334155;
-            border-top: 1.5px solid var(--line);
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid rgba(148, 163, 184, 0.14);
             padding-top: 10px;
-            margin-top: 10px;
+            font-family: 'JetBrains Mono', monospace;
         }
-
-        @media (max-width: 768px) {
-            body { height: auto; overflow-y: auto; }
-            .topbar { flex-wrap: wrap; height: auto; padding: 8px 12px; gap: 6px; }
-            .deck { padding: 10px; align-items: flex-start; }
-            .slide { aspect-ratio: auto; min-height: 82vh; padding: 20px 18px; }
-            h1 { font-size: 28px; }
-            h2 { font-size: 22px; }
-            .grid-2, .grid-3 { grid-template-columns: 1fr !important; }
-            .mars-orb { width: 140px; height: 140px; }
-            .orbit-track { width: 195px; height: 195px; }
-            .iso-layer { width: 230px; height: 58px; font-size: 11.5px; }
+        /* Live animated O2 Ring demo (Slide 4) */
+        @keyframes pulseRing {
+            0%, 100% { r: 62; stroke: #00ff9d; }
+            50% { r: 44; stroke: #38bdf8; }
         }
-
+        .anim-ring { animation: pulseRing 3.6s ease-in-out infinite; }
+        @keyframes dashFlow { to { stroke-dashoffset: -40; } }
+        .anim-route { stroke-dasharray: 8 6; animation: dashFlow 1.2s linear infinite; }
+        /* Live Chaos Test cycle (Slide 5) */
+        @keyframes chaosCycle {
+            0%, 45% { border-color: #00ff9d; box-shadow: 0 0 20px rgba(0, 255, 157, 0.15); }
+            50%, 95% { border-color: #ff2a55; box-shadow: 0 0 28px rgba(255, 42, 85, 0.35); }
+            100% { border-color: #00ff9d; }
+        }
+        .chaos-sim-box { animation: chaosCycle 6s infinite; }
+        @keyframes panoPan {
+            0% { background-position: 20% 50%; }
+            50% { background-position: 80% 50%; }
+            100% { background-position: 20% 50%; }
+        }
+        .pano-preview {
+            width: 100%; height: 100%; min-height: 270px;
+            border-radius: 14px; border: 1px solid rgba(56, 189, 248, 0.5);
+            background-image: url('./panos/vanzyl_pia24836.jpg');
+            background-size: auto 122%;
+            background-repeat: repeat-x;
+            animation: panoPan 14s ease-in-out infinite;
+            position: relative; overflow: hidden;
+        }
         @media print {
-            @page { size: landscape; margin: 0; }
-            body { background: var(--bg); height: auto; overflow: visible; }
-            .topbar { display: none !important; }
+            body { height: auto; overflow: visible; background: #050814; }
+            .topbar { display: none; }
             .deck { display: block; padding: 0; }
-            .slide {
-                display: flex !important;
-                page-break-after: always;
-                break-after: page;
-                width: 100vw;
-                height: 100vh;
-                max-width: none;
-                border-radius: 0;
-                box-shadow: none;
-            }
+            .slide { display: flex !important; page-break-after: always; margin: 0 auto 12px; max-width: 100%; box-shadow: none; }
         }
     </style>
 </head>
 <body>
-    <div class="topbar">
+    <header class="topbar">
         <div class="topbar-left">
-            <span class="badge-nasa">NASA SPACE APPS 2026</span>
-            <span>MARS MAPS — Team Nexo Code (Neiva, Colombia)</span>
+            <img src="./nexo-logo.svg" alt="Nexo Code" style="width:22px;height:22px;" />
+            <span>MARS MAPS</span>
+            <span class="badge-team">NEXO CODE • SPACE APPS 2026</span>
         </div>
         <div class="controls">
-            <button class="btn-nav" onclick="mover(-1)">← Prev</button>
-            <span id="contador" style="font-size:12px;font-family:'JetBrains Mono',monospace;">1 / 7</span>
-            <button class="btn-nav" onclick="mover(1)">Next →</button>
-            <button class="btn-pdf" onclick="window.print()">🖨️ Export PDF (7 Slides)</button>
+            <button class="btn-nav" onclick="moverSlide(-1)">← Prev</button>
+            <span id="slide-counter" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7dd3fc;min-width:52px;text-align:center;">1 / 7</span>
+            <button class="btn-nav" onclick="moverSlide(1)">Next →</button>
+            <button class="btn-pdf" onclick="window.print()">🖨️ PDF</button>
         </div>
-    </div>
+    </header>
 
-    <div class="deck">
+    <main class="deck">
         <!-- SLIDE 1: COVER -->
         <section class="slide active">
-            <div class="main-area">
-                <div class="grid-2" style="grid-template-columns: 1.25fr 0.95fr;">
-                    <div style="display:flex;flex-direction:column;justify-content:space-between;">
-                        <div>
-                            <div class="kicker">NASA Space Apps Challenge 2026 • Neiva</div>
-                            <h1>MARS MAPS:<br /><span style="color:var(--mars);">Marswalk</span> Survival GPS</h1>
-                            <p class="sub">
-                                A hyperlocal, multi-layer navigation and human-viability planner for the first astronauts exploring Jezero Crater.
-                            </p>
-                            <div style="margin-top:16px;">
-                                <span class="tag mars">📍 Jezero Crater</span>
-                                <span class="tag">🛰️ Mars Trek WMTS</span>
-                                <span class="tag">☀️ DONKI Live</span>
-                            </div>
-                        </div>
-                        <div class="card" style="padding:14px 18px;margin-top:14px;border-left:5px solid var(--nasa);">
-                            <div style="font-size:12px;font-weight:800;color:var(--nasa);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Team Nexo Code • Members</div>
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:14.5px;font-weight:700;color:#0f172a;">
-                                <span>1. David Santiago Ortiz Rincon</span>
-                                <span>2. Samuel Esteban Ramirez</span>
-                                <span>3. Daniel Zea Tamayo</span>
-                                <span>4. Mailyn Yuliana Rojas</span>
-                                <span style="grid-column:span 2;">5. Diego Fernando Vargas Ramirez</span>
-                            </div>
-                        </div>
-                        <div class="grid-3" style="flex:0;margin-top:12px;">
-                            <div class="card" style="padding:12px 16px;"><div class="kpi">4+</div><p style="font-size:13.5px;font-weight:700;">NASA Layers</p></div>
-                            <div class="card" style="padding:12px 16px;"><div class="kpi" style="color:var(--mars);">12</div><p style="font-size:13.5px;font-weight:700;">Jezero Sites</p></div>
-                            <div class="card" style="padding:12px 16px;"><div class="kpi" style="color:var(--green);">30%</div><p style="font-size:13.5px;font-weight:700;">Min PLSS O₂</p></div>
-                        </div>
-                    </div>
-                    <div class="mars-hero">
-                        <div class="orbit-track"><div class="orbit-sat"></div></div>
-                        <div class="mars-orb"></div>
-                        <div style="margin-top:26px;font-size:12.5px;font-weight:700;color:#cbd5e1;letter-spacing:0.5px;">JEZERO CRATER • 18.44°N, 77.45°E</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="kicker">NASA SPACE APPS CHALLENGE 2026 • NEIVA → GLOBAL</span>
+                <span class="badge-team">OPEN-SOURCE • OFFLINE-FIRST</span>
+            </div>
+            <div class="grid-2" style="grid-template-columns:1.25fr 0.75fr;">
+                <div>
+                    <h1>Mars Maps<br><span style="color:var(--cyan);">xEMU EVA Navigator</span></h1>
+                    <p class="sub" style="font-size:19px;color:#e2e8f0;margin-top:14px;">
+                        Real-time astronaut surface navigation, life-support twin &amp; 360° hazard helmet HUD for Jezero Crater.
+                    </p>
+                    <p class="sub-es" style="font-size:14.5px;margin-top:6px;">
+                        Navegación táctica humana en Marte: oxígeno vivo, pendientes y clima espacial en tiempo real.
+                    </p>
+                    <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;">
+                        <span class="badge-team" style="border-color:var(--green);color:var(--green);">3,396.2 km Mars Geodesy</span>
+                        <span class="badge-team">NASA + ESA Multi-Layer</span>
+                        <span class="badge-team">360° Perseverance HUD</span>
                     </div>
                 </div>
+                <div class="glass-card cyan" style="align-items:center;justify-content:center;text-align:center;padding:30px;">
+                    <img src="./nexo-logo.svg" alt="Nexo Code Logo" style="width:138px;height:138px;filter:drop-shadow(0 0 24px rgba(56,189,248,0.35));" />
+                    <div style="font-size:22px;font-weight:800;margin-top:14px;letter-spacing:1px;">NEXO CODE</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:4px;">Team Aerospace Engineering • Colombia</div>
+                </div>
             </div>
-            <div class="footer-slide">
-                <span>NASA Space Apps Challenge 2026 • Neiva, Huila — Colombia</span>
-                <span>1 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 01 / 07 • COVER</span>
+                <span>Data Attribution: NASA/JPL-Caltech • NASA MGS MOLA • NASA DONKI • ESA Mars Express HRSC</span>
             </div>
         </section>
 
-        <!-- SLIDE 2: PROBLEM VS SOLUTION -->
+        <!-- SLIDE 2: PROBLEM -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">01 • The Challenge Gap</div>
-                <h2>Why Global Maps Aren't Enough for <span style="color:var(--nasa);">Human Marswalks</span></h2>
+            <div>
+                <div class="kicker">02 • THE CHALLENGE / EL PROBLEMA</div>
+                <h2>Global Mars maps are built for orbiters — <span style="color:var(--red);">not humans on foot</span></h2>
+                <p class="sub-es">Los mapas orbitales muestran fotos planas; un astronauta necesita saber si sobrevive el regreso.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-2">
-                    <div class="card" style="border-top:5px solid var(--red);">
-                        <h3>❌ Traditional Planetary Portals</h3>
-                        <ul>
-                            <li>Built for regional geology, not <strong>5–15 km spacesuit EVAs</strong>.</li>
-                            <li>Zero tracking of <strong>xEMU suit fatigue</strong> or <strong>O₂ reserves</strong>.</li>
-                            <li>No live integration with <strong>Solar Particle (SEP)</strong> alerts.</li>
-                            <li>No automatic avoidance of <strong>&gt;20° cliffs</strong> or <strong>UHF blackouts</strong>.</li>
-                        </ul>
+            <div class="grid-3">
+                <div class="glass-card red">
+                    <div>
+                        <div style="font-size:28px;font-weight:800;color:var(--red);font-family:'JetBrains Mono',monospace;">&gt; 20° NO-GO</div>
+                        <h3 style="margin:8px 0 6px;font-size:17px;">Lethal Suit Slope</h3>
+                        <p style="font-size:13.5px;color:#cbd5e1;line-height:1.45;">Pressurized xEMU suits cannot safely traverse steep crater scarps like Kodiak (23.6°).</p>
                     </div>
-                    <div class="card" style="border-top:5px solid var(--green);">
-                        <h3>✅ Mars Maps Tactical Planner</h3>
-                        <ul>
-                            <li><strong>A* Geodesic Engine:</strong> Optimizes kcal, distance &amp; safety.</li>
-                            <li><strong>CSRM Life Support:</strong> Enforces <strong>≥30% PLSS O₂</strong> margin.</li>
-                            <li><strong>Live NASA DONKI:</strong> Blocks EVAs above <strong>1.5 mSv</strong> in storms.</li>
-                            <li><strong>Rover Companion:</strong> Cuts metabolic load by <strong>45%</strong>.</li>
-                        </ul>
-                    </div>
+                    <div style="font-size:11.5px;color:#fca5a5;margin-top:12px;">Riesgo de caída y despresurización</div>
                 </div>
-                <div class="card" style="flex:0;flex-direction:row;align-items:center;justify-content:space-around;background:#0f172a;color:#fff;padding:16px 24px;">
-                    <div style="text-align:center;"><strong style="color:#38bdf8;font-size:15px;">1. NASA APIs &amp; WMTS</strong><br /><span style="font-size:12px;color:#94a3b8;">CTX 5m • MOLA • DONKI • Mastcam-Z</span></div>
-                    <div style="font-size:24px;color:var(--mars);font-weight:800;">➔</div>
-                    <div style="text-align:center;"><strong style="color:#fff;font-size:15px;">2. FastAPI A* + CSRM</strong><br /><span style="font-size:12px;color:#94a3b8;">Slope • UHF • Payload • Radiation</span></div>
-                    <div style="font-size:24px;color:var(--mars);font-weight:800;">➔</div>
-                    <div style="text-align:center;"><strong style="color:#4ade80;font-size:15px;">3. Astronaut HUD &amp; POV</strong><br /><span style="font-size:12px;color:#94a3b8;">Live Walk • Post-EVA Report • 360°</span></div>
+                <div class="glass-card cyan">
+                    <div>
+                        <div style="font-size:28px;font-weight:800;color:var(--amber);font-family:'JetBrains Mono',monospace;">30% PLSS</div>
+                        <h3 style="margin:8px 0 6px;font-size:17px;">Strict O₂ Bingo Limit</h3>
+                        <p style="font-size:13.5px;color:#cbd5e1;line-height:1.45;">Astronauts must reserve 30% oxygen for emergencies and account for round-trip return.</p>
+                    </div>
+                    <div style="font-size:11.5px;color:#fde68a;margin-top:12px;">Reserva obligatoria NASA</div>
+                </div>
+                <div class="glass-card cyan">
+                    <div>
+                        <div style="font-size:28px;font-weight:800;color:var(--cyan);font-family:'JetBrains Mono',monospace;">UHF + CME</div>
+                        <h3 style="margin:8px 0 6px;font-size:17px;">Comms &amp; Solar Storms</h3>
+                        <p style="font-size:13.5px;color:#cbd5e1;line-height:1.45;">Deep craters block line-of-sight UHF radio and solar CMEs spike radiation up to 0.85 mSv/h.</p>
+                    </div>
+                    <div style="font-size:11.5px;color:#7dd3fc;margin-top:12px;">Cráteres ciegos y tormentas solares</div>
                 </div>
             </div>
-            <div class="footer-slide">
-                <span>Hyperlocal Decision Support for Surface Missions</span>
-                <span>2 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 02 / 07 • PROBLEM STATEMENT</span>
+                <span>JEZERO CRATER OPERATIONAL ZONE (18.45° N, 77.42° E)</span>
             </div>
         </section>
 
-        <!-- SLIDE 3: JEZERO CRATER -->
+        <!-- SLIDE 3: MULTI-MISSION DATA -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">02 • Target Location &amp; Science Goal</div>
-                <h2>Jezero Crater: <span style="color:var(--mars);">12 Real Geological Waypoints</span></h2>
+            <div>
+                <div class="kicker">03 • MULTI-MISSION ARCHITECTURE / DATOS NASA + ESA</div>
+                <h2>4 Official Space Datasets Fused in <span style="color:var(--cyan);">1 Tactical Console</span></h2>
+                <p class="sub-es">Arquitectura Offline-First con respaldo en caché local (1.5s timeout) a prueba de fallas de Wi-Fi.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-2" style="grid-template-columns: 0.95fr 1.15fr;">
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div class="card" style="flex:1;border-left:5px solid var(--green);">
-                            <h3>🏠 Habitat: Octavia E. Butler Base</h3>
-                            <p>Flat (-2570 m, 1.8° slope) landing site serving as life-support &amp; primary UHF relay hub.</p>
-                        </div>
-                        <div class="card" style="flex:1;border-left:5px solid var(--nasa);">
-                            <h3>🔬 Science Targets (100 pts)</h3>
-                            <p>Hogwallow Flats (biosignature clays), Bright Angel, Neretva Vallis, Séítah &amp; Three Forks depot.</p>
-                        </div>
-                        <div class="card" style="flex:1;border-left:5px solid var(--red);">
-                            <h3>🚫 Hazards Avoided by A*</h3>
-                            <p>Belva Crater (21.8° + UHF radio shadow), Kodiak Cliff (23.6°) &amp; Jezero West Rim (24.5°).</p>
-                        </div>
-                    </div>
-                    <div class="card" style="padding:14px;background:#0f172a;">
-                        <svg viewBox="0 0 440 310" style="width:100%;height:100%;background:#1e1410;border-radius:10px;">
-                            <text x="16" y="24" fill="#94a3b8" font-size="11" font-family="JetBrains Mono">JEZERO CRATER • A* SAFE ROUTING</text>
-                            <circle cx="220" cy="92" r="30" fill="rgba(239,68,68,0.24)" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,4" />
-                            <circle cx="145" cy="232" r="28" fill="rgba(239,68,68,0.24)" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,4" />
-                            <text x="176" y="56" fill="#fca5a5" font-size="11" font-weight="700">Belva (No UHF)</text>
-                            <text x="102" y="274" fill="#fca5a5" font-size="11" font-weight="700">Kodiak (23.6°)</text>
-                            <line x1="370" y1="158" x2="280" y2="142" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="4,4" />
-                            <line x1="280" y1="142" x2="190" y2="168" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="4,4" />
-                            <line x1="190" y1="168" x2="95" y2="110" stroke="rgba(255,255,255,0.22)" stroke-width="1.5" stroke-dasharray="4,4" />
-                            <line x1="370" y1="158" x2="220" y2="92" stroke="rgba(239,68,68,0.45)" stroke-width="1.5" stroke-dasharray="4,4" />
-                            <polyline class="route-anim" points="370,158 280,142 190,168 95,110" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" />
-                            <circle cx="370" cy="158" r="9" fill="#22c55e" stroke="#fff" stroke-width="2.5" />
-                            <text x="315" y="185" fill="#fff" font-size="11" font-weight="700">1. Habitat Base</text>
-                            <circle cx="280" cy="142" r="7" fill="#fff" />
-                            <text x="242" y="128" fill="#e2e8f0" font-size="10.5" font-weight="600">2. Three Forks</text>
-                            <circle cx="190" cy="168" r="7" fill="#fff" />
-                            <text x="148" y="192" fill="#e2e8f0" font-size="10.5" font-weight="600">3. Hogwallow</text>
-                            <circle cx="95" cy="110" r="9" fill="#38bdf8" stroke="#fff" stroke-width="2.5" />
-                            <text x="38" y="92" fill="#bae6fd" font-size="11" font-weight="700">4. Neretva Vallis</text>
-                        </svg>
+            <div class="grid-2">
+                <ul class="bullets">
+                    <li><strong>NASA/JPL-Caltech Jezero Mosaic (PIA24096) &amp; Mastcam-Z</strong><span>High-resolution orbital imagery + 6 local Perseverance 360° surface panoramas.</span></li>
+                    <li><strong>NASA MGS MOLA + ESA Mars Express HRSC</strong><span>Elevation profiles (-2,650m to -2,250m), slope calculation &amp; 3D terrain mesh export (.STL).</span></li>
+                    <li><strong>NASA DONKI Space Weather API</strong><span>Live solar flux (0.028 mSv/h nominal → 0.85 mSv/h CME alert) with local cache fallback.</span></li>
+                </ul>
+                <div class="glass-card cyan" style="padding:14px;">
+                    <img src="./jezero-hi-res.jpg" alt="Jezero Crater HD" style="width:100%;height:230px;object-fit:cover;border-radius:10px;border:1px solid rgba(56,189,248,0.4);" />
+                    <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11.5px;color:#7dd3fc;font-family:'JetBrains Mono',monospace;">
+                        <span>12 JEZERO NODES</span>
+                        <span>60 FPS CANVAS</span>
+                        <span>OFFLINE BUNKER 1.5s</span>
                     </div>
                 </div>
             </div>
-            <div class="footer-slide">
-                <span>25 km Basin Coverage • Native 5 m/px CTX Resolution</span>
-                <span>3 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 03 / 07 • NASA + ESA OPEN DATA</span>
+                <span>Zero external API single-point-of-failure</span>
             </div>
         </section>
 
-        <!-- SLIDE 4: MULTI-LAYER NASA DATA -->
+        <!-- SLIDE 4: EVA PLANNER & WHITE-BOX PHYSICS -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">03 • Multi-Layer NASA Data Integration</div>
-                <h2>4+ Stacked Scientific Layers &amp; <span style="color:var(--nasa);">Live NASA APIs</span></h2>
+            <div>
+                <div class="kicker">04 • AUDITABLE PHYSICS / PLANIFICADOR EVA &amp; CAJA BLANCA</div>
+                <h2>Live Oxygen Range Ring &amp; <span style="color:var(--green);">White-Box Math</span></h2>
+                <p class="sub-es">Cero cajas negras: cada número de distancia, oxígeno y radiación es auditable en vivo.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-2" style="grid-template-columns: 0.95fr 1.15fr;">
-                    <div class="iso-box">
-                        <div class="iso-layer" style="background:linear-gradient(135deg,#dc2626,#991b1b);">
-                            <span>☀️ Layer 4: Radiation &amp; UHF</span><span>DONKI API</span>
-                        </div>
-                        <div class="iso-layer" style="background:linear-gradient(135deg,#ea580c,#9a3412);">
-                            <span>🌡️ Layer 3: Thermal &amp; Slope</span><span>&gt;20° Hazard</span>
-                        </div>
-                        <div class="iso-layer" style="background:linear-gradient(135deg,#0284c7,#075985);">
-                            <span>⛰️ Layer 2: MOLA Altimetry</span><span>463 m/px</span>
-                        </div>
-                        <div class="iso-layer" style="background:linear-gradient(135deg,#475569,#1e293b);">
-                            <span>🛰️ Layer 1: CTX + Viking Optical</span><span>5 m/px HD</span>
-                        </div>
-                    </div>
-                    <div style="display:flex;flex-direction:column;gap:12px;">
-                        <div class="card" style="flex:1;">
-                            <h3>🛰️ NASA Mars Trek WMTS</h3>
-                            <p>Stacks <strong>Caltech CTX (5 m/px)</strong>, <strong>Viking Color (232 m/px)</strong>, and <strong>40% MOLA Topography Fusion</strong>.</p>
-                        </div>
-                        <div class="card" style="flex:1;">
-                            <h3>☀️ NASA DONKI Space Weather (Live)</h3>
-                            <p>Reads real solar flare/SEP alerts (0.028 mSv/h basal → <strong>0.85 mSv/h</strong> Solar Storm Simulator).</p>
-                        </div>
-                        <div class="card" style="flex:1;">
-                            <h3>📸 Mars 2020 Perseverance Raw API</h3>
-                            <p>Filters surface landscape cameras (<strong>Mastcam-Z</strong>) for ground-truth arrival verification.</p>
-                        </div>
-                    </div>
+            <div class="grid-2">
+                <ul class="bullets">
+                    <li><strong>Martian Haversine Geodesy (R = 3,396.19 km)</strong><span>True Mars surface distances — never inflated by Earth's 6,371 km radius.</span></li>
+                    <li><strong>Metabolic O₂ + Live Autonomy Ring</strong><span>Penalizes slopes &gt;15°, payload mass &amp; switches seamlessly between Light / xEMU / Rover.</span></li>
+                    <li><strong>Apollo/Artemis EVA Cuff Checklist</strong><span>One-click wrist card with compass bearings, Bingo O₂ turn-back threshold &amp; PDF export.</span></li>
+                </ul>
+                <div class="glass-card green" style="align-items:center;justify-content:center;position:relative;">
+                    <svg viewBox="0 0 260 200" style="width:100%;max-height:230px;">
+                        <rect width="260" height="200" rx="10" fill="#090f1d" />
+                        <circle cx="130" cy="100" class="anim-ring" fill="rgba(0,255,157,0.08)" stroke-width="2" stroke-dasharray="5 4" />
+                        <path d="M130 100 Q 100 72, 65 88" fill="none" stroke="#38bdf8" stroke-width="3.5" class="anim-route" />
+                        <circle cx="130" cy="100" r="6" fill="#00ff9d" />
+                        <circle cx="65" cy="88" r="6" fill="#38bdf8" />
+                        <circle cx="185" cy="135" r="9" fill="rgba(255,42,85,0.25)" stroke="#ff2a55" stroke-width="1.5" stroke-dasharray="3 3" />
+                        <text x="138" y="104" fill="#00ff9d" font-size="9" font-family="monospace">Base Octavia (A)</text>
+                        <text x="20" y="75" fill="#7dd3fc" font-size="9" font-family="monospace">Hogwallow (B) • 63.4% O₂</text>
+                        <text x="150" y="156" fill="#fda4af" font-size="8.5" font-family="monospace">Kodiak 23.6° NO-GO</text>
+                    </svg>
+                    <div style="font-size:11px;color:var(--green);font-family:'JetBrains Mono',monospace;margin-top:8px;">LIVE O₂ AUTONOMY RING • A* SAFE ROUTING</div>
                 </div>
             </div>
-            <div class="footer-slide">
-                <span>All layers toggleable in real time with FastAPI 15-min caching</span>
-                <span>4 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 04 / 07 • WHITE-BOX ENGINEERING</span>
+                <span>Interactive Cuff Checklist + CSV/STL Export</span>
             </div>
         </section>
 
-        <!-- SLIDE 5: METABOLIC & ROVER TELEMETRY -->
+        <!-- SLIDE 5: ACTIVE SAFETY & CHAOS TEST -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">04 • Biomechanics &amp; Survival Telemetry</div>
-                <h2>CSRM Suit Fatigue, <span style="color:var(--mars);">Payload</span> &amp; Rover Trade-off</h2>
+            <div>
+                <div class="kicker">05 • ACTIVE SAFETY / CHAOS TEST EN VIVO</div>
+                <h2>Real-Time <span style="color:var(--red);">Chaos Test</span> &amp; Mission Abort Guardrails</h2>
+                <p class="sub-es">El jurado puede inyectar fallas en vivo y ver el recálculo inmediato de supervivencia.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-2">
-                    <div class="card" style="justify-content:space-between;">
-                        <h3>🔋 PLSS O₂ Left (10 km Jezero Traverse)</h3>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;"><span>🤖 With Rover Companion</span><span style="color:var(--green);">68% Left (GO)</span></div>
-                            <div class="bar-track"><div class="bar-fill" style="width:68%;background:var(--green);"></div></div>
+            <div class="grid-2">
+                <div class="glass-card chaos-sim-box" style="padding:20px;">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:8px;">LIVE EMERGENCY SIMULATION LOOP</div>
+                    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+                        <div style="background:rgba(15,23,42,0.9);padding:10px;border-radius:8px;border-left:3px solid var(--red);">
+                            <strong>1. O₂ Suit Leak (-35% Tank)</strong><br><span style="color:#94a3b8;">Auto-shrinks range ring &amp; triggers EVA ABORT if reserve &lt; 30%.</span>
                         </div>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;"><span>🎒 Standard xEMU Suit (0 kg)</span><span style="color:var(--nasa);">44% Left (GO)</span></div>
-                            <div class="bar-track"><div class="bar-fill" style="width:44%;background:var(--nasa);"></div></div>
+                        <div style="background:rgba(15,23,42,0.9);padding:10px;border-radius:8px;border-left:3px solid var(--amber);">
+                            <strong>2. Solar CME Storm (0.85 mSv/h)</strong><br><span style="color:#94a3b8;">Red edge pulse + recalculates ETA to nearest topographic shelter (~6 min).</span>
                         </div>
-                        <div>
-                            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;"><span>🔬 +25 kg Spectrometer (Solo)</span><span style="color:var(--red);">21% Left (NO-GO &lt;30%)</span></div>
-                            <div class="bar-track"><div class="bar-fill" style="width:21%;background:var(--red);"></div></div>
+                        <div style="background:rgba(15,23,42,0.9);padding:10px;border-radius:8px;border-left:3px solid var(--cyan);">
+                            <strong>3. UHF Link Blackout</strong><br><span style="color:#94a3b8;">Reroutes around blind craters like Belva (21.8°, no UHF).</span>
                         </div>
                     </div>
-                    <div class="card" style="justify-content:space-between;">
-                        <h3>📈 Exponential Slope Cost (xEMU Suit)</h3>
-                        <svg viewBox="0 0 360 155" style="width:100%;height:165px;">
-                            <line x1="35" y1="130" x2="340" y2="130" stroke="#cbd5e1" stroke-width="2" />
-                            <line x1="35" y1="15" x2="35" y2="130" stroke="#cbd5e1" stroke-width="2" />
-                            <line x1="230" y1="15" x2="230" y2="130" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,4" />
-                            <text x="236" y="30" fill="#dc2626" font-size="12" font-weight="700">20° NO-GO Limit</text>
-                            <path d="M 35 118 Q 145 106, 230 70 T 330 20" fill="none" stroke="#d94e28" stroke-width="4.5" stroke-linecap="round" />
-                            <circle cx="230" cy="70" r="6" fill="#dc2626" />
-                            <text x="38" y="148" fill="#475569" font-size="11" font-weight="600">0° Flat</text>
-                            <text x="218" y="148" fill="#dc2626" font-size="11" font-weight="700">20°</text>
-                            <text x="315" y="148" fill="#475569" font-size="11" font-weight="600">30°</text>
-                        </svg>
-                    </div>
                 </div>
-                <div class="grid-3" style="flex:0;">
-                    <div class="card" style="padding:14px 18px;text-align:center;"><div class="kpi">≥30%</div><p style="font-weight:700;">Mandatory PLSS O₂ Reserve</p></div>
-                    <div class="card" style="padding:14px 18px;text-align:center;"><div class="kpi" style="color:var(--mars);">≤20°</div><p style="font-weight:700;">xEMU Stability Slope Limit</p></div>
-                    <div class="card" style="padding:14px 18px;text-align:center;"><div class="kpi" style="color:var(--red);">≤1.5 mSv</div><p style="font-weight:700;">Solar Storm EVA Cutoff</p></div>
-                </div>
+                <ul class="bullets">
+                    <li><strong>SpaceX-Style Post-EVA Debrief</strong><span>Animated counters, Ida + Retorno O₂ breakdown &amp; site mineral sample findings.</span></li>
+                    <li><strong>Instant Safe Reset (Esc Key)</strong><span>Zero F5 reloads on stage — cancels tours, clears faults &amp; recenters Jezero in 0.5s.</span></li>
+                    <li><strong>3D Jezero Terrain + Sonar Pulse</strong><span>Interactive WebGL elevation model with X-Ray MOLA slider &amp; .STL 3D-print export.</span></li>
+                </ul>
             </div>
-            <div class="footer-slide">
-                <span>Real-time recalculation in Python FastAPI</span>
-                <span>5 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 05 / 07 • MISSION SAFETY &amp; RESILIENCE</span>
+                <span>Both Safe &amp; Aborted EVAs verified</span>
             </div>
         </section>
 
-        <!-- SLIDE 6: 3D GLOBE + LIVE WALK + STREET VIEW -->
+        <!-- SLIDE 6: 360 xEMU HELMET IMMERSION -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">05 • Immersion &amp; Historical Autopsy</div>
-                <h2>3D Orbital Context, <span style="color:var(--nasa);">Live Walk HUD</span> &amp; Mastcam-Z POV</h2>
+            <div>
+                <div class="kicker">06 • SURFACE IMMERSION / VISOR CASCO xEMU 360°</div>
+                <h2>Cylindrical 360° Perseverance HUD + <span style="color:var(--cyan);">PIXL Scanner</span></h2>
+                <p class="sub-es">Marcadores cardinales reales en el horizonte, escáner mineralógico y audio EVA sintetizado.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-3">
-                    <div class="card" style="border-top:5px solid var(--mars);justify-content:flex-start;">
-                        <h3>🌍 3D Mars Mission Globe</h3>
-                        <p style="margin-bottom:12px;">Three.js globe textured with Viking MDIM 21 pinning real NASA mission outcomes:</p>
-                        <ul>
-                            <li>🔴 <strong>Spirit:</strong> Slope trap (&gt;20°)</li>
-                            <li>🔴 <strong>Opportunity:</strong> Power loss</li>
-                            <li>🟡 <strong>InSight:</strong> Dust degradation</li>
-                            <li>🟢 <strong>Perseverance:</strong> Jezero Hub</li>
-                        </ul>
-                    </div>
-                    <div class="card" style="border-top:5px solid var(--nasa);justify-content:flex-start;">
-                        <h3>🧑‍🚀 Live Walk &amp; Post-EVA</h3>
-                        <p style="margin-bottom:12px;">Animated traverse updates live astronaut telemetry and generates an arrival debrief:</p>
-                        <ul>
-                            <li>Live <strong>O₂ %</strong>, elevation &amp; <strong>mSv</strong></li>
-                            <li>MOLA elevation SVG profile</li>
-                            <li><strong>Post-EVA Card</strong> with destination NASA photo &amp; audit</li>
-                        </ul>
-                    </div>
-                    <div class="card" style="border-top:5px solid var(--green);justify-content:flex-start;">
-                        <h3>📷 Mars Street View</h3>
-                        <p style="margin-bottom:12px;">Interactive ground-level preview so crews know what to expect before arrival:</p>
-                        <ul>
-                            <li>Draggable 2D/3D horizon + compass</li>
-                            <li>Live <strong>Mastcam-Z</strong> raw images</li>
-                            <li>Step-by-step neighbor hops</li>
-                        </ul>
-                    </div>
+            <div class="grid-2">
+                <div class="pano-preview">
+                    <div style="position:absolute;top:12px;left:12px;background:rgba(11,15,25,0.88);border:1px solid var(--cyan);padding:4px 10px;border-radius:999px;font-size:11px;font-family:'JetBrains Mono',monospace;">O₂: 63.4% • RAD: 0.028 mSv/h • UHF OK</div>
+                    <div style="position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border:1.5px dashed #38bdf8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;background:rgba(11,15,25,0.55);color:#7dd3fc;">🔬 PIXL</div>
+                    <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(11,15,25,0.9);border:1px solid var(--cyan);padding:5px 12px;border-radius:999px;font-size:11px;color:#7dd3fc;white-space:nowrap;">🧭 Next Stop: Three Forks • 1.84 km (82°) →</div>
                 </div>
+                <ul class="bullets">
+                    <li><strong>100% Real Jezero Panoramas</strong><span>6 local NASA Mastcam-Z / Navcam mosaics (including Three Forks Ti tubes PIA25663).</span></li>
+                    <li><strong>True Azimuth Horizon Beacons</strong><span>Neighbors appear at their real compass bearing; dangerous cliffs show ⛔ NO-GO.</span></li>
+                    <li><strong>Interactive PIXL / SuperCam + EVA Audio</strong><span>Click-to-scan rock mineralogy + live Web Audio helmet ventilation &amp; Mars wind.</span></li>
+                </ul>
             </div>
-            <div class="footer-slide">
-                <span>Bilingual ES / EN Interface + Right-Click Free-Point Routing</span>
-                <span>6 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 06 / 07 • xEMU AR HELMET VISOR</span>
+                <span>Local assets = zero lag on stage</span>
             </div>
         </section>
 
-        <!-- SLIDE 7: CITATIONS & AI DISCLOSURE -->
+        <!-- SLIDE 7: IMPACT, SCALABILITY & LIVE QR -->
         <section class="slide">
-            <div class="slide-header">
-                <div class="kicker">06 • Citations, Impact &amp; Transparency</div>
-                <h2>Ready for <span style="color:var(--green);">Artemis-to-Mars</span> Operations</h2>
+            <div>
+                <div class="kicker">07 • IMPACT &amp; LIVE DEMO / ESCALABILIDAD Y QR</div>
+                <h2>Ready for <span style="color:var(--cyan);">Artemis Lunar South Pole</span> &amp; Mars EVA</h2>
+                <p class="sub-es">Escanea el QR para probar Mars Maps ahora mismo desde tu celular o portátil sin contraseñas.</p>
             </div>
-            <div class="main-area">
-                <div class="grid-2">
-                    <div class="card" style="justify-content:flex-start;">
-                        <h3>📚 Verified NASA Data Sources</h3>
-                        <ul>
-                            <li><strong>NASA JPL Mars Trek WMTS:</strong> <code>CTX_beta01_uncontrolled_5m_Caltech</code>, <code>Mars_Viking_MDIM21_ClrMosaic_global_232m</code>, <code>Mars_MGS_MOLA_ClrShade_merge_global_463m</code>.</li>
-                            <li><strong>NASA DONKI Space Weather API:</strong> <code>api.nasa.gov/DONKI/notifications</code> + MSL-RAD baseline.</li>
-                            <li><strong>NASA Mars 2020 Raw Images &amp; Image Library:</strong> <code>mars.nasa.gov/rss/api</code> &amp; <code>images-api.nasa.gov</code>.</li>
-                        </ul>
+            <div class="grid-2" style="grid-template-columns:1.15fr 0.85fr;">
+                <ul class="bullets">
+                    <li><strong>Plug-and-Play Planetary Graph</strong><span>Same A* + PLSS metabolic engine adapts to Artemis III Lunar South Pole DEMs.</span></li>
+                    <li><strong>100% Transparent AI Engineering</strong><span>AI used as software engineering copilot; physics, datasets &amp; NASA/ESA rules verified.</span></li>
+                    <li><strong>Live Public Access (No Login)</strong><span>Web App: <strong>ortiz10m.github.io/nexo-code-nass/frontend/index.html</strong><br>Repo: <strong>github.com/ortiz10m/nexo-code-nass</strong></span></li>
+                </ul>
+                <div class="glass-card cyan" style="align-items:center;justify-content:center;text-align:center;padding:20px;">
+                    <div style="background:#ffffff;padding:12px;border-radius:14px;display:inline-block;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=210x210&data=https://ortiz10m.github.io/nexo-code-nass/frontend/index.html" alt="QR Mars Maps Live" style="width:175px;height:175px;display:block;" />
                     </div>
-                    <div class="card" style="justify-content:flex-start;">
-                        <h3>🤖 AI Disclosure &amp; Next Steps</h3>
-                        <ul>
-                            <li><strong>AI Usage Disclosure:</strong> AI coding assistants were used to accelerate FastAPI/Leaflet integration, UI styling, and presentation formatting. All NASA APIs and routing math were tested locally.</li>
-                            <li><strong>Roadmap:</strong> Integrate HiRISE 25 cm/px boulder maps, MEDA dust-storm opacity feeds, and multi-astronaut cooperative EVA sync.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="card" style="flex:0;flex-direction:row;align-items:center;justify-content:space-between;background:#0f172a;color:#fff;padding:16px 26px;">
-                    <div><strong style="font-size:17px;">Team Nexo Code</strong> <span style="color:#94a3b8;margin-left:8px;">Neiva, Huila — Colombia</span></div>
-                    <span class="badge-nasa" style="font-size:12px;padding:5px 14px;">NASA SPACE APPS CHALLENGE 2026</span>
+                    <div style="font-size:14px;font-weight:800;color:#ffffff;margin-top:12px;">SCAN TO LAUNCH MARS MAPS</div>
+                    <div style="font-size:11.5px;color:var(--cyan);margin-top:2px;">Team Nexo Code • NASA Space Apps 2026</div>
                 </div>
             </div>
-            <div class="footer-slide">
-                <span>Thank You • Questions?</span>
-                <span>7 / 7</span>
+            <div class="slide-footer">
+                <span>SLIDE 07 / 07 • THANK YOU / GRACIAS</span>
+                <span>ortiz10m.github.io/nexo-code-nass/frontend/index.html</span>
             </div>
         </section>
-    </div>
+    </main>
 
     <script>
-        let actual = 0;
-        const slides = document.querySelectorAll(".slide");
-        function mostrar(idx) {
-            actual = Math.max(0, Math.min(slides.length - 1, idx));
-            slides.forEach((s, i) => s.classList.toggle("active", i === actual));
-            document.getElementById("contador").innerText = `${actual + 1} / ${slides.length}`;
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        let idx = 0;
+        function mostrarSlide(n) {
+            idx = Math.max(0, Math.min(slides.length - 1, n));
+            slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+            document.getElementById("slide-counter").innerText = `${idx + 1} / ${slides.length}`;
         }
-        function mover(delta) { mostrar(actual + delta); }
-        window.addEventListener("keydown", e => {
-            if (e.key === "ArrowRight" || e.key === " ") mover(1);
-            if (e.key === "ArrowLeft") mover(-1);
+        function moverSlide(d) { mostrarSlide(idx + d); }
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); moverSlide(1); }
+            if (e.key === "ArrowLeft") { e.preventDefault(); moverSlide(-1); }
         });
     </script>
 </body>
