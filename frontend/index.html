@@ -1047,6 +1047,7 @@
     </aside>
 
     <div class="chips-superiores">
+        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:linear-gradient(135deg,#ea580c,#c2410c);color:#fff;font-weight:700;">🪐 Globo 3D</button>
         <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;font-weight:700;">🏔️ Terreno 3D</button>
         <div style="position:relative;">
             <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Capas ▾</button>
@@ -1176,6 +1177,11 @@
             <button id="btn-cerrar-globo" class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
         </div>
         <div id="contenedor-globo-3d"></div>
+        <div id="globo-labels-layer" style="position:absolute;inset:0;pointer-events:none;z-index:22;overflow:hidden;"></div>
+        <div style="position:absolute;left:20px;bottom:84px;z-index:30;display:flex;gap:6px;background:rgba(11,16,28,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:5px;">
+            <button id="btn-g3d-viking" onclick="cambiarTexturaGlobo3D('viking')" style="padding:6px 11px;border-radius:8px;border:none;background:#ea580c;color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;">🪨 Color Viking</button>
+            <button id="btn-g3d-mola" onclick="cambiarTexturaGlobo3D('mola')" style="padding:6px 11px;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-size:11.5px;font-weight:700;cursor:pointer;">🌈 Altitud MOLA</button>
+        </div>
         <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:30;font-size:12px;backdrop-filter:blur(6px);">
             <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">CÓDIGO DE COLORES • MISIONES</div>
             <div style="display:flex;flex-direction:column;gap:7px;">
@@ -2291,14 +2297,17 @@
             });
             scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.045, 64, 64), atmoMat));
 
-            // Pines 3D reales sobre la superficie de Marte para cada misión NASA
+            // Pines 3D + etiquetas flotantes estilo explore-mars.esri.com
             const misiones3D = [
-                { lat: 18.44, lon: 77.45, color: 0x22c55e, tam: 0.028 },
-                { lat: -4.58, lon: 137.44, color: 0x3b82f6, tam: 0.023 },
-                { lat: -14.56, lon: 175.47, color: 0xef4444, tam: 0.023 },
-                { lat: -1.94, lon: 354.47, color: 0xef4444, tam: 0.023 },
-                { lat: 4.50, lon: 135.62, color: 0xfacc15, tam: 0.023 }
+                { lat: 18.44, lon: 77.45, color: 0x22c55e, hex: "#22c55e", tam: 0.028, label: "Perseverance (Jezero 2021)" },
+                { lat: -4.58, lon: 137.44, color: 0x3b82f6, hex: "#38bdf8", tam: 0.022, label: "Curiosity (Gale 2012)" },
+                { lat: -14.56, lon: 175.47, color: 0xef4444, hex: "#f87171", tam: 0.022, label: "Spirit (Gusev 2004)" },
+                { lat: -1.94, lon: 354.47, color: 0xef4444, hex: "#f87171", tam: 0.022, label: "Opportunity (2004)" },
+                { lat: 4.50, lon: 135.62, color: 0xfacc15, hex: "#facc15", tam: 0.022, label: "InSight (2018)" },
+                { lat: 18.65, lon: 226.20, color: 0xf97316, hex: "#fdba74", tam: 0.018, label: "Olympus Mons (21.9 km)" },
+                { lat: -13.90, lon: 300.80, color: 0xf97316, hex: "#fdba74", tam: 0.018, label: "Valles Marineris" }
             ];
+            window._pinsGlobo3D = [];
             misiones3D.forEach(m => {
                 const pin = new THREE.Mesh(
                     new THREE.SphereGeometry(m.tam, 16, 16),
@@ -2306,25 +2315,42 @@
                 );
                 pin.position.copy(latLonAVector3(m.lat, m.lon));
                 esferaMarte.add(pin);
+                window._pinsGlobo3D.push({ mesh: pin, label: m.label, hex: m.hex, lat: m.lat, lon: m.lon });
             });
 
-            const baseViking = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/";
-            for (let y = 0; y < 2; y++) {
-                for (let x = 0; x < 4; x++) {
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.onload = () => { ctx.drawImage(img, x * 512, y * 512, 512, 512); texMarte.needsUpdate = true; };
-                    img.src = `${baseViking}1/${y}/${x}.jpg`;
+            window._globoCtx = ctx;
+            window._globoTex = texMarte;
+            window.cambiarTexturaGlobo3D = function(modo) {
+                const isMola = modo === "mola";
+                const bV = document.getElementById("btn-g3d-viking");
+                const bM = document.getElementById("btn-g3d-mola");
+                if (bV && bM) {
+                    bV.style.background = isMola ? "transparent" : "#ea580c";
+                    bV.style.color = isMola ? "#cbd5e1" : "#fff";
+                    bM.style.background = isMola ? "#0284c7" : "transparent";
+                    bM.style.color = isMola ? "#fff" : "#cbd5e1";
                 }
-            }
-            for (let y = 0; y < 4; y++) {
-                for (let x = 0; x < 8; x++) {
-                    const img = new Image();
-                    img.crossOrigin = "anonymous";
-                    img.onload = () => { ctx.drawImage(img, x * 256, y * 256, 256, 256); texMarte.needsUpdate = true; };
-                    img.src = `${baseViking}2/${y}/${x}.jpg`;
+                const baseUrl = isMola
+                    ? "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/"
+                    : "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/";
+                for (let y = 0; y < 2; y++) {
+                    for (let x = 0; x < 4; x++) {
+                        const img = new Image();
+                        img.crossOrigin = "anonymous";
+                        img.onload = () => { ctx.drawImage(img, x * 512, y * 512, 512, 512); texMarte.needsUpdate = true; };
+                        img.src = `${baseUrl}1/${y}/${x}.jpg`;
+                    }
                 }
-            }
+                for (let y = 0; y < 4; y++) {
+                    for (let x = 0; x < 8; x++) {
+                        const img = new Image();
+                        img.crossOrigin = "anonymous";
+                        img.onload = () => { ctx.drawImage(img, x * 256, y * 256, 256, 256); texMarte.needsUpdate = true; };
+                        img.src = `${baseUrl}2/${y}/${x}.jpg`;
+                    }
+                }
+            };
+            window.cambiarTexturaGlobo3D("viking");
 
             let drag = false, px = 0, py = 0;
             renderer.domElement.addEventListener("mousedown", e => { drag = true; autoRotar3D = false; px = e.clientX; py = e.clientY; });
@@ -2359,10 +2385,30 @@
                 renderer.setSize(cont.clientWidth, cont.clientHeight);
             });
 
+            const gLayer = document.getElementById("globo-labels-layer");
             (function animar3D() {
                 requestAnimationFrame(animar3D);
                 if (!drag && autoRotar3D) esferaMarte.rotation.y += 0.0011;
                 renderer.render(scene, camera);
+                if (gLayer && document.getElementById("modal-globo3d").style.display !== "none" && window._pinsGlobo3D) {
+                    gLayer.innerHTML = "";
+                    const w = cont.clientWidth, h = cont.clientHeight;
+                    const camDir = new THREE.Vector3();
+                    camera.getWorldDirection(camDir);
+                    window._pinsGlobo3D.forEach(item => {
+                        const wp = new THREE.Vector3();
+                        item.mesh.getWorldPosition(wp);
+                        const normal = wp.clone().normalize();
+                        if (normal.dot(camera.position.clone().normalize()) < 0.15) return;
+                        const proj = wp.clone().project(camera);
+                        const sx = (proj.x * 0.5 + 0.5) * w;
+                        const sy = (-proj.y * 0.5 + 0.5) * h;
+                        const el = document.createElement("div");
+                        el.style.cssText = `position:absolute;left:${sx}px;top:${sy}px;transform:translate(8px,-50%);color:#fff;font-size:11.5px;font-weight:700;text-shadow:0 1px 4px #000, 0 0 8px #000;border-left:2px solid ${item.hex};padding-left:6px;white-space:nowrap;`;
+                        el.innerText = item.label;
+                        gLayer.appendChild(el);
+                    });
+                }
             })();
         }
 
