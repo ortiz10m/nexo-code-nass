@@ -799,6 +799,69 @@
         }
         .sv-raw-item img { width: 100%; height: 82px; object-fit: cover; display: block; }
         .sv-raw-item span { display: block; padding: 4px 6px; font-size: 10.5px; color: #dadce0; background: rgba(0,0,0,0.45); }
+    
+        /* Dinamismo e inmersión: ruta animada y balizas pulsantes */
+        @keyframes flujoRuta {
+            to { stroke-dashoffset: -28; }
+        }
+        .ruta-animada-svg {
+            stroke-dasharray: 10 8;
+            animation: flujoRuta 1.1s linear infinite;
+        }
+        @keyframes pulsoBaliza {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.22); opacity: 0.35; }
+        }
+        .escenario-pills {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .escenario-btn {
+            flex: 1;
+            min-width: 90px;
+            background: rgba(30, 41, 59, 0.85);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 5px 7px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: center;
+        }
+        .escenario-btn:hover { background: rgba(56, 189, 248, 0.2); color: #fff; border-color: #38bdf8; }
+        .estado-hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 12.5px;
+            font-weight: 600;
+        }
+        .estado-hero.go { background: rgba(22, 101, 52, 0.35); color: #86efac; border: 1px solid rgba(74, 222, 128, 0.35); }
+        .estado-hero.nogo { background: rgba(153, 27, 27, 0.42); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.45); }
+        details.tech-drawer {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 8px 10px;
+        }
+        details.tech-drawer summary {
+            cursor: pointer;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #94a3b8;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        details.tech-drawer[open] summary { margin-bottom: 10px; color: #e2e8f0; }
+
     </style>
 </head>
 <body>
@@ -833,11 +896,20 @@
 
             <div class="barra-opciones">
                 <label><input type="checkbox" id="check-retorno" onchange="recalcularDesdeUI()"> <span id="lbl-retorno">Ida y vuelta al Hábitat</span></label>
-                <span id="lbl-clic-der" style="color:#1a73e8;font-weight:500;">Clic derecho en el mapa = Ruta libre</span>
+                <span id="lbl-clic-der" style="color:#38bdf8;font-weight:500;">Clic derecho = Ruta libre</span>
+            </div>
+            <div class="escenario-pills">
+                <button class="escenario-btn" onclick="activarEscenarioDemo('segura')" title="Ruta segura validada">✅ Ruta Segura</button>
+                <button class="escenario-btn" onclick="activarEscenarioDemo('peligro')" title="Prueba de alerta en cráter peligroso">⚠ Zona Crítica</button>
+                <button class="escenario-btn" onclick="activarEscenarioDemo('tormenta')" title="Simular tormenta solar NASA DONKI">🌪 Tormenta</button>
             </div>
         </div>
 
         <div class="gmaps-body">
+            <div id="hero-viabilidad" class="estado-hero go">
+                <span id="hero-viab-txt">🟢 Misión Segura • Llegas con buen aire</span>
+                <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
+            </div>
             <div class="sec-titulo" id="sec-plss">1. Soporte Vital (Traje xEMU)</div>
             <div class="panel-oxigeno">
                 <div class="oxigeno-top">
@@ -855,6 +927,9 @@
                 </div>
             </div>
 
+            <details class="tech-drawer" id="drawer-tecnico">
+                <summary><span id="lbl-detalles-tec">📊 Telemetría NASA, Carga y Perfil MOLA</span><span>▾</span></summary>
+                <div style="display:flex;flex-direction:column;gap:10px;">
             <div class="sec-titulo" id="sec-equipo">2. Equipo Científico y Movilidad</div>
             <div class="fila-equipo">
                 <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Peso del equipo científico">
@@ -895,6 +970,8 @@
                 <strong id="hist-titulo">Comparación histórica NASA</strong>
                 <span id="hist-texto">Cargando archivo de misiones marcianas...</span>
             </div>
+                </div>
+            </details>
         </div>
         <div class="acciones-inferiores">
             <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
@@ -909,6 +986,7 @@
         <button id="btn-mola-overlay" class="chip-gmaps" onclick="toggleMolaOverlay()">Fusión MOLA 40%</button>
         <button id="btn-termica" class="chip-gmaps" onclick="toggleCapaTermica()">Capa Térmica</button>
         <button id="btn-peligros" class="chip-gmaps activo" onclick="togglePeligros()">Zonas de Riesgo</button>
+        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-weight:700;">🎬 Tour Demo</button>
         <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
     </div>
 
@@ -1303,23 +1381,7 @@
             s1.innerHTML = "";
             s2.innerHTML = "";
 
-            // Dibujar corredores posibles del grafo A* muy sutiles para dar contexto espacial
-            const mapaNodos = {};
-            puntosJezero.forEach(p => mapaNodos[p.id] = p);
-            const aristasVistas = new Set();
-            puntosJezero.forEach(p => {
-                (p.vecinos || []).forEach(vId => {
-                    const key = [Math.min(p.id, vId), Math.max(p.id, vId)].join("-");
-                    if (!aristasVistas.has(key) && mapaNodos[vId]) {
-                        aristasVistas.add(key);
-                        L.polyline([[p.lat, p.lng], [mapaNodos[vId].lat, mapaNodos[vId].lng]], {
-                            color: "rgba(255, 255, 255, 0.12)",
-                            weight: 1.0,
-                            dashArray: "3, 7"
-                        }).addTo(capaRedGrafo);
-                    }
-                });
-            });
+            // Mapa limpio estilo Mars Trek (sin telaraña de líneas de fondo)
 
             const boundsPts = [];
             puntosJezero.forEach(p => {
@@ -1516,44 +1578,20 @@
                 }).addTo(capaRutas);
 
                 const poly = L.polyline(coords, {
-                    color,
-                    weight: activa ? 5 : 4,
-                    opacity: activa ? 0.98 : 0.72,
-                    dashArray: (!item.datos.viab.viable && activa) ? "8, 6" : null
+                    color: activa ? (item.datos.viab.viable ? "#38bdf8" : "#ef4444") : color,
+                    weight: activa ? 5 : 3.5,
+                    opacity: activa ? 0.95 : 0.55,
+                    className: activa ? "ruta-animada-svg" : ""
                 }).addTo(capaRutas);
 
                 poly.on("click", () => seleccionarAlternativa(item.k));
                 polyBorde.on("click", () => seleccionarAlternativa(item.k));
-
-                if (coords.length > 1) {
-                    const idxMitad = item.k === "directa" ? 1 : Math.floor(coords.length / 2);
-                    const pA = coords[Math.max(0, idxMitad - 1)];
-                    const pB = coords[Math.min(coords.length - 1, idxMitad)];
-                    const mitad = [(pA[0] + pB[0]) / 2, (pA[1] + pB[1]) / 2];
-                    L.marker(mitad, {
-                        icon: L.divIcon({
-                            className: "globo-wrapper",
-                            iconSize: null,
-                            html: `<div class="globo-ruta-mapa" style="border-color:${color};color:${activa ? color : '#5f6368'}">${item.datos.ruta.tiempo_estimado_min} min • ${item.datos.ruta.distancia_km} km</div>`
-                        })
-                    }).on("click", () => seleccionarAlternativa(item.k)).addTo(capaRutas);
-                }
             });
 
             const sel = cacheAlternativas[alternativaActiva];
             const pts = sel.ruta.ruta_calculada;
 
-            // Numerar las paradas de la ruta activa (1, 2, 3...) para mostrar orden claro de movilidad
-            pts.forEach((p, idx) => {
-                L.marker([p.lat, p.lng], {
-                    interactive: false,
-                    icon: L.divIcon({
-                        className: "globo-wrapper",
-                        iconSize: null,
-                        html: `<div class="waypoint-num" style="background:${sel.viab.viable ? '#1a73e8' : '#d93025'}">${idx + 1}</div>`
-                    })
-                }).addTo(capaRutas);
-            });
+            // Paradas limpias sin tapar nombres del cráter
 
             if (pts.length > 0) {
                 const pIni = pts[0];
@@ -1584,6 +1622,16 @@
 
             const vAct = sel.viab;
             document.getElementById("lbl-restante").innerText = vAct.energia_restante + "%";
+            const hero = document.getElementById("hero-viabilidad");
+            const heroTxt = document.getElementById("hero-viab-txt");
+            const heroPct = document.getElementById("hero-viab-pct");
+            if (hero && heroTxt && heroPct) {
+                hero.className = "estado-hero " + (vAct.viable ? "go" : "nogo");
+                heroPct.innerText = vAct.energia_restante + "% O₂";
+                heroTxt.innerText = vAct.viable
+                    ? (idiomaActual === "en" ? "🟢 SAFE EVA • Good air margin" : "🟢 MISIÓN SEGURA • Buen margen de aire")
+                    : (idiomaActual === "en" ? "🔴 CRITICAL RISK • Unsafe EVA" : "🔴 RIESGO CRÍTICO • EVA No Segura");
+            }
             const barra = document.getElementById("barra-restante");
             barra.style.width = Math.min(100, Math.max(0, vAct.energia_restante)) + "%";
             barra.style.background = vAct.energia_restante < 30 ? "#d93025" : "#188038";
@@ -2097,6 +2145,8 @@
             document.documentElement.lang = idiomaActual;
             setTextoId("btn-lang", en ? "🌐 ES" : "🌐 EN");
             setTextoId("btn-abrir-panel", en ? "☰ Plan EVA" : "☰ Planificar EVA");
+            setTextoId("btn-tour", en ? "🎬 Demo Tour" : "🎬 Tour Demo");
+            setTextoId("lbl-detalles-tec", en ? "📊 NASA Telemetry, Payload & MOLA" : "📊 Telemetría NASA, Carga y Perfil MOLA");
             setTextoId("sec-plss", en ? "1. Life Support (xEMU Suit)" : "1. Soporte Vital (Traje xEMU)");
             setTextoId("sec-equipo", en ? "2. Science Payload & Mobility" : "2. Equipo Científico y Movilidad");
             setTextoId("lbl-limite-nasa", en ? "NASA emergency limit (30%)" : "Límite emergencia NASA (30%)");
@@ -2146,6 +2196,41 @@
             const firmaA = cacheAlternativas.segura?.ruta?.ruta_calculada?.map(n => n.id).join("-");
             const firmaB = cacheAlternativas.directa?.ruta?.ruta_calculada?.map(n => n.id).join("-");
             if (firmaA) renderizarAlternativasGMaps(firmaA !== firmaB);
+        }
+
+        function activarEscenarioDemo(tipo) {
+            if (tipo === "segura") {
+                if (tormentaSimulada) toggleSimularTormenta();
+                document.getElementById("select-inicio").value = "1";
+                document.getElementById("select-destino").value = "7";
+                document.getElementById("check-retorno").checked = false;
+                document.getElementById("slider-energia").value = 100;
+                document.getElementById("lbl-oxigeno").innerText = "100%";
+                recalcularDesdeUI();
+            } else if (tipo === "peligro") {
+                if (tormentaSimulada) toggleSimularTormenta();
+                document.getElementById("select-inicio").value = "1";
+                document.getElementById("select-destino").value = "10";
+                document.getElementById("check-retorno").checked = true;
+                recalcularDesdeUI();
+            } else if (tipo === "tormenta") {
+                if (!tormentaSimulada) toggleSimularTormenta();
+                else recalcularDesdeUI();
+            }
+        }
+
+        function iniciarTourJurados() {
+            abrirGlobo3D();
+            setTimeout(() => {
+                enfocarMision3D(18.44, 77.45, "Cráter Jezero • Base Octavia E. Butler", "Aterrizando en el sitio de exploración humana...");
+            }, 900);
+            setTimeout(() => {
+                aterrizarEnJezero();
+                activarEscenarioDemo("segura");
+            }, 2600);
+            setTimeout(() => {
+                simularPasoAPaso();
+            }, 3800);
         }
 
         async function iniciar() {
