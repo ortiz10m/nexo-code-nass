@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXO-ARES — Presentación Ejecutiva (7 Diapositivas) | Nexo Code</title>
+    <title>NEXO-ARES — Executive Mission Briefing (7 Slides) | Nexo Code</title>
     <link rel="icon" type="image/svg+xml" href="./nexo-logo.svg">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,10 +40,6 @@
             z-index: 0;
         }
 
-        /* Bilingual visibility toggle (Spanish default for easy presentation, 1-click English) */
-        body.lang-en [data-lang="es"] { display: none !important; }
-        body.lang-es [data-lang="en"] { display: none !important; }
-
         /* Top bar */
         .hud-top {
             position: fixed; top: 0; left: 0; right: 0; height: 56px;
@@ -66,7 +62,7 @@
         .hud-actions { display: flex; align-items: center; gap: 10px; }
         .hud-pill {
             font-family: var(--mono); font-size: 12px; font-weight: 700;
-            padding: 7px 14px; border-radius: 6px;
+            padding: 8px 16px; border-radius: 6px;
             border: 1px solid var(--hairline);
             background: rgba(15, 23, 42, 0.9);
             color: #f1f5f9; cursor: pointer; text-decoration: none;
@@ -237,7 +233,7 @@
         }
         .s2-event-desc { font-size: 14.5px; color: #e2e8f0; line-height: 1.42; }
 
-        /* ===== SLIDE 3: INTUITIVE WHITE-BOX PHYSICS (EASY TO EXPLAIN!) ===== */
+        /* ===== SLIDE 3: WHITE-BOX PHYSICS ===== */
         .s3-pipeline {
             display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
         }
@@ -269,7 +265,7 @@
             padding: 4px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.16); color: var(--cyan);
         }
         .s3-eq-formula {
-            font-family: var(--mono); font-size: 16px; color: #7dd3fc; font-weight: 800;
+            font-family: var(--mono); font-size: 15.5px; color: #7dd3fc; font-weight: 800;
             background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(56, 189, 248, 0.25);
             padding: 8px 14px; border-radius: 6px; margin: 8px 0;
         }
@@ -427,17 +423,6 @@
         }
         .nav-btn:hover { border-color: var(--cyan); color: #fff; }
 
-        /* Pitch Script Modal */
-        #modal-guion {
-            display: none; position: fixed; inset: 0; z-index: 300;
-            background: rgba(3, 6, 12, 0.88); backdrop-filter: blur(10px);
-            align-items: center; justify-content: center; padding: 20px;
-        }
-        .guion-box {
-            max-width: 740px; width: 100%; background: #0b1120;
-            border: 1px solid var(--cyan); padding: 30px; border-radius: 12px;
-        }
-
         @media (max-width: 1080px) {
             html, body { overflow-y: auto; }
             .slide {
@@ -452,22 +437,17 @@
         }
     </style>
 </head>
-<body class="lang-es">
+<body>
 
     <!-- TOP AEROSPACE BAR -->
     <header class="hud-top">
         <div class="hud-brand">
             <img src="./nexo-logo.svg" alt="Nexo Code">
             <span>NEXO-ARES</span>
-            <span class="sub" data-lang="es">NASA SPACE APPS • SISTEMA OPERATIVO DE SUPERVIVENCIA EVA • EQUIPO NEXO CODE</span>
-            <span class="sub" data-lang="en">NASA SPACE APPS • MARS EVA SURVIVAL OS • TEAM NEXO CODE</span>
+            <span class="sub">NASA SPACE APPS • MARS EVA SURVIVAL OS • TEAM NEXO CODE</span>
         </div>
         <div class="hud-actions">
-            <button id="btn-lang-slides" class="hud-pill" onclick="toggleIdiomaSlides()">🌐 EN / ES</button>
-            <a class="hud-pill primary" href="./index.html">
-                <span data-lang="es">🚀 Abrir Simulador en Vivo</span>
-                <span data-lang="en">🚀 Launch Live Simulator</span>
-            </a>
+            <a class="hud-pill primary" href="./index.html">🚀 Launch Live Simulator</a>
         </div>
     </header>
 
@@ -481,52 +461,37 @@
                 <div class="s1-bg"></div>
                 <div class="s1-main">
                     <div>
-                        <div class="s1-tag">
-                            <span data-lang="es">01 // BRIEFING DE MISIÓN • CRÁTER JEZERO (18.44°N, 77.45°E)</span>
-                            <span data-lang="en">01 // MISSION BRIEFING • JEZERO CRATER (18.44°N, 77.45°E)</span>
-                        </div>
+                        <div class="s1-tag">01 // MISSION BRIEFING • JEZERO CRATER (18.44°N, 77.45°E)</div>
                         <h1 class="s1-title">NEXO-ARES</h1>
-                        <div class="s1-subtitle">
-                            <span data-lang="es">Sistema Operativo de Enrutamiento y Supervivencia Extravehicular (EVA)</span>
-                            <span data-lang="en">Astronaut Routing &amp; Extravehicular Survival Operating System</span>
-                        </div>
-                        <p class="s1-lead" data-lang="es">
-                            Los mapas satelitales muestran dónde están las rocas, pero <strong>no si un astronauta dentro de un traje presurizado NASA xEMU sobrevivirá al caminar hacia ellas</strong>. <strong>NEXO-ARES</strong> fusiona telemetría real de la NASA/JPL con física biomédica determinista para planificar caminatas seguras en Marte y regresar con vida al hábitat.
-                        </p>
-                        <p class="s1-lead" data-lang="en">
+                        <div class="s1-subtitle">Astronaut Routing &amp; Extravehicular Survival Operating System</div>
+                        <p class="s1-lead">
                             Satellite maps show where rocks are—<strong>not whether an astronaut inside a pressurized NASA xEMU spacesuit will survive walking there</strong>. <strong>NEXO-ARES</strong> fuses real NASA/JPL telemetry with deterministic biomedical physics so astronauts explore Jezero Crater and return alive.
                         </p>
                     </div>
 
                     <div class="s1-right-cards">
                         <div class="s1-mini-photo">
-                            <img src="./jezero-hi-res.jpg" alt="Mosaico Orbital Jezero">
+                            <img src="./jezero-hi-res.jpg" alt="Jezero Orbital Mosaic">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--cyan);font-weight:800;">MOSAICO ORBITAL NASA CTX (5m/px)</span>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="es">7 Capas Científicas en Tiempo Real</strong>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="en">7 Real-Time Scientific Layers</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="es">Satélite HD, Altitud MOLA, Térmica THEMIS y Biofirmas CRISM.</span>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="en">HD Satellite, MOLA Elevation, THEMIS Thermal &amp; CRISM Bio.</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--cyan);font-weight:800;">NASA CTX ORBITAL MOSAIC (5m/px)</span>
+                                <strong style="font-size:16px;color:#fff;margin:2px 0;">7 Real-Time Scientific Layers</strong>
+                                <span style="font-size:13.5px;color:#cbd5e1;">HD Satellite, MOLA Elevation, THEMIS Thermal &amp; CRISM Bio.</span>
                             </div>
                         </div>
                         <div class="s1-mini-photo">
-                            <img src="./panos/vanzyl_pia24836.jpg" alt="Visor Casco 360">
+                            <img src="./panos/vanzyl_pia24836.jpg" alt="360 Helmet Visor">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:800;">VISOR AR 360° MASTCAM-Z • PIA24836</span>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="es">Inmersión en Primera Persona + Láser PIXL</strong>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="en">First-Person Helmet Visor + PIXL Laser</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="es">Panoramas reales de Perseverance con audio de respiración EVA.</span>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="en">Real Perseverance panoramas with synthesized PLSS breathing.</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:800;">AR 360° MASTCAM-Z VISOR • PIA24836</span>
+                                <strong style="font-size:16px;color:#fff;margin:2px 0;">First-Person Helmet Visor + PIXL Laser</strong>
+                                <span style="font-size:13.5px;color:#cbd5e1;">Real Perseverance panoramas with synthesized PLSS breathing.</span>
                             </div>
                         </div>
                         <div class="s1-mini-photo">
-                            <img src="./panos/tubes_pia25663.jpg" alt="Muestras Marte">
+                            <img src="./panos/tubes_pia25663.jpg" alt="Mars Sample Tubes">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:800;"> FÍSICA DE CAJA BLANCA • CERO ALUCINACIÓN</span>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="es">Motor Dual: FastAPI + Kernel xEMU Activo</strong>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;" data-lang="en">Dual Engine: FastAPI + Active xEMU Kernel</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="es">Cálculo exacto de O₂, pendiente &lt;20°, radio UHF y radiación solar.</span>
-                                <span style="font-size:13.5px;color:#cbd5e1;" data-lang="en">Exact O₂ burn, &lt;20° slope limit, UHF line-of-sight &amp; radiation.</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:800;">WHITE-BOX PHYSICS • ZERO HALLUCINATION</span>
+                                <strong style="font-size:16px;color:#fff;margin:2px 0;">Dual Engine: FastAPI + Active xEMU Kernel</strong>
+                                <span style="font-size:13.5px;color:#cbd5e1;">Exact O₂ burn, &lt;20° slope limit, UHF line-of-sight &amp; radiation.</span>
                             </div>
                         </div>
                     </div>
@@ -535,23 +500,19 @@
                 <div class="s1-ticker">
                     <div class="s1-stat">
                         <div class="s1-stat-val" style="color:var(--cyan);">3,396.19 km</div>
-                        <div class="s1-stat-lbl" data-lang="es">Radio Geodésico Real de Marte</div>
-                        <div class="s1-stat-lbl" data-lang="en">True Mars Geodesic Radius</div>
+                        <div class="s1-stat-lbl">True Mars Geodesic Radius</div>
                     </div>
                     <div class="s1-stat">
                         <div class="s1-stat-val" style="color:var(--green);">≥ 30% O₂</div>
-                        <div class="s1-stat-lbl" data-lang="es">Reserva Vital Obligatoria NASA PLSS</div>
-                        <div class="s1-stat-lbl" data-lang="en">Mandatory PLSS Emergency Reserve</div>
+                        <div class="s1-stat-lbl">Mandatory PLSS Emergency Reserve</div>
                     </div>
                     <div class="s1-stat">
                         <div class="s1-stat-val" style="color:var(--amber);">&lt; 20.0°</div>
-                        <div class="s1-stat-lbl" data-lang="es">Límite de Estabilidad Traje xEMU</div>
-                        <div class="s1-stat-lbl" data-lang="en">xEMU Center-of-Gravity Slope Limit</div>
+                        <div class="s1-stat-lbl">xEMU Center-of-Gravity Slope Limit</div>
                     </div>
                     <div class="s1-stat">
-                        <div class="s1-stat-val">13 NODOS</div>
-                        <div class="s1-stat-lbl" data-lang="es">Sitios Reales Perseverance e Ingenuity</div>
-                        <div class="s1-stat-lbl" data-lang="en">Verified Perseverance &amp; Ingenuity Sites</div>
+                        <div class="s1-stat-val">13 NODES</div>
+                        <div class="s1-stat-lbl">Verified Perseverance &amp; Ingenuity Sites</div>
                     </div>
                 </div>
             </div>
@@ -563,39 +524,28 @@
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">02 // EL PROBLEMA REAL • AUTOPSIA FORENSE DE MISIONES EN MARTE</span>
-                    <span class="slide-kicker" data-lang="en">02 // THE OPERATIONAL GAP • FORENSIC AUTOPSY OF MARS FAILURES</span>
-                    <span class="slide-coords">ESTÁNDAR NASA STD-3001 • BIOASTRONÁUTICA EVA</span>
+                    <span class="slide-kicker">02 // THE OPERATIONAL GAP • FORENSIC AUTOPSY OF MARS FAILURES</span>
+                    <span class="slide-coords">NASA STD-3001 • EVA BIOASTRONAUTICS</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Los Mapas Orbitales Son Pasivos. <span class="danger">Caminar en Marte Sin Física Es Letal.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
+                <h2 class="slide-headline">
                     Orbital Maps Are Passive. <span class="danger">Walking on Mars Without Physics Is Lethal.</span>
                 </h2>
             </div>
 
             <div class="s2-layout">
                 <div class="s2-left">
-                    <p class="s2-quote" data-lang="es">
-                        Un rover puede detenerse días a recargar sus paneles solares. Un astronauta a pie tiene <strong>minutos de oxígeno respirable</strong>, una mochila soporte vital que desplaza su centro de gravedad y no puede sobrevivir a un apagón de radio dentro de un cráter.
-                    </p>
-                    <p class="s2-quote" data-lang="en">
+                    <p class="s2-quote">
                         A rover can wait days to recharge solar panels. A human astronaut on foot has <strong>minutes of breathable oxygen</strong>, a shifted center of gravity inside a rigid suit, and cannot survive a radio blackout inside a crater.
                     </p>
 
                     <div class="s2-bar">
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:800;" data-lang="es">❌ VISORES ORBITALES TRADICIONALES (EJ. NASA MARS TREK)</div>
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:800;" data-lang="en">❌ TRADITIONAL ORBITAL GIS (E.G. NASA MARS TREK)</div>
-                        <div style="font-size:15.5px;color:#e2e8f0;margin-top:6px;line-height:1.45;" data-lang="es">Solo dibujan fotos satelitales estáticas: no calculan cuánto oxígeno gasta el astronauta al subir una duna ni si perderá señal con el hábitat.</div>
-                        <div style="font-size:15.5px;color:#e2e8f0;margin-top:6px;line-height:1.45;" data-lang="en">Only render static satellite tiles—zero awareness of astronaut O₂ burn on slopes or UHF radio loss.</div>
+                        <div style="font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:800;">❌ TRADITIONAL ORBITAL GIS (E.G. NASA MARS TREK)</div>
+                        <div style="font-size:15.5px;color:#e2e8f0;margin-top:6px;line-height:1.45;">Only render static satellite tiles—zero awareness of astronaut O₂ burn on slopes, suit tipping limits, or UHF radio loss.</div>
                     </div>
 
                     <div class="s2-bar ares">
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;" data-lang="es">✅ MOTOR DE SUPERVIVENCIA NEXO-ARES</div>
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;" data-lang="en">✅ NEXO-ARES SURVIVAL DECISION ENGINE</div>
-                        <div style="font-size:15.5px;color:#fff;margin-top:6px;line-height:1.45;" data-lang="es">Transforma los 4 fallos históricos más famosos de la NASA en reglas matemáticas automáticas que protegen la vida del astronauta.</div>
-                        <div style="font-size:15.5px;color:#fff;margin-top:6px;line-height:1.45;" data-lang="en">Transforms NASA's 4 most famous robotic failures into automatic mathematical guardrails that protect human life.</div>
+                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">✅ NEXO-ARES SURVIVAL DECISION ENGINE</div>
+                        <div style="font-size:15.5px;color:#fff;margin-top:6px;line-height:1.45;">Transforms NASA's 4 most famous robotic failures into automatic mathematical guardrails that protect human life.</div>
                     </div>
                 </div>
 
@@ -604,12 +554,10 @@
                         <img src="./panos/rim_pia26373.jpg" alt="Kodiak & Rim Slope">
                         <div class="s2-event-body">
                             <div class="s2-event-top">
-                                <span class="s2-event-title" data-lang="es">1. Rover Spirit (2009) — Trampa de Arena y Pendiente</span>
-                                <span class="s2-event-title" data-lang="en">1. Spirit Rover (2009) — Slope &amp; Sand Trap</span>
-                                <span class="s2-event-code">BLOQUEO &gt; 20°</span>
+                                <span class="s2-event-title">1. Spirit Rover (2009) — Slope &amp; Sand Trap</span>
+                                <span class="s2-event-code">&gt; 20° LOCKOUT</span>
                             </div>
-                            <div class="s2-event-desc" data-lang="es">Atrapado en arena blanda en Gusev. <strong>En NEXO-ARES:</strong> Bloqueamos pendientes &gt;20° (Acantilado Kodiak 23.6°, Borde Oeste 24.5°) y activamos la capa térmica THEMIS.</div>
-                            <div class="s2-event-desc" data-lang="en">Trapped in soft sand at Gusev. <strong>In NEXO-ARES:</strong> Automatically locks slopes &gt;20° (Kodiak 23.6°, Rim 24.5°) and maps THEMIS thermal inertia.</div>
+                            <div class="s2-event-desc">Trapped in soft sand at Gusev. <strong>In NEXO-ARES:</strong> Automatically locks slopes &gt;20° (Kodiak Butte 23.6°, West Rim 24.5°) and maps THEMIS thermal inertia.</div>
                         </div>
                     </div>
 
@@ -617,12 +565,10 @@
                         <img src="./panos/threeforks_pia25734.jpg" alt="Opportunity O2 Reserve">
                         <div class="s2-event-body">
                             <div class="s2-event-top">
-                                <span class="s2-event-title" data-lang="es">2. Rover Opportunity (2018) — Agotamiento de Energía</span>
-                                <span class="s2-event-title" data-lang="en">2. Opportunity Rover (2018) — Total Energy Depletion</span>
-                                <span class="s2-event-code">RESERVA ≥ 30% O₂</span>
+                                <span class="s2-event-title">2. Opportunity Rover (2018) — Total Energy Depletion</span>
+                                <span class="s2-event-code">≥ 30% O₂ RESERVE</span>
                             </div>
-                            <div class="s2-event-desc" data-lang="es">Perdido con 0% de batería. <strong>En NEXO-ARES:</strong> Exigimos un 30% de reserva intocable de oxígeno en el traje y calculamos el punto exacto de retorno (<em>Bingo O₂</em>).</div>
-                            <div class="s2-event-desc" data-lang="en">Lost with 0% battery. <strong>In NEXO-ARES:</strong> Enforces a mandatory 30% O₂ reserve floor and computes the exact turnback point (<em>Bingo O₂</em>).</div>
+                            <div class="s2-event-desc">Lost with 0% battery. <strong>In NEXO-ARES:</strong> Enforces a mandatory 30% PLSS oxygen reserve floor and computes the exact turnback point (<em>Bingo O₂</em>).</div>
                         </div>
                     </div>
 
@@ -630,12 +576,10 @@
                         <img src="./panos/ingenuity_pia26237.jpg" alt="Ingenuity Valinor Hills">
                         <div class="s2-event-body">
                             <div class="s2-event-top">
-                                <span class="s2-event-title" data-lang="es">3. Helicóptero Ingenuity (Ene 2024) — Vuelo 72 en Dunas</span>
-                                <span class="s2-event-title" data-lang="en">3. Ingenuity Helicopter (Jan 2024) — Flight 72 Dune Crash</span>
-                                <span class="s2-event-code">NODO #13 • PIA26237</span>
+                                <span class="s2-event-title">3. Ingenuity Helicopter (Jan 2024) — Flight 72 Dune Crash</span>
+                                <span class="s2-event-code">NODE #13 • PIA26237</span>
                             </div>
-                            <div class="s2-event-desc" data-lang="es">Las dunas lisas de Valinor Hills engañaron su cámara óptica y rompió su rotor. <strong>En NEXO-ARES:</strong> El Nodo #13 es una misión de recuperación humana estilo Apollo 12.</div>
-                            <div class="s2-event-desc" data-lang="en">Smooth dunes blinded its nav camera on Flight 72. <strong>In NEXO-ARES:</strong> Node #13 is a dedicated Apollo-12 style human salvage EVA.</div>
+                            <div class="s2-event-desc">Smooth dunes blinded its nav camera on Flight 72. <strong>In NEXO-ARES:</strong> Node #13 is a dedicated Apollo-12 style human salvage EVA.</div>
                         </div>
                     </div>
 
@@ -643,12 +587,10 @@
                         <img src="./panos/belva_pia25889.jpg" alt="Belva Crater UHF">
                         <div class="s2-event-body">
                             <div class="s2-event-top">
-                                <span class="s2-event-title" data-lang="es">4. Cráter Belva (-2,615 m) — Apagón de Radio UHF</span>
-                                <span class="s2-event-title" data-lang="en">4. Belva Crater (-2,615 m) — UHF Radio Blackout</span>
-                                <span class="s2-event-code">SOMBRA UHF • PIA25889</span>
+                                <span class="s2-event-title">4. Belva Crater (-2,615 m) — UHF Radio Blackout</span>
+                                <span class="s2-event-code">UHF SHADOW • PIA25889</span>
                             </div>
-                            <div class="s2-event-desc" data-lang="es">Entrar al fondo del cráter corta la línea de vista con la antena del Hábitat. <strong>En NEXO-ARES:</strong> El algoritmo A* desvía al astronauta por el corredor seguro con señal UHF.</div>
-                            <div class="s2-event-desc" data-lang="en">Deep crater walls block line-of-sight to the Habitat antenna. <strong>In NEXO-ARES:</strong> Our A* solver routes astronauts around UHF shadow zones.</div>
+                            <div class="s2-event-desc">Deep crater walls block line-of-sight to the Habitat antenna. <strong>In NEXO-ARES:</strong> Our A* solver routes astronauts around UHF shadow zones.</div>
                         </div>
                     </div>
                 </div>
@@ -656,51 +598,39 @@
         </section>
 
         <!-- =========================================================
-             SLIDE 03 // WHITE-BOX PHYSICS (HOW TO EXPLAIN IT EASILY!)
+             SLIDE 03 // WHITE-BOX PHYSICS
         ========================================================== -->
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">03 // FÍSICA DE CAJA BLANCA • CÓMO FUNCIONA NUESTRO MOTOR SIN ALUCINAR</span>
-                    <span class="slide-kicker" data-lang="en">03 // WHITE-BOX ENGINEERING • HOW OUR DETERMINISTIC ENGINE WORKS</span>
+                    <span class="slide-kicker">03 // WHITE-BOX ENGINEERING • HOW OUR DETERMINISTIC ENGINE WORKS</span>
                     <span class="slide-coords">100% AUDITABLE • PYTHON FASTAPI + JS xEMU ENGINE</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Física Real Auditable. <span class="accent">Explicada de Forma Simple.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
-                    Auditable Aerospace Physics. <span class="accent">Explained Simply.</span>
+                <h2 class="slide-headline">
+                    Auditable Aerospace Physics. <span class="accent">Zero AI Hallucinations.</span>
                 </h2>
             </div>
 
             <div class="s3-pipeline">
                 <div class="s3-step">
-                    <div class="s3-num">PASO 01 // ENTRADA NASA</div>
-                    <div class="s3-name" data-lang="es">Datos Reales de Marte</div>
-                    <div class="s3-name" data-lang="en">Real Mars Telemetry</div>
-                    <div class="s3-txt" data-lang="es">Recibe mapas de Mars Trek, fotos de Perseverance y clima solar DONKI.</div>
-                    <div class="s3-txt" data-lang="en">Ingests Mars Trek tiles, Perseverance photos &amp; DONKI solar weather.</div>
+                    <div class="s3-num">STAGE 01 // NASA INGESTION</div>
+                    <div class="s3-name">Real Mars Telemetry</div>
+                    <div class="s3-txt">Ingests Mars Trek WMTS tiles, Perseverance photos &amp; DONKI solar weather.</div>
                 </div>
                 <div class="s3-step">
-                    <div class="s3-num">PASO 02 // CEREBRO A*</div>
-                    <div class="s3-name" data-lang="es">Comparador de 2 Rutas</div>
-                    <div class="s3-name" data-lang="en">Dual-Route A* Solver</div>
-                    <div class="s3-txt" data-lang="es">Compara siempre la <strong>Ruta Segura</strong> (azul) frente a la <strong>Ruta Corta Riesgosa</strong> (naranja).</div>
-                    <div class="s3-txt" data-lang="en">Always compares the <strong>Safe EVA Route</strong> (blue) vs. <strong>Shortest Risky Route</strong> (orange).</div>
+                    <div class="s3-num">STAGE 02 // A* SOLVER</div>
+                    <div class="s3-name">Dual-Route A* Router</div>
+                    <div class="s3-txt">Always compares the <strong>Safe EVA Route</strong> (blue) vs. <strong>Shortest Risky Route</strong> (orange).</div>
                 </div>
                 <div class="s3-step">
-                    <div class="s3-num">PASO 03 // FILTRO VITAL</div>
-                    <div class="s3-name" data-lang="es">Simulador Traje xEMU</div>
-                    <div class="s3-name" data-lang="en">xEMU Suit Simulator</div>
-                    <div class="s3-txt" data-lang="es">Evalúa las 4 reglas físicas de abajo según el peso de las muestras o uso de Rover.</div>
-                    <div class="s3-txt" data-lang="en">Evaluates the 4 physical laws below based on sample load or Rover support.</div>
+                    <div class="s3-num">STAGE 03 // BIO-KERNEL</div>
+                    <div class="s3-name">xEMU Suit Simulator</div>
+                    <div class="s3-txt">Evaluates the 4 physical laws below based on sample load or Rover support.</div>
                 </div>
                 <div class="s3-step">
-                    <div class="s3-num">PASO 04 // DECISIÓN</div>
-                    <div class="s3-name" data-lang="es">Semáforo GO / NO-GO</div>
-                    <div class="s3-name" data-lang="en">GO / NO-GO Verdict</div>
-                    <div class="s3-txt" data-lang="es">Autoriza o bloquea la caminata y genera la libreta PDF de muñeca del astronauta.</div>
-                    <div class="s3-txt" data-lang="en">Approves or blocks the walk and prints the astronaut's wrist checklist PDF.</div>
+                    <div class="s3-num">STAGE 04 // DECISION</div>
+                    <div class="s3-name">GO / NO-GO Verdict</div>
+                    <div class="s3-txt">Approves or blocks the walk and exports the astronaut's wrist checklist PDF.</div>
                 </div>
             </div>
 
@@ -708,16 +638,12 @@
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">1. Geodesia Esférica Marciana (Haversine)</span>
-                            <span class="s3-eq-title" data-lang="en">1. Martian Spherical Geodesy (Haversine)</span>
-                            <span class="s3-eq-badge">R_Marte = 3,396.19 km</span>
+                            <span class="s3-eq-title">1. Martian Spherical Geodesy (Haversine)</span>
+                            <span class="s3-eq-badge">R_Mars = 3,396.19 km</span>
                         </div>
                         <div class="s3-eq-formula">d = 2 · 3,396.19 km · arcsin( √[ sin²(Δφ/2) + cos(φ₁)·cos(φ₂)·sin²(Δλ/2) ] )</div>
                     </div>
-                    <div class="s3-explain" data-lang="es">
-                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Marte tiene la mitad del radio de la Tierra (3,396 km vs. 6,371 km). Los mapas terrestres distorsionan las distancias marcianas; nuestro motor aplica la curvatura planetaria real para calcular cada metro con precisión milimétrica.
-                    </div>
-                    <div class="s3-explain" data-lang="en">
+                    <div class="s3-explain">
                         <strong>⚡ EVA Survival Impact:</strong> Mars has half the radius of Earth (3,396 km vs. 6,371 km). Standard terrestrial GIS distorts Martian distances; our solver applies true planetary curvature for meter-accurate oxygen budgeting.
                     </div>
                 </div>
@@ -725,16 +651,12 @@
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">2. Gasto Metabólico de Oxígeno (Traje xEMU)</span>
-                            <span class="s3-eq-title" data-lang="en">2. Metabolic Oxygen Burn (NASA xEMU Suit)</span>
-                            <span class="s3-eq-badge" style="color:var(--green);">Reserva ≥ 30% O₂</span>
+                            <span class="s3-eq-title">2. Metabolic Oxygen Burn (NASA xEMU Suit)</span>
+                            <span class="s3-eq-badge" style="color:var(--green);">Reserve ≥ 30% O₂</span>
                         </div>
-                        <div class="s3-eq-formula">O₂_req = Σ [ d_km · 3.8% · (1 + max(0, θ - 15°) · 0.14) · f_carga · f_rover ]</div>
+                        <div class="s3-eq-formula">O₂_req = Σ [ d_km · 3.8% · (1 + max(0, θ - 15°) · 0.14) · f_load · f_rover ]</div>
                     </div>
-                    <div class="s3-explain" data-lang="es">
-                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Subir pendientes superiores a 15° cargando muestras geológicas (+12 kg a +25 kg) dispara el consumo pulmonar. Si el talud supera los 20°, el algoritmo bloquea el paso para evitar la pérdida de centro de gravedad del traje presurizado.
-                    </div>
-                    <div class="s3-explain" data-lang="en">
+                    <div class="s3-explain">
                         <strong>⚡ EVA Survival Impact:</strong> Climbing slopes above 15° with geological payloads (+12 kg to +25 kg) spikes pulmonary O₂ burn. Above 20°, the solver hard-locks the node to prevent pressurized suit center-of-gravity tipping.
                     </div>
                 </div>
@@ -742,16 +664,12 @@
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">3. Horizonte de Línea de Vista Radio UHF (401.5 MHz)</span>
-                            <span class="s3-eq-title" data-lang="en">3. UHF Radio Line-of-Sight Horizon (401.5 MHz)</span>
-                            <span class="s3-eq-badge" style="color:var(--amber);">Enlace con Hábitat</span>
+                            <span class="s3-eq-title">3. UHF Radio Line-of-Sight Horizon (401.5 MHz)</span>
+                            <span class="s3-eq-badge" style="color:var(--amber);">Habitat Relay Link</span>
                         </div>
-                        <div class="s3-eq-formula">d_horizonte = √( 2 · R_Marte · h_antena ) • Bloqueo por depresión &gt; 20°</div>
+                        <div class="s3-eq-formula">d_horizon = √( 2 · R_Mars · h_antenna ) • Blocked in depressions &gt; 20°</div>
                     </div>
-                    <div class="s3-explain" data-lang="es">
-                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Sin satélites repetidores locales, el transceptor UHF del traje requiere línea de vista con la antena del Hábitat. Al detectar depresiones profundas como el Cráter Belva (-2,615 m), el modo seguro redirige al astronauta por fuera de la sombra radial.
-                    </div>
-                    <div class="s3-explain" data-lang="en">
+                    <div class="s3-explain">
                         <strong>⚡ EVA Survival Impact:</strong> Without local relay towers, the suit UHF transceiver requires direct line-of-sight to the Habitat mast. Deep depressions like Belva Crater (-2,615 m) block signal, triggering automatic safe-corridor rerouting.
                     </div>
                 </div>
@@ -759,16 +677,12 @@
                 <div class="s3-eq-card">
                     <div>
                         <div class="s3-eq-top">
-                            <span class="s3-eq-title" data-lang="es">4. Dosimetría de Radiación Ionizante (NASA DONKI)</span>
-                            <span class="s3-eq-title" data-lang="en">4. Ionizing Radiation Dosimetry (NASA DONKI)</span>
-                            <span class="s3-eq-badge" style="color:var(--red);">Alerta CME: 0.85 mSv/h</span>
+                            <span class="s3-eq-title">4. Ionizing Radiation Dosimetry (NASA DONKI)</span>
+                            <span class="s3-eq-badge" style="color:var(--red);">CME Alert: 0.85 mSv/h</span>
                         </div>
-                        <div class="s3-eq-formula">Dosis_EVA = ( t_min / 60 ) · Flujo_DONKI   [Nominal: 0.028 mSv/h]</div>
+                        <div class="s3-eq-formula">Dose_EVA = ( t_min / 60 ) · Flux_DONKI   [Nominal: 0.028 mSv/h]</div>
                     </div>
-                    <div class="s3-explain" data-lang="es">
-                        <strong>⚡ Impacto en Supervivencia EVA:</strong> Marte carece de magnetosfera global. Conectado a la telemetría espacial de NASA DONKI y MSL-RAD, ante una eyección de masa coronal (0.85 mSv/h) el sistema activa alerta roja y calcula el retorno de emergencia a refugio en menos de 6 minutos.
-                    </div>
-                    <div class="s3-explain" data-lang="en">
+                    <div class="s3-explain">
                         <strong>⚡ EVA Survival Impact:</strong> Mars lacks a global magnetosphere. Linked to NASA DONKI and MSL-RAD telemetry, a Coronal Mass Ejection (0.85 mSv/h) triggers immediate red-alert abort routing to shelter within 6 minutes.
                     </div>
                 </div>
@@ -781,14 +695,10 @@
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">04 // CUATRO MOTORES VISUALES SINCRONIZADOS • DE LA ÓRBITA AL SUELO</span>
-                    <span class="slide-kicker" data-lang="en">04 // FOUR SYNCHRONIZED VISUAL ENGINES • ORBIT TO SURFACE</span>
-                    <span class="slide-coords">100% IMÁGENES REALES NASA / JPL-CALTECH / MSSS</span>
+                    <span class="slide-kicker">04 // FOUR SYNCHRONIZED VISUAL ENGINES • ORBIT TO SURFACE</span>
+                    <span class="slide-coords">100% AUTHENTIC NASA / JPL-CALTECH / MSSS IMAGERY</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Cuatro Escalas Reales en <span class="accent">Una Sola Pantalla Táctica.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
+                <h2 class="slide-headline">
                     Four Real Spatial Scales in <span class="accent">One Tactical Interface.</span>
                 </h2>
             </div>
@@ -797,25 +707,19 @@
                 <!-- Left large visual frame with real Belva Crater photo PIA25889 -->
                 <div class="s4-hero-shot">
                     <div class="s4-hero-top-badges">
-                        <span class="s4-chip">🔭 VISOR CASCO AR 360°</span>
-                        <span class="s4-chip">🔬 ESCÁNER LÁSER PIXL</span>
-                        <span class="s4-chip">🔊 AUDIO RESPIRACIÓN EVA + GEIGER</span>
+                        <span class="s4-chip">🔭 AR 360° HELMET VISOR</span>
+                        <span class="s4-chip">🔬 PIXL LASER SCANNER</span>
+                        <span class="s4-chip">🔊 EVA BREATHING AUDIO + GEIGER</span>
                     </div>
                     <div class="s4-hero-overlay">
                         <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;margin-bottom:6px;">
-                            MOTOR 04 // STREET VIEW MARCIANO 360° • FOTOS REALES MASTCAM-Z (PIA25889 / PIA25172)
+                            ENGINE 04 // MARTIAN 360° STREET VIEW • REAL MASTCAM-Z PANORAMAS (PIA25889 / PIA25172)
                         </div>
-                        <h3 style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;" data-lang="es">
-                            Ponte el Casco del Astronauta antes de Salir del Hábitat
-                        </h3>
-                        <h3 style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;" data-lang="en">
+                        <h3 style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;">
                             Step Inside the Astronaut's Helmet Before Leaving the Airlock
                         </h3>
-                        <p style="font-size:15.5px;color:#f1f5f9;line-height:1.5;" data-lang="es">
-                            El astronauta gira 360° dentro de los panoramas reales tomados por Perseverance en el Cráter Belva, el Delta y Van Zyl Overlook. Incluye <strong>espectroscopía láser PIXL interactiva</strong> para analizar filosilicatos y sulfatos en las rocas, galería en vivo de la API de la NASA y sonido sintetizado del soporte vital.
-                        </p>
-                        <p style="font-size:15.5px;color:#f1f5f9;line-height:1.5;" data-lang="en">
-                            Pan 360° inside real Perseverance panoramas at Belva Crater, the Delta, and Van Zyl Overlook. Features an interactive <strong>PIXL X-ray laser scanner</strong> to inspect rock mineralogy, live NASA API photo feeds, and synthesized PLSS suit audio.
+                        <p style="font-size:15.5px;color:#f1f5f9;line-height:1.5;">
+                            Pan 360° inside real Perseverance panoramas at Belva Crater, the Delta, and Van Zyl Overlook. Features an interactive <strong>PIXL X-ray laser scanner</strong> to inspect rock mineralogy (phyllosilicates &amp; sulfates), live NASA API photo feeds, and synthesized PLSS suit audio.
                         </p>
                     </div>
                 </div>
@@ -823,35 +727,29 @@
                 <!-- Right 3 stacked filmstrip engines with verified local photos -->
                 <div class="s4-stack">
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./panos/vanzyl_pia24836.jpg" alt="Globo Planetario 3D">
+                        <img class="s4-thumb" src="./panos/vanzyl_pia24836.jpg" alt="3D Planetary Globe">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">MOTOR 01 // GLOBO PLANETARIO 3D + COSMOS</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="es">Explorador Global de 5 Misiones de la NASA</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="en">Global 5-Mission Planetary Explorer</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="es">Globo 3D con 2,600 estrellas sincronizadas que compara Perseverance con Curiosity, InSight, Spirit y Opportunity antes de aterrizar en Jezero.</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="en">3D globe with 2,600 synced stars comparing Perseverance with Curiosity, InSight, Spirit &amp; Opportunity before landing in Jezero.</div>
+                            <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">ENGINE 01 // 3D PLANETARY GLOBE + COSMOS</div>
+                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Global 5-Mission Planetary Explorer</div>
+                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">3D globe with 2,600 synced stars comparing Perseverance with Curiosity, InSight, Spirit &amp; Opportunity before landing in Jezero.</div>
                         </div>
                     </div>
 
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./jezero-hi-res.jpg" alt="Mapa Táctico 2D">
+                        <img class="s4-thumb" src="./jezero-hi-res.jpg" alt="2D Tactical Map">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--green);font-weight:800;">MOTOR 02 // MAPA TÁCTICO 2D + 7 CAPAS ORBITALES</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="es">Enrutamiento Tipo Google Maps con Anillo de O₂</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="en">Google Maps-Style Routing with Live O₂ Ring</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="es">Incluye Satélite HD 5m/px, Altitud MOLA, Detector térmico de arena THEMIS, Biofirmas CRISM y animación del astronauta paso a paso.</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="en">Includes 5m/px HD Satellite, MOLA Elevation, THEMIS sand-trap detector, CRISM Biosignatures &amp; live step-by-step walk animation.</div>
+                            <div style="font-family:var(--mono);font-size:12px;color:var(--green);font-weight:800;">ENGINE 02 // 2D TACTICAL MAP + 7 ORBITAL LAYERS</div>
+                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Google Maps-Style Routing with Live O₂ Ring</div>
+                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">Includes 5m/px HD Satellite, MOLA Elevation, THEMIS sand-trap detector, CRISM Biosignatures &amp; live step-by-step walk animation.</div>
                         </div>
                     </div>
 
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./panos/delta_pia25172.jpg" alt="Mesa Holográfica 3D">
+                        <img class="s4-thumb" src="./panos/delta_pia25172.jpg" alt="3D Crater Holotable">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--amber);font-weight:800;">MOTOR 03 // MESA HOLOGRÁFICA 3D + IMPRESIÓN .STL</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="es">Relieve Fotogramétrico 3D e Impresión Física</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;" data-lang="en">Photogrammetric 3D Relief &amp; Physical .STL Export</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="es">Simula sombras reales según la hora solar (06:00 a 18:00), Rayos-X MOLA y descarga el archivo binario <code>.STL</code> listo para impresoras 3D.</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;" data-lang="en">Simulates solar shadows (06:00–18:00), MOLA X-Ray wireframe, and exports binary <code>.STL</code> files for physical 3D printing.</div>
+                            <div style="font-family:var(--mono);font-size:12px;color:var(--amber);font-weight:800;">ENGINE 03 // 3D CRATER HOLOTABLE + .STL EXPORT</div>
+                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Photogrammetric 3D Relief &amp; Physical .STL Export</div>
+                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">Simulates solar shadows (06:00–18:00), MOLA X-Ray wireframe, and exports binary <code>.STL</code> files for physical 3D printing.</div>
                         </div>
                     </div>
                 </div>
@@ -864,14 +762,10 @@
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">05 // OPERACIONES DE CAMPO • MODOS DE TRAJE, LIBRETA DE MUÑECA Y CHAOS TEST</span>
-                    <span class="slide-kicker" data-lang="en">05 // FIELD OPERATIONS • SUIT MODES, WRIST CHECKLIST &amp; CHAOS TEST</span>
-                    <span class="slide-coords">RESILIENCIA OPERATIVA EN TIEMPO REAL</span>
+                    <span class="slide-kicker">05 // FIELD OPERATIONS • SUIT MODES, WRIST CHECKLIST &amp; CHAOS TEST</span>
+                    <span class="slide-coords">REAL-TIME OPERATIONAL RESILIENCE</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Preparado para <span class="ok">Emergencias en Plena Caminata.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
+                <h2 class="slide-headline">
                     Engineered for <span class="ok">Mid-Walk Emergencies.</span>
                 </h2>
             </div>
@@ -879,51 +773,43 @@
             <table class="s5-table">
                 <thead>
                     <tr>
-                        <th data-lang="es">Modo de Equipo EVA</th>
-                        <th data-lang="en">EVA Mobility Mode</th>
-                        <th data-lang="es">Peso Extra</th>
-                        <th data-lang="en">Payload Mass</th>
-                        <th data-lang="es">Consumo de O₂ (Base → Hogwallow Flats)</th>
-                        <th data-lang="en">O₂ Burn Rate (Base → Hogwallow Flats)</th>
-                        <th data-lang="es">Radio de Alcance Seguro</th>
-                        <th data-lang="en">Safe Autonomy Radius</th>
-                        <th data-lang="es">Misión Recomendada</th>
-                        <th data-lang="en">Operational Role</th>
+                        <th>EVA Mobility Mode</th>
+                        <th>Payload Mass</th>
+                        <th>O₂ Burn Rate (Base → Hogwallow Flats)</th>
+                        <th>Safe Autonomy Radius</th>
+                        <th>Operational Role</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>🏃 EVA Ligero (Scout)</strong></td>
+                        <td><strong>🏃 Light EVA Scout</strong></td>
                         <td style="font-family:var(--mono);font-weight:700;">0 kg</td>
                         <td>
                             <div class="bar-track"><div class="bar-fill" style="width:32%;background:var(--green);"></div></div>
                             <span style="font-family:var(--mono);color:var(--green);font-weight:800;">17.2% O₂</span>
                         </td>
                         <td style="font-family:var(--mono);font-weight:800;">6.4 km</td>
-                        <td data-lang="es">Reconocimiento rápido a pie y miradores</td>
-                        <td data-lang="en">Fast foot reconnaissance &amp; lookouts</td>
+                        <td>Fast foot reconnaissance &amp; lookouts</td>
                     </tr>
                     <tr>
-                        <td><strong style="color:var(--cyan);">🧑‍🚀 Traje Estándar NASA xEMU</strong></td>
+                        <td><strong style="color:var(--cyan);">🧑‍🚀 Standard NASA xEMU Suit</strong></td>
                         <td style="font-family:var(--mono);font-weight:700;">+12 kg Kit</td>
                         <td>
                             <div class="bar-track"><div class="bar-fill" style="width:48%;background:var(--cyan);"></div></div>
                             <span style="font-family:var(--mono);color:var(--cyan);font-weight:800;">22.4% O₂</span>
                         </td>
                         <td style="font-family:var(--mono);font-weight:800;">5.1 km</td>
-                        <td data-lang="es">Recolección de muestras y astrobiología (&lt;20°)</td>
-                        <td data-lang="en">Core sampling &amp; astrobiology (&lt;20° rule)</td>
+                        <td>Core sampling &amp; astrobiology (&lt;20° rule)</td>
                     </tr>
                     <tr>
-                        <td><strong>🚙 Con Rover Presurizado de Apoyo</strong></td>
+                        <td><strong>🚙 Pressurized Rover Support</strong></td>
                         <td style="font-family:var(--mono);font-weight:700;">+25 kg Lab</td>
                         <td>
                             <div class="bar-track"><div class="bar-fill" style="width:20%;background:#38bdf8;"></div></div>
                             <span style="font-family:var(--mono);color:#38bdf8;font-weight:800;">11.8% O₂ (-45%)</span>
                         </td>
                         <td style="font-family:var(--mono);font-weight:800;color:var(--green);">11.8 km</td>
-                        <td data-lang="es">Travesía larga hasta Bright Angel o Neretva Vallis</td>
-                        <td data-lang="en">Long-range traverse to Bright Angel or Neretva</td>
+                        <td>Long-range traverse to Bright Angel or Neretva Vallis</td>
                     </tr>
                 </tbody>
             </table>
@@ -931,27 +817,23 @@
             <div class="s5-bottom">
                 <div class="s5-panel" style="border-left:5px solid var(--cyan);">
                     <div>
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">HERENCIA APOLLO Y ARTEMIS // EVA CUFF CHECKLIST</div>
-                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="es">📋 Libreta de Muñeca Imprimible con "Bingo O₂"</h3>
-                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="en">📋 Printable Astronaut Wrist Card with "Bingo O₂"</h3>
-                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="es">
-                            Si las pantallas electrónicas del casco fallan durante una tormenta solar, el astronauta sobrevive leyendo la libreta física cosida a su muñeca. <strong>NEXO-ARES genera e imprime en PDF</strong> la hoja táctica con rumbos exactos de brújula (0° a 360°), distancias y el <strong>Bingo O₂</strong> (el porcentaje exacto de oxígeno al que debe dar media vuelta).
-                        </p>
-                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="en">
-                            If helmet displays fail during a solar storm, astronauts rely on the physical cuff card on their wrist. <strong>NEXO-ARES exports a printable PDF</strong> with exact compass bearings (0°–360°), segment distances, and the exact <strong>Bingo O₂ turnback level</strong>.
+                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">APOLLO &amp; ARTEMIS HERITAGE // EVA CUFF CHECKLIST</div>
+                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;">📋 Printable Astronaut Wrist Card with "Bingo O₂"</h3>
+                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;">
+                            If helmet displays fail during a solar storm, astronauts rely on the physical cuff card stitched to their wrist. <strong>NEXO-ARES exports a printable PDF</strong> with exact compass bearings (0°–360°), segment distances, and the exact <strong>Bingo O₂ turnback threshold</strong>.
                         </p>
                     </div>
                     <div class="s5-mini-grid">
                         <div class="s5-mini-box">
-                            <div style="font-size:11px;color:var(--muted);">RUMBO BRÚJULA</div>
+                            <div style="font-size:11px;color:var(--muted);">COMPASS BEARING</div>
                             <strong style="font-family:var(--mono);font-size:18px;color:var(--cyan);">284° NW</strong>
                         </div>
                         <div class="s5-mini-box">
-                            <div style="font-size:11px;color:var(--muted);">BINGO O₂ (RETORNO)</div>
+                            <div style="font-size:11px;color:var(--muted);">BINGO O₂ (TURNBACK)</div>
                             <strong style="font-family:var(--mono);font-size:18px;color:var(--amber);">41.2% O₂</strong>
                         </div>
                         <div class="s5-mini-box">
-                            <div style="font-size:11px;color:var(--muted);">RESERVA FINAL</div>
+                            <div style="font-size:11px;color:var(--muted);">FINAL RESERVE</div>
                             <strong style="font-family:var(--mono);font-size:18px;color:var(--green);">77.6% OK</strong>
                         </div>
                     </div>
@@ -959,28 +841,24 @@
 
                 <div class="s5-panel" style="border-left:5px solid var(--red);">
                     <div>
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--red);font-weight:800;">⚡ SIMULADOR DE EMERGENCIAS // CHAOS TEST</div>
-                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="es">🔥 Inyección de Fallas Críticas en Vivo</h3>
-                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;" data-lang="en">🔥 Live Critical Fault Injection Console</h3>
-                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="es">
-                            En misiones reales las anomalías ocurren sin previo aviso. El módulo <strong>⚡ Chaos Test</strong> inyecta 3 emergencias críticas en tiempo real: el anillo verde de autonomía se contrae al instante y el algoritmo recalcula la ruta de aborto hacia el Hábitat.
-                        </p>
-                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;" data-lang="en">
-                            In surface missions, anomalies strike without warning. The <strong>⚡ Chaos Test</strong> module injects 3 live critical emergencies—instantly shrinking the green autonomy ring and recalculating an emergency abort path to the Habitat.
+                        <div style="font-family:var(--mono);font-size:12px;color:var(--red);font-weight:800;">⚡ EMERGENCY SIMULATOR // CHAOS ENGINEERING</div>
+                        <h3 style="font-size:22px;font-weight:900;color:#fff;margin:6px 0;">🔥 Live Critical Fault Injection Console</h3>
+                        <p style="font-size:15.5px;color:#e2e8f0;line-height:1.5;">
+                            In surface missions, anomalies strike without warning. The <strong>⚡ Chaos Test</strong> module injects 3 live critical emergencies at any second—instantly shrinking the green autonomy ring and recalculating an emergency abort path to the Habitat.
                         </p>
                     </div>
                     <div class="s5-mini-grid">
                         <div class="s5-mini-box" style="border-color:rgba(244,63,94,0.4);">
-                            <div style="font-size:11px;color:#fda4af;">FALLA 1</div>
-                            <strong style="font-family:var(--mono);font-size:15px;color:#fff;">🫁 Fuga -35% O₂</strong>
+                            <div style="font-size:11px;color:#fda4af;">FAULT 01</div>
+                            <strong style="font-family:var(--mono);font-size:15px;color:#fff;">🫁 -35% O₂ Leak</strong>
                         </div>
                         <div class="s5-mini-box" style="border-color:rgba(244,63,94,0.4);">
-                            <div style="font-size:11px;color:#fda4af;">FALLA 2</div>
+                            <div style="font-size:11px;color:#fda4af;">FAULT 02</div>
                             <strong style="font-family:var(--mono);font-size:15px;color:#fff;">☀️ CME 0.85 mSv/h</strong>
                         </div>
                         <div class="s5-mini-box" style="border-color:rgba(244,63,94,0.4);">
-                            <div style="font-size:11px;color:#fda4af;">FALLA 3</div>
-                            <strong style="font-family:var(--mono);font-size:15px;color:#fff;">📡 Corte UHF</strong>
+                            <div style="font-size:11px;color:#fda4af;">FAULT 03</div>
+                            <strong style="font-family:var(--mono);font-size:15px;color:#fff;">📡 UHF Blackout</strong>
                         </div>
                     </div>
                 </div>
@@ -993,14 +871,10 @@
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">06 // DIFERENCIACIÓN GLOBAL • POR QUÉ NEXO-ARES SUPERA A OTRAS SOLUCIONES</span>
-                    <span class="slide-kicker" data-lang="en">06 // GLOBAL DIFFERENTIATION • WHY NEXO-ARES LEADS THE FIELD</span>
-                    <span class="slide-coords">AUDITORÍA TÉCNICA • CERO ERRORES</span>
+                    <span class="slide-kicker">06 // GLOBAL DIFFERENTIATION • AEROSPACE CAPABILITY BENCHMARK</span>
+                    <span class="slide-coords">TECHNICAL AUDIT • ZERO ERRORS</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Benchmark Aeroespacial: Visores Pasivos vs. <span class="accent">NEXO-ARES.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
+                <h2 class="slide-headline">
                     Aerospace Benchmark: Passive Viewers vs. <span class="accent">NEXO-ARES.</span>
                 </h2>
             </div>
@@ -1008,45 +882,42 @@
             <table class="s6-matrix">
                 <thead>
                     <tr>
-                        <th data-lang="es">Capacidad Crítica para Misiones Humanas</th>
-                        <th data-lang="en">Critical Human Mission Capability</th>
-                        <th data-lang="es">Visores Orbitales (NASA Mars Trek)</th>
-                        <th data-lang="en">Orbital Viewers (NASA Mars Trek)</th>
-                        <th data-lang="es">Proyectos con Chatbots IA / LLM</th>
-                        <th data-lang="en">Generic AI / LLM Projects</th>
+                        <th>Critical Human Mission Capability</th>
+                        <th>Orbital Viewers (NASA Mars Trek)</th>
+                        <th>Generic AI / LLM Planners</th>
                         <th class="ares-col">🚀 NEXO-ARES (Nexo Code)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong data-lang="es">1. Mapas Satelitales NASA y Visor 360° Real</strong><strong data-lang="en">1. Real NASA Orbital Maps &amp; 360° Visor</strong></td>
-                        <td style="color:var(--green);font-weight:700;">✔ Sí (Solo vista orbital)</td>
-                        <td style="color:var(--red);">✘ Imágenes sintéticas o fijas</td>
-                        <td class="ares-col" style="color:var(--green);">✔ 7 Capas Orbitales + Street View 360° con Láser PIXL</td>
+                        <td><strong>1. Real NASA Orbital Maps &amp; 360° Visor</strong></td>
+                        <td style="color:var(--green);font-weight:700;">✔ Yes (Orbital view only)</td>
+                        <td style="color:var(--red);">✘ Static or synthetic images</td>
+                        <td class="ares-col" style="color:var(--green);">✔ 7 Orbital Layers + 360° Street View with PIXL Laser</td>
                     </tr>
                     <tr>
-                        <td><strong data-lang="es">2. Cálculo Metabólico de Oxígeno y Reserva 30%</strong><strong data-lang="en">2. Metabolic O₂ Physics &amp; 30% Reserve Floor</strong></td>
-                        <td style="color:var(--red);">✘ No calcula soporte vital</td>
-                        <td style="color:var(--amber);">⚠ Inventa números sin física</td>
-                        <td class="ares-col" style="color:var(--cyan);">✔ Ecuación Física Exacta + Anillo de Autonomía O₂</td>
+                        <td><strong>2. Metabolic O₂ Physics &amp; 30% Reserve Floor</strong></td>
+                        <td style="color:var(--red);">✘ No life-support math</td>
+                        <td style="color:var(--amber);">⚠ Unverified text guesses</td>
+                        <td class="ares-col" style="color:var(--cyan);">✔ Exact Pandolf Physics + Live O₂ Autonomy Ring</td>
                     </tr>
                     <tr>
-                        <td><strong data-lang="es">3. Bloqueo de Pendientes &gt;20° y Sombras UHF</strong><strong data-lang="en">3. Automatic &gt;20° Slope &amp; UHF Blackout Lock</strong></td>
-                        <td style="color:var(--red);">✘ Solo muestra alturas pasivas</td>
-                        <td style="color:var(--red);">✘ Riesgo mortal de alucinación</td>
-                        <td class="ares-col" style="color:var(--cyan);">✔ Algoritmo A* que bloquea riscos &gt;20° y zonas sin UHF</td>
+                        <td><strong>3. Automatic &gt;20° Slope &amp; UHF Blackout Lock</strong></td>
+                        <td style="color:var(--red);">✘ Passive elevation contours</td>
+                        <td style="color:var(--red);">✘ Lethal hallucination risk</td>
+                        <td class="ares-col" style="color:var(--cyan);">✔ A* Solver locks &gt;20° scarps &amp; UHF shadow zones</td>
                     </tr>
                     <tr>
-                        <td><strong data-lang="es">4. Clima Espacial NASA DONKI + Chaos Test</strong><strong data-lang="en">4. Live NASA DONKI Weather + Chaos Test</strong></td>
-                        <td style="color:var(--red);">✘ Sin conexión climática</td>
-                        <td style="color:var(--red);">✘ No simula fallas en vivo</td>
-                        <td class="ares-col" style="color:var(--cyan);">✔ Dosis mSv en Vivo + Inyección de Tormenta Solar y Fugas</td>
+                        <td><strong>4. Live NASA DONKI Weather + Chaos Test</strong></td>
+                        <td style="color:var(--red);">✘ No space weather link</td>
+                        <td style="color:var(--red);">✘ No live fault injection</td>
+                        <td class="ares-col" style="color:var(--cyan);">✔ Live mSv Dosimetry + Solar Storm &amp; O₂ Leak Sim</td>
                     </tr>
                     <tr>
-                        <td><strong data-lang="es">5. Maqueta Imprimible 3D (.STL) y Libreta PDF</strong><strong data-lang="en">5. 3D Printable .STL Mesh &amp; Wrist Checklist PDF</strong></td>
-                        <td style="color:var(--amber);">⚠ STL sin ruta de astronauta</td>
-                        <td style="color:var(--red);">✘ Solo texto en pantalla</td>
-                        <td class="ares-col" style="color:var(--green);">✔ Exporta Terreno .STL con Ruta Tallada + Libreta PDF</td>
+                        <td><strong>5. 3D Printable .STL Mesh &amp; Wrist Checklist PDF</strong></td>
+                        <td style="color:var(--amber);">⚠ STL without EVA route</td>
+                        <td style="color:var(--red);">✘ Screen text only</td>
+                        <td class="ares-col" style="color:var(--green);">✔ Exports .STL Terrain with Carved Route + Wrist PDF</td>
                     </tr>
                 </tbody>
             </table>
@@ -1054,17 +925,14 @@
             <div class="s6-compliance">
                 <div>
                     <div style="font-family:var(--mono);font-size:13px;color:var(--green);font-weight:900;">
-                        ✔ CUMPLIMIENTO OFICIAL NASA SPACE APPS // TRANSPARENCIA E INTEGRIDAD CIENTÍFICA
+                        ✔ OFFICIAL NASA SPACE APPS COMPLIANCE // TRANSPARENCY &amp; SCIENTIFIC INTEGRITY
                     </div>
-                    <div style="font-size:15px;color:#f1f5f9;margin-top:4px;line-height:1.45;" data-lang="es">
-                        <strong>Cero Logos de la NASA:</strong> Respeto estricto a las reglas del hackathon. <strong>Píxeles 100% Originales:</strong> Fotografías oficiales JPL/MSSS/ASU sin alterar. <strong>Declaración SI/IA:</strong> La IA asistió en la maquetación visual; el motor matemático A* y las ecuaciones de soporte vital son 100% código determinista verificable.
-                    </div>
-                    <div style="font-size:15px;color:#f1f5f9;margin-top:4px;line-height:1.45;" data-lang="en">
-                        <strong>Zero NASA Logos:</strong> Strict compliance with hackathon branding rules. <strong>100% Unmodified Pixels:</strong> Official JPL/MSSS/ASU photos intact. <strong>SI/AI Disclosure:</strong> AI assisted with UI layout; all A* routing and life-support physics are 100% deterministic human-verified code.
+                    <div style="font-size:15px;color:#f1f5f9;margin-top:4px;line-height:1.45;">
+                        <strong>Zero NASA Logos:</strong> Strict compliance with hackathon branding rules. <strong>100% Unmodified Pixels:</strong> Official JPL/MSSS/ASU photos rendered intact. <strong>SI/AI Disclosure:</strong> AI assisted with UI layout; all A* routing and life-support physics are 100% deterministic human-verified code.
                     </div>
                 </div>
                 <div style="font-family:var(--mono);font-size:14px;font-weight:900;color:var(--green);white-space:nowrap;background:rgba(5,8,15,0.8);padding:10px 16px;border-radius:8px;border:1px solid var(--green);">
-                    13/13 NODOS VERIFICADOS
+                    13/13 VERIFIED NODES
                 </div>
             </div>
         </section>
@@ -1075,14 +943,10 @@
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker" data-lang="es">07 // IMPACTO GLOBAL Y DEMO EN VIVO • NEIVA, COLOMBIA PARA EL MUNDO</span>
-                    <span class="slide-kicker" data-lang="en">07 // GLOBAL IMPACT &amp; LIVE DEMO • NEIVA, COLOMBIA TO MARS</span>
-                    <span class="slide-coords">PROYECTO 100% FUNCIONAL EN PRODUCCIÓN</span>
+                    <span class="slide-kicker">07 // GLOBAL IMPACT &amp; LIVE DEPLOYMENT • NEIVA, COLOMBIA TO MARS</span>
+                    <span class="slide-coords">100% PRODUCTION READY</span>
                 </div>
-                <h2 class="slide-headline" data-lang="es">
-                    Antes de Pisar el Polvo Rojo, <span class="accent">NEXO-ARES Camina la Ruta.</span>
-                </h2>
-                <h2 class="slide-headline" data-lang="en">
+                <h2 class="slide-headline">
                     Before Boots Touch the Red Dust, <span class="accent">NEXO-ARES Walks the Path.</span>
                 </h2>
             </div>
@@ -1092,13 +956,9 @@
                     <div class="s7-pillar">
                         <div class="s7-p-num">01</div>
                         <div>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="es">Escalable a las Misiones Artemis (Luna) y Marte</h3>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="en">Scalable to Artemis Lunar &amp; Mars Human Missions</h3>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="es">
-                                Nuestro motor geodésico y biomédico puede cargar cualquier mapa de elevación planetario—desde el Polo Sur de la Luna (Artemis III) hasta el Cráter Jezero—para proteger a las futuras tripulaciones humanas.
-                            </p>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="en">
-                                Our geodesic and biomedical kernel can ingest any planetary DEM—from the Lunar South Pole (Artemis III) to Jezero Crater—protecting future human crews.
+                            <h3 style="font-size:21px;font-weight:900;color:#fff;">Scalable to Artemis Lunar &amp; Mars Human Missions</h3>
+                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;">
+                                Our geodesic and biomedical kernel can ingest any planetary DEM—from the Lunar South Pole (Artemis III) to Jezero Crater—protecting future human crews in real time.
                             </p>
                         </div>
                     </div>
@@ -1106,12 +966,8 @@
                     <div class="s7-pillar">
                         <div class="s7-p-num">02</div>
                         <div>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="es">Arquitectura Dual Inmortal (Servidor Hábitat + Visor Autónomo)</h3>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="en">Dual-Engine Resilience (Habitat Server + Autonomous Visor)</h3>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="es">
-                                Funciona conectado al servidor Python FastAPI del Hábitat (<code>🟢 FastAPI Live</code>) o de forma 100% autónoma en el navegador del traje (<code>⚡ Motor xEMU</code> en GitHub Pages), garantizando cero caídas en misión.
-                            </p>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="en">
+                            <h3 style="font-size:21px;font-weight:900;color:#fff;">Dual-Engine Resilience (Habitat Server + Autonomous Visor)</h3>
+                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;">
                                 Operates connected to the Habitat Python FastAPI server (<code>🟢 FastAPI Live</code>) or 100% autonomously inside the suit browser (<code>⚡ xEMU Engine</code>), guaranteeing zero mission downtime.
                             </p>
                         </div>
@@ -1120,12 +976,8 @@
                     <div class="s7-pillar">
                         <div class="s7-p-num">03</div>
                         <div>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="es">Ciencia Abierta e Inclusiva (Impresión 3D Táctil .STL)</h3>
-                            <h3 style="font-size:21px;font-weight:900;color:#fff;" data-lang="en">Open &amp; Inclusive Science (Tactile 3D .STL Printing)</h3>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="es">
-                                Cualquier colegio, universidad o estudiante con discapacidad visual puede exportar gratis el relieve 3D del Cráter Jezero en formato <code>.STL</code> para tocar con sus manos las montañas y rutas de Marte.
-                            </p>
-                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;" data-lang="en">
+                            <h3 style="font-size:21px;font-weight:900;color:#fff;">Open &amp; Inclusive Science (Tactile 3D .STL Printing)</h3>
+                            <p style="font-size:15.5px;color:#e2e8f0;margin-top:4px;line-height:1.45;">
                                 Any school, university, or visually impaired student can export the 3D relief of Jezero Crater as a binary <code>.STL</code> file to touch Mars mountains and EVA routes with their own hands.
                             </p>
                         </div>
@@ -1134,24 +986,18 @@
 
                 <div class="s7-launchpad">
                     <div style="font-family:var(--mono);font-size:13px;color:var(--cyan);font-weight:900;letter-spacing:1.5px;">
-                         PRUÉBALO AHORA EN TU CELULAR O PC // QR EN VIVO
+                        LIVE TELEMETRY ACCESS // SCAN QR OR LAUNCH
                     </div>
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=38bdf8&bgcolor=05080f&data=https%3A%2F%2Fortiz10m.github.io%2Fnexo-code-nass%2Ffrontend%2Findex.html" alt="QR NEXO-ARES" style="width:164px;height:164px;border:2px solid var(--cyan);padding:8px;border-radius:12px;background:#05080f;box-shadow:0 0 28px rgba(56,189,248,0.35);">
                     <div style="font-family:var(--mono);font-size:13.5px;color:#fff;font-weight:700;word-break:break-all;background:rgba(5,8,15,0.85);padding:6px 12px;border-radius:6px;">
                         ortiz10m.github.io/nexo-code-nass/frontend/index.html
                     </div>
                     <div style="display:flex;gap:12px;width:100%;">
-                        <a href="./index.html" class="hud-pill primary" style="flex:1.2;text-align:center;padding:13px;font-size:14px;">
-                            <span data-lang="es">🚀 Iniciar Demo en Vivo</span>
-                            <span data-lang="en">🚀 Launch Live Demo</span>
-                        </a>
-                        <a href="https://github.com/ortiz10m/nexo-code-nass" target="_blank" rel="noopener" class="hud-pill" style="flex:1;text-align:center;padding:13px;font-size:14px;">
-                            <span data-lang="es">💻 Ver Código GitHub</span>
-                            <span data-lang="en">💻 View GitHub Repo</span>
-                        </a>
+                        <a href="./index.html" class="hud-pill primary" style="flex:1.2;text-align:center;padding:13px;font-size:14px;">🚀 Launch Live Demo</a>
+                        <a href="https://github.com/ortiz10m/nexo-code-nass" target="_blank" rel="noopener" class="hud-pill" style="flex:1;text-align:center;padding:13px;font-size:14px;">💻 View GitHub Repo</a>
                     </div>
                     <div style="font-size:13px;color:#cbd5e1;font-weight:600;">
-                        Desarrollado por <strong>Team Nexo Code</strong> • NASA Space Apps Challenge
+                        Developed by <strong>Team Nexo Code</strong> • NASA Space Apps Challenge
                     </div>
                 </div>
             </div>
@@ -1163,13 +1009,12 @@
     <footer class="hud-bottom">
         <div style="font-family:var(--mono);font-size:12.5px;color:#cbd5e1;font-weight:700;">
             <span id="slide-counter" style="color:var(--cyan);">01 // 07</span>
-            <span style="margin-left:14px;" data-lang="es">Usa las flechas del teclado ◀ ▶ o los botones para avanzar</span>
-            <span style="margin-left:14px;" data-lang="en">Use ◀ ▶ Arrow Keys or buttons to navigate</span>
+            <span style="margin-left:14px;">Use ◀ ▶ Arrow Keys or buttons to navigate</span>
         </div>
         <div class="nav-dots" id="nav-dots"></div>
         <div class="nav-controls">
-            <button class="nav-btn" onclick="cambiarSlide(-1)">◀ ANTERIOR</button>
-            <button class="nav-btn" onclick="cambiarSlide(1)">SIGUIENTE ▶</button>
+            <button class="nav-btn" onclick="cambiarSlide(-1)">◀ PREV</button>
+            <button class="nav-btn" onclick="cambiarSlide(1)">NEXT ▶</button>
         </div>
     </footer>
 
@@ -1178,11 +1023,10 @@
         const dotsWrap = document.getElementById("nav-dots");
         const counterEl = document.getElementById("slide-counter");
         let idxActual = 0;
-        let idiomaSlides = "es";
 
         function renderDots() {
             dotsWrap.innerHTML = slides.map((_, i) =>
-                `<button class="nav-dot ${i === idxActual ? "active" : ""}" onclick="irASlide(${i})" title="Diapositiva ${i + 1}"></button>`
+                `<button class="nav-dot ${i === idxActual ? "active" : ""}" onclick="irASlide(${i})" title="Slide ${i + 1}"></button>`
             ).join("");
             counterEl.innerText = `0${idxActual + 1} // 0${slides.length}`;
         }
@@ -1195,14 +1039,6 @@
 
         function cambiarSlide(delta) {
             irASlide(idxActual + delta);
-        }
-
-        function toggleIdiomaSlides() {
-            idiomaSlides = idiomaSlides === "es" ? "en" : "es";
-            document.body.classList.toggle("lang-es", idiomaSlides === "es");
-            document.body.classList.toggle("lang-en", idiomaSlides === "en");
-            const btn = document.getElementById("btn-lang-slides");
-            if (btn) btn.innerText = idiomaSlides === "es" ? "🌐 EN / ES" : "🌐 ES / EN";
         }
 
         window.addEventListener("keydown", (e) => {
