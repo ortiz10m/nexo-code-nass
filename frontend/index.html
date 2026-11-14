@@ -1140,6 +1140,60 @@
             .lugar-card { flex: 0 0 148px; }
         }
 
+    
+        /* ===== REPORTE POST-EVA DARK GLASS + TORMENTA + TOUR + LEYENDA CAPAS ===== */
+        @keyframes pulsoBordeRojo {
+            0%, 100% { box-shadow: inset 0 0 40px rgba(255, 42, 85, 0.25); }
+            50% { box-shadow: inset 0 0 85px rgba(255, 42, 85, 0.55); }
+        }
+        #tormenta-borde-alerta {
+            display: none; position: fixed; inset: 0; pointer-events: none; z-index: 990;
+            animation: pulsoBordeRojo 1.8s ease-in-out infinite;
+        }
+        body.tormenta-activa #tormenta-borde-alerta { display: block; }
+        .rep-card-aaa {
+            background: rgba(11, 16, 27, 0.94);
+            backdrop-filter: blur(14px);
+            width: 490px; max-width: 94vw;
+            border-radius: 16px; padding: 22px;
+            color: #f8fafc;
+            border: 1.5px solid #00ff9d;
+            box-shadow: 0 0 36px rgba(0, 255, 157, 0.18), 0 24px 60px rgba(0, 0, 0, 0.78);
+        }
+        .rep-card-aaa.abortada {
+            border-color: #ff2a55;
+            box-shadow: 0 0 36px rgba(255, 42, 85, 0.28), 0 24px 60px rgba(0, 0, 0, 0.78);
+        }
+        .rep-metric-aaa {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 10px; padding: 10px 12px;
+        }
+        .rep-metric-aaa small {
+            display: block; color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px;
+        }
+        .rep-metric-aaa strong {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 15px; color: #ffffff; font-weight: 800;
+        }
+        .rep-o2-bar {
+            height: 8px; border-radius: 999px; overflow: hidden; display: flex;
+            background: rgba(255,255,255,0.08); margin: 6px 0 4px;
+        }
+        #tour-subtitulo-bar {
+            display: none; position: fixed; top: 62px; left: 50%; transform: translateX(-50%);
+            z-index: 2800; background: rgba(11, 16, 27, 0.92); backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.55); border-radius: 999px;
+            padding: 8px 16px; color: #e2e8f0; font-size: 12px; font-weight: 600;
+            gap: 12px; align-items: center; box-shadow: 0 8px 28px rgba(0,0,0,0.65);
+        }
+        #leyenda-capa-activa {
+            display: none; position: fixed; top: 60px; right: 16px; z-index: 995;
+            background: rgba(11, 16, 27, 0.9); border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 10px; padding: 8px 12px; color: #cbd5e1; font-size: 11px;
+            max-width: 265px; box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
     </style>
 </head>
 <body>
@@ -1362,24 +1416,33 @@
         <span>Dosis: <strong id="hud-rad">0.00 mSv</strong></span>
     </div>
 
-    <!-- MODAL REPORTE FINAL DE CAMINATA EVA -->
-    <div id="modal-reporte-eva" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.72);z-index:2500;align-items:center;justify-content:center;">
-        <div style="background:#fff;width:440px;max-width:92vw;border-radius:16px;padding:20px;box-shadow:0 12px 36px rgba(0,0,0,0.45);color:#202124;">
+    <div id="tormenta-borde-alerta"></div>
+    <div id="tour-subtitulo-bar">
+        <span id="tour-subtitulo-txt" style="color:#7dd3fc;">Paso 1/3: Inserción orbital en Cráter Jezero...</span>
+        <button onclick="detenerTourJurados()" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">⏹ Detener Tour</button>
+    </div>
+    <div id="leyenda-capa-activa"></div>
+
+    <!-- MODAL REPORTE FINAL DE CAMINATA EVA (ESTILO SPACEX / AAA) -->
+    <div id="modal-reporte-eva" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.78);backdrop-filter:blur(6px);z-index:2500;align-items:center;justify-content:center;" onclick="if(event.target===this)cerrarReporteEVA()">
+        <div id="rep-card-aaa" class="rep-card-aaa">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <span id="rep-badge" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:#e6f4ea;color:#137333;">REPORTE POST-EVA</span>
-                <button onclick="cerrarReporteEVA()" style="border:none;background:none;font-size:18px;cursor:pointer;color:#5f6368;">✕</button>
+                <span id="rep-badge" style="font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;letter-spacing:0.6px;">EVA EXITOSA</span>
+                <button onclick="cerrarReporteEVA()" style="border:none;background:none;font-size:18px;cursor:pointer;color:#94a3b8;">✕</button>
             </div>
-            <h3 id="rep-titulo" style="font-size:18px;margin-bottom:6px;">Misión EVA Completada</h3>
-            <p id="rep-subtitulo" style="font-size:12.5px;color:#5f6368;margin-bottom:10px;"></p>
-            <div id="rep-foto-box" style="margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid #dadce0;background:#1f140e;display:none;">
-                <img id="rep-foto-img" src="" alt="Vista del destino" style="width:100%;height:135px;object-fit:cover;display:block;">
-                <div id="rep-foto-cap" style="padding:4px 8px;font-size:10.5px;color:#e2e8f0;background:rgba(15,23,42,0.9);"></div>
+            <h3 id="rep-titulo" style="font-size:18px;font-weight:800;margin-bottom:4px;color:#ffffff;">Misión EVA Completada</h3>
+            <p id="rep-subtitulo" style="font-size:12px;color:#cbd5e1;margin-bottom:10px;"></p>
+            <div id="rep-foto-box" style="margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(56,189,248,0.35);background:#090d16;display:none;">
+                <img id="rep-foto-img" src="" alt="Vista del destino" style="width:100%;height:125px;object-fit:cover;display:block;">
+                <div id="rep-foto-cap" style="padding:4px 8px;font-size:10.5px;color:#7dd3fc;background:rgba(11,16,27,0.92);"></div>
             </div>
-            <div id="rep-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;"></div>
-            <div id="rep-leccion" style="background:#f8f9fa;border:1px solid #dadce0;border-radius:10px;padding:10px;font-size:12px;color:#3c4043;margin-bottom:14px;"></div>
-            <div style="display:flex;gap:8px;">
-                <button class="btn-azul" onclick="cerrarReporteEVA(); abrirStreetViewActual();">🧑‍🚀 Ver destino en Street View</button>
-                <button class="btn-gris" onclick="cerrarReporteEVA()">Cerrar</button>
+            <div id="rep-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"></div>
+            <div id="rep-o2-desglose" style="background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#cbd5e1;"></div>
+            <div id="rep-leccion" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px;font-size:12px;color:#e0f2fe;margin-bottom:14px;"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn-azul" style="flex:1.4;font-size:11.5px;letter-spacing:0.3px;" onclick="cerrarReporteEVA(); abrirStreetViewActual();">VISOR CASCO AR 360° — INSPECCIONAR SITIO</button>
+                <button class="btn-gris" style="flex:1;font-size:11.5px;background:rgba(15,23,42,0.95);color:#7dd3fc;border:1px solid rgba(56,189,248,0.4);" onclick="cerrarReporteEVA(); abrirCuffChecklist();">PLAN DE MUÑECA EVA</button>
+                <button class="btn-gris" style="padding:8px 14px;font-size:11.5px;background:rgba(30,41,59,0.9);color:#f8fafc;border:1px solid rgba(148,163,184,0.4);" onclick="cerrarReporteEVA()">Cerrar</button>
             </div>
         </div>
     </div>
@@ -1696,6 +1759,18 @@
         capaNodos.addTo(mapa);
     capaAnilloO2.addTo(mapa);
 
+        function actualizarLeyendaCapas(tipoBase = null) {
+            const box = document.getElementById("leyenda-capa-activa");
+            if (!box) return;
+            const items = [];
+            if (tipoBase === "mola" || verMolaOverlay) items.push("🏔️ <strong>MOLA:</strong> Azul = Valle profundo (-2,650m) • Rojo/Blanco = Borde elevado (-2,250m)");
+            if (verTermica) items.push("🌡️ <strong>Térmica:</strong> Naranja (&gt;-25°C) • Amarillo (-35°C a -25°C) • Azul (&lt;-35°C)");
+            if (verPeligros) items.push("⛔ <strong>Riesgo:</strong> Rojo = Pendiente &gt;20° incompatible con traje xEMU o sin línea UHF");
+            if (!items.length) { box.style.display = "none"; return; }
+            box.innerHTML = items.join("<br>");
+            box.style.display = "block";
+        }
+
         function cambiarMapaBase(tipo) {
             mapa.removeLayer(baseActiva);
             document.getElementById("btn-ctx").classList.toggle("activo", tipo === "ctx");
@@ -1705,6 +1780,7 @@
 
             baseActiva = tipo === "ctx" ? grupoSateliteHD : (tipo === "color" ? capaSoloViking : capaMola);
             baseActiva.addTo(mapa);
+            actualizarLeyendaCapas(tipo);
         }
 
         function toggleMolaOverlay() {
@@ -1712,11 +1788,13 @@
             document.getElementById("btn-mola-overlay").classList.toggle("activo", verMolaOverlay);
             if (verMolaOverlay) capaMolaOverlay.addTo(mapa);
             else mapa.removeLayer(capaMolaOverlay);
+            actualizarLeyendaCapas();
         }
 
         function toggleCapaTermica() {
             verTermica = !verTermica;
             document.getElementById("btn-termica").classList.toggle("activo", verTermica);
+            actualizarLeyendaCapas();
             if (verTermica) {
                 capaTermica.clearLayers();
                 puntosJezero.forEach(p => {
@@ -1770,9 +1848,10 @@
             }
 
             const esTormenta = climaEspacial.estado_solar === "TORMENTA SOLAR";
+            document.body.classList.toggle("tormenta-activa", esTormenta);
             btn.classList.toggle("tormenta", esTormenta);
             btn.innerText = esTormenta
-                ? `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h)`
+                ? `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h) • Refugio ~6 min`
                 : `☀️ DONKI: ${climaEspacial.estado_solar} (${climaEspacial.radiacion_msv_hora} mSv/h)`;
         }
 
@@ -1960,6 +2039,8 @@
         function cancelarAccionesEnCurso(detenerCaminata = false) {
             (window._tourTimers || []).forEach(id => clearTimeout(id));
             window._tourTimers = [];
+            const tourBar = document.getElementById("tour-subtitulo-bar");
+            if (tourBar) tourBar.style.display = "none";
             try { mapa.stop(); } catch (_) {}
             if (detenerCaminata) {
                 clearInterval(timerCaminata);
@@ -2415,49 +2496,100 @@
             }, 850);
         }
 
+        function animarContador(el, target, dec = 1, suf = "") {
+            if (!el) return;
+            const dur = 450, t0 = performance.now();
+            (function step(now) {
+                const f = Math.min(1, (now - t0) / dur);
+                const val = target * (1 - Math.pow(1 - f, 3));
+                el.innerText = `${dec === 0 ? Math.round(val) : val.toFixed(dec)}${suf}`;
+                if (f < 1) requestAnimationFrame(step);
+            })(t0);
+        }
+
+        const HALLAZGOS_MUESTRA = {
+            1: "Regolito basáltico consolidado — Calibración de soporte vital y enlace UHF nominal en Base Octavia.",
+            2: "Cúmulo de olivino y carbonatos (Formación Séítah) — Evidencia clave de actividad ígnea primitiva.",
+            3: "Arenisca estratificada en promontorio — Punto óptimo de triangulación visual y muestreo eólico.",
+            4: "Talud deltaico escarpado (>20°) — Observación remota recomendada; alto riesgo de deslizamiento.",
+            5: "Corredor de depósitos fluviales — Zona segura de almacenamiento de tubos de muestras para retorno a Tierra.",
+            6: "Brecha de impacto profunda sin línea UHF — Exposición del subsuelo antiguo (>3.7 Ga).",
+            7: "Muestra recolectada: Lutita de grano fino con sulfatos y arcillas lacustres — Prioridad Astrobiológica Nivel 1 para retorno a Tierra.",
+            8: "Conglomerado fluvial antiguo (Neretva Vallis) — Evidencia directa de corriente de agua líquida hacia el paleolago.",
+            9: "Basalto vesicular (Formación Máaz) — Muestra ideal para datación radiométrica del suelo del cráter.",
+            10: "Cresta de megadunas compactadas (Artuby) — Estudio de estratificación cruzada y transporte de polvo.",
+            11: "Rocas claras ricas en sulfatos y vetas minerales (Bright Angel) — Alta probabilidad de preservación de biofirmas.",
+            12: "Corteza primordial del borde oeste (>3.8 Ga) — Terreno extremo; ascenso humano bloqueado por norma >20°."
+        };
+
         function mostrarReporteFinalEVA(sel, energiaIni) {
             const r = sel.ruta;
             const v = sel.viab;
             const modal = document.getElementById("modal-reporte-eva");
+            const card = document.getElementById("rep-card-aaa");
             const badge = document.getElementById("rep-badge");
             const titulo = document.getElementById("rep-titulo");
             const sub = document.getElementById("rep-subtitulo");
 
-            badge.innerText = v.viable ? "✅ EVA EXITOSA" : "⚠️ ALERTA CRÍTICA EN RUTA";
-            badge.style.background = v.viable ? "#e6f4ea" : "#fce8e6";
-            badge.style.color = v.viable ? "#137333" : "#c5221f";
+            const abortada = !v.viable || v.energia_restante < 30;
+            card.classList.toggle("abortada", abortada);
+            badge.innerText = abortada ? "EVA ABORTADA — SEGURIDAD NASA" : "EVA EXITOSA — MISIÓN NOMINAL";
+            badge.style.background = abortada ? "rgba(255,42,85,0.2)" : "rgba(0,255,157,0.16)";
+            badge.style.color = abortada ? "#ff4d6d" : "#00ff9d";
+            badge.style.border = `1px solid ${abortada ? "#ff2a55" : "#00ff9d"}`;
 
             const destNodo = r.ruta_calculada[r.ruta_calculada.length - 1] || {};
             const dest = destNodo.nombre || "Destino";
-            titulo.innerText = v.viable ? `Llegada segura a ${dest.split("(")[0].trim()}` : `Misión comprometida hacia ${dest.split("(")[0].trim()}`;
-            sub.innerText = (v.razones || []).join(" ");
+            const destCorto = dest.split("(")[0].trim();
+            const esRetorno = Boolean(document.getElementById("check-retorno")?.checked);
+            titulo.innerText = abortada
+                ? `EVA ABORTADA hacia ${destCorto}`
+                : `Llegada segura a ${destCorto}`;
+            sub.innerText = abortada
+                ? `Reserva final proyectada ${v.energia_restante}% (< límite NASA 30%) o pendiente incompatible. ${(v.razones || []).join(" ")}`
+                : `${esRetorno ? "Misión Ida + Retorno asegurada" : "Tramo de Ida completado • Reserva de Retorno validada"} • ${(v.razones || []).join(" ")}`;
 
             const fotoBox = document.getElementById("rep-foto-box");
-            fotoBox.style.display = "none";
             const nodoFull = puntosJezero.find(p => p.id === destNodo.id) || destNodo;
-            if (nodoFull?.query_nasa) {
-                fetch(`${URL_API}/fotos_perseverance?query=${encodeURIComponent(nodoFull.query_nasa)}&limit=1`)
-                    .then(res => res.json())
-                    .then(d => {
-                        const urlF = d.galeria_nasa?.[0]?.url || d.raw_perseverance?.[0]?.url;
-                        if (urlF) {
-                            document.getElementById("rep-foto-img").src = urlF;
-                            document.getElementById("rep-foto-cap").innerText = `📸 Vista real NASA — ${dest.split("(")[0].trim()}`;
-                            fotoBox.style.display = "block";
-                        }
-                    }).catch(() => {});
-            }
+            const fotoLocal = obtenerFotoNodoNASA(nodoFull);
+            document.getElementById("rep-foto-img").src = fotoLocal.url;
+            document.getElementById("rep-foto-cap").innerText = `NASA Mastcam-Z / Navcam — ${destCorto}`;
+            fotoBox.style.display = "block";
 
+            const litros = r.litros_o2 ?? Math.round((r.kcal_totales || 0) * 0.21);
+            const o2Color = abortada ? "#ff4d6d" : "#00ff9d";
             document.getElementById("rep-grid").innerHTML = `
-                <div class="metrica-pill"><small>Distancia / Tiempo</small><strong>${r.distancia_km} km • ${r.tiempo_estimado_min} min</strong></div>
-                <div class="metrica-pill"><small>Oxígeno PLSS final</small><strong style="color:${v.energia_restante < 30 ? '#d93025' : '#137333'}">${v.energia_restante}% (de ${energiaIni}%)</strong></div>
-                <div class="metrica-pill"><small>Gasto / Consumo O₂</small><strong>${r.kcal_totales} kcal • ${r.litros_o2 ?? Math.round(r.kcal_totales * 0.21)} L</strong></div>
-                <div class="metrica-pill"><small>Ciencia / Radiación</small><strong>${r.puntaje_cientifico ?? 65}/100 • ${r.radiacion_msv ?? 0} mSv</strong></div>
+                <div class="rep-metric-aaa"><small>Distancia / Tiempo</small><strong><span id="cnt-km">0</span> km • <span id="cnt-min">0</span> min</strong></div>
+                <div class="rep-metric-aaa"><small>Oxígeno PLSS Final</small><strong style="color:${o2Color};"><span id="cnt-o2">0</span>% (de ${energiaIni}%)</strong></div>
+                <div class="rep-metric-aaa"><small>Gasto Metabólico</small><strong><span id="cnt-kcal">0</span> kcal • ${litros} L O₂</strong></div>
+                <div class="rep-metric-aaa"><small>Ciencia / Radiación</small><strong>${r.puntaje_cientifico ?? 78}/100 • ${r.radiacion_msv ?? 0} mSv</strong></div>
             `;
 
-            const hist = v.detalle_historico || {};
-            document.getElementById("rep-leccion").innerHTML = `<strong>${hist.mision || "Archivo NASA"}:</strong> ${hist.leccion || v.comparacion_historica || ""}`;
+            const usadoPct = Math.max(0, +(energiaIni - v.energia_restante).toFixed(1));
+            const usadoIda = esRetorno ? +(usadoPct / 2).toFixed(1) : usadoPct;
+            const resRet = esRetorno ? +(usadoPct / 2).toFixed(1) : Math.min(v.energia_restante, usadoPct);
+            const margenLibre = Math.max(0, +(100 - usadoIda - resRet).toFixed(1));
+            document.getElementById("rep-o2-desglose").innerHTML = `
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                    <span>Usado Ida: <strong>${usadoIda}%</strong></span>
+                    <span>Reserva Retorno: <strong>${resRet}%</strong></span>
+                    <span>Margen + Emergencia NASA (30%): <strong style="color:${o2Color};">${margenLibre}%</strong></span>
+                </div>
+                <div class="rep-o2-bar">
+                    <div style="width:${usadoIda}%;background:#38bdf8;"></div>
+                    <div style="width:${resRet}%;background:#f59e0b;"></div>
+                    <div style="width:${margenLibre}%;background:${abortada ? '#ff2a55' : '#00ff9d'};"></div>
+                </div>
+            `;
+
+            const hallazgo = HALLAZGOS_MUESTRA[destNodo.id] || `Muestra recolectada en ${destCorto}: ${destNodo.valor_cientifico || "Registro geológico Jezero."}`;
+            document.getElementById("rep-leccion").innerHTML = `<strong style="color:#7dd3fc;">🔬 Hallazgo Científico del Sitio:</strong><br>${hallazgo}`;
             modal.style.display = "flex";
+
+            animarContador(document.getElementById("cnt-km"), Number(r.distancia_km || 0), 2, "");
+            animarContador(document.getElementById("cnt-min"), Number(r.tiempo_estimado_min || r.tiempo_min || 0), 0, "");
+            animarContador(document.getElementById("cnt-o2"), Number(v.energia_restante || 0), 1, "");
+            animarContador(document.getElementById("cnt-kcal"), Number(r.kcal_totales || 0), 0, "");
         }
 
         function cerrarReporteEVA() {
@@ -3420,21 +3552,38 @@
             }
         }
 
+        function detenerTourJurados() {
+            cancelarAccionesEnCurso(true);
+            const bar = document.getElementById("tour-subtitulo-bar");
+            if (bar) bar.style.display = "none";
+        }
+
         function iniciarTourJurados() {
             if (!puedeCambiarVista()) return;
             cancelarAccionesEnCurso(true);
             window._bloqueoVistaHasta = 0;
+            const bar = document.getElementById("tour-subtitulo-bar");
+            const txt = document.getElementById("tour-subtitulo-txt");
+            if (bar && txt) {
+                txt.innerText = "Paso 1/3: Inserción orbital en Cráter Jezero (Globo 3D)";
+                bar.style.display = "flex";
+            }
             abrirGlobo3D();
             window._tourTimers.push(setTimeout(() => {
                 enfocarMision3D(18.44, 77.45, "Cráter Jezero • Base Octavia E. Butler", "Aterrizando en el sitio de exploración humana...");
-            }, 900));
+            }, 1000));
             window._tourTimers.push(setTimeout(() => {
+                if (txt) txt.innerText = "Paso 2/3: Escaneo de pendiente (<20°), radio UHF y anillo O₂";
                 aterrizarEnJezero();
                 activarEscenarioDemo("segura");
-            }, 2600));
+            }, 3000));
             window._tourTimers.push(setTimeout(() => {
+                if (txt) txt.innerText = "Paso 3/3: Ejecución de caminata EVA y telemetría en vivo";
                 simularPasoAPaso();
-            }, 3800));
+            }, 5200));
+            window._tourTimers.push(setTimeout(() => {
+                if (bar) bar.style.display = "none";
+            }, 14000));
         }
 
         function calcularRumboGrados(a, b) {
