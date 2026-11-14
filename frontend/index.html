@@ -936,8 +936,14 @@
         .tac-pin.poi-base .tac-card { border-color: rgba(34, 197, 94, 0.65); color: #bbf7d0; }
         .tac-pin.poi-riesgo .tac-card { border-color: rgba(255, 42, 85, 0.65); color: #fecdd3; }
         .tac-card small { color: #94a3b8; font-weight: 500; margin-left: 4px; font-size: 9.5px; }
-        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(:hover) .tac-card,
-        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(:hover) .tac-stem { display: none; }
+        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(.poi-riesgo):not(.poi-base):not(:hover) .tac-card,
+        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(.poi-riesgo):not(.poi-base):not(:hover) .tac-stem { display: none; }
+        .tac-pin.tac-left .tac-card { left: -12px; bottom: 0; transform: translate(-100%, -50%); }
+        .tac-pin.tac-left .tac-stem { display: none; }
+        .tac-pin.tac-right .tac-card { left: 12px; bottom: 0; transform: translate(0, -50%); }
+        .tac-pin.tac-right .tac-stem { display: none; }
+        .tac-pin.tac-bottom .tac-stem { bottom: auto; top: 5px; }
+        .tac-pin.tac-bottom .tac-card { bottom: auto; top: 25px; }
         .pin-ab {
             width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -978,7 +984,28 @@
         .lugar-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
         .lugar-card.activo { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
         .lugar-card.peligro.activo { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
-        .lugar-card-img { width: 100%; height: 64px; object-fit: cover; display: block; transform: scale(1.18); }
+        .lugar-card-img { width: 100%; height: 64px; object-fit: cover; object-position: center 68%; display: block; transform: scale(1.42); }
+        body.carrusel-oculto #carrusel-lugares { display: none !important; }
+        .btn-toggle-carrusel {
+            position: absolute;
+            bottom: 56px;
+            left: 410px;
+            z-index: 996;
+            background: rgba(11, 15, 25, 0.88);
+            color: #7dd3fc;
+            border: 1px solid rgba(56, 189, 248, 0.42);
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+            transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
+        }
+        .btn-toggle-carrusel:hover { background: rgba(56, 189, 248, 0.18); }
+        body.panel-oculto .btn-toggle-carrusel { left: 108px; }
+        body:not(.carrusel-oculto) .btn-toggle-carrusel { bottom: 178px; }
+        @media (max-width: 768px) { .btn-toggle-carrusel { display: none; } }
         .lugar-card-body { padding: 7px 9px 8px; }
         .lugar-card-nom { font-size: 11.5px; font-weight: 700; color: #f8fafc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .lugar-card-meta { font-size: 10px; margin-top: 2px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
@@ -1158,8 +1185,8 @@
     </aside>
 
     <div class="chips-superiores">
-        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:rgba(255,255,255,0.06);color:#fdba74;border:1px solid rgba(249,115,22,0.45);font-weight:600;">🪐 Globo 3D</button>
-        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:rgba(56,189,248,0.14);color:#7dd3fc;border:1px solid rgba(56,189,248,0.5);font-weight:600;">🏔️ Terreno 3D</button>
+        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🪐 Globo 3D</button>
+        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:rgba(56,189,248,0.16);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);font-weight:600;">🏔️ Terreno 3D</button>
         <div style="position:relative;">
             <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Capas ▾</button>
             <div id="menu-capas" style="display:none;position:absolute;top:42px;right:0;flex-direction:column;gap:4px;background:rgba(11,16,28,0.96);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:6px;min-width:175px;box-shadow:0 8px 24px rgba(0,0,0,0.6);z-index:1100;">
@@ -1171,7 +1198,7 @@
                 <button id="btn-peligros" class="chip-gmaps activo" style="text-align:left;" onclick="togglePeligros()">Zonas de Riesgo</button>
             </div>
         </div>
-        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.22);font-weight:600;">🎬 Tour Demo</button>
+        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:rgba(11,15,25,0.88);color:#bae6fd;border:1px solid rgba(56,189,248,0.38);font-weight:600;">🎬 Tour Demo</button>
         <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
     </div>
 
@@ -1221,6 +1248,7 @@
         <span>🖱️ Clic derecho: Ruta libre</span>
     </div>
 
+    <button id="btn-toggle-carrusel" class="btn-toggle-carrusel" onclick="toggleCarruselLugares()">▾ Ocultar sitios</button>
     <div id="carrusel-lugares"></div>
 
     <div id="menu-clic-derecho" class="menu-contextual">
@@ -1420,19 +1448,23 @@
             inertiaDeceleration: 2600,
             zoomControl: false,
             attributionControl: false,
-            minZoom: 7,
+            minZoom: 10.25,
             maxZoom: 14,
-            maxBounds: [[-90, -180], [90, 180]],
+            maxBounds: [[18.14, 77.06], [18.76, 77.88]],
             maxBoundsViscosity: 1.0
-        }).setView([18.448, 77.418], 10);
+        }).setView([18.448, 77.418], 10.75);
 
         L.control.attribution({ prefix: false, position: "bottomright" }).addTo(mapa);
         L.control.zoom({ position: "bottomright" }).addTo(mapa);
         L.control.scale({ position: "bottomright", imperial: false }).addTo(mapa);
         function actualizarClaseZoomMapa() {
-            document.getElementById("mapa")?.classList.toggle("zoom-lejos", mapa.getZoom() < 10);
+            document.getElementById("mapa")?.classList.toggle("zoom-lejos", mapa.getZoom() < 12.25);
         }
         mapa.on("zoomend", actualizarClaseZoomMapa);
+        actualizarClaseZoomMapa();
+        mapa.on("dragstart mousedown", () => {
+            if (typeof cancelarAccionesEnCurso === "function") cancelarAccionesEnCurso(false);
+        });
         mapa.on("mousemove", (e) => {
             const el = document.getElementById("coords-mars");
             if (!el) return;
@@ -1678,7 +1710,7 @@
                     icon: L.divIcon({
                         className: "poi-wrap",
                         iconSize: [0, 0],
-                        html: `<div class="tac-pin ${tipoPoi}"><div class="tac-stem"></div><div class="tac-card">${nombreCorto}<small>${p.pendiente}°</small></div><div class="tac-dot"></div></div>`
+                        html: `<div class="tac-pin ${tipoPoi} ${[7, 11].includes(p.id) ? "tac-left" : ([2, 5, 9].includes(p.id) ? "tac-right" : ([3, 4].includes(p.id) ? "tac-bottom" : ""))}"><div class="tac-stem"></div><div class="tac-card">${nombreCorto}<small>${p.pendiente}°</small></div><div class="tac-dot"></div></div>`
                     })
                 }).addTo(capaNodos);
                 window._poiMarkers = window._poiMarkers || {};
@@ -1731,7 +1763,43 @@
             }).join("");
         }
 
+        window._tourTimers = [];
+        window._bloqueoVistaHasta = 0;
+
+        function cancelarAccionesEnCurso(detenerCaminata = false) {
+            (window._tourTimers || []).forEach(id => clearTimeout(id));
+            window._tourTimers = [];
+            try { mapa.stop(); } catch (_) {}
+            if (detenerCaminata) {
+                clearInterval(timerCaminata);
+                if (pinCaminante) { try { mapa.removeLayer(pinCaminante); } catch (_) {} pinCaminante = null; }
+                const hud = document.getElementById("hud-caminata");
+                if (hud) hud.style.display = "none";
+            }
+        }
+
+        function puedeCambiarVista() {
+            const ahora = Date.now();
+            if (ahora < (window._bloqueoVistaHasta || 0)) return false;
+            window._bloqueoVistaHasta = ahora + 650;
+            return true;
+        }
+
+        function setCarruselColapsado(colapsar) {
+            document.body.classList.toggle("carrusel-oculto", colapsar);
+            const btn = document.getElementById("btn-toggle-carrusel");
+            if (btn) {
+                const n = Math.max(0, (puntosJezero?.length || 1) - 1);
+                btn.innerText = colapsar ? `📍 Explorar sitios (${n})` : "▾ Ocultar sitios";
+            }
+        }
+
+        function toggleCarruselLugares() {
+            setCarruselColapsado(!document.body.classList.contains("carrusel-oculto"));
+        }
+
         function seleccionarLugarCarrusel(id) {
+            cancelarAccionesEnCurso(false);
             puntoLibreDestino = null;
             const s2 = document.getElementById("select-destino");
             if (s2) s2.value = String(id);
@@ -2112,9 +2180,11 @@
         }
 
         function simularPasoAPaso() {
+            cancelarAccionesEnCurso(false);
             const sel = cacheAlternativas[alternativaActiva];
             const pts = sel?.ruta?.ruta_calculada || [];
             if (pts.length < 2) return;
+            setCarruselColapsado(true);
             if (pinCaminante) mapa.removeLayer(pinCaminante);
             clearInterval(timerCaminata);
 
@@ -2432,8 +2502,14 @@
         }
 
         function abrirTerreno3DJezero() {
+            if (!puedeCambiarVista()) return;
+            cancelarAccionesEnCurso(false);
             document.getElementById("modal-terreno3d").style.display = "flex";
             if (!t3dIniciado) iniciarMotorTerreno3D();
+            else if (window._animT3DFn && !window._t3dLoopActivo) {
+                window._t3dLoopActivo = true;
+                requestAnimationFrame(window._animT3DFn);
+            }
             actualizarRutaTerreno3D();
         }
 
@@ -2594,7 +2670,12 @@
                 }
             };
 
-            (function animT3D() {
+            window._t3dLoopActivo = true;
+            window._animT3DFn = function animT3D() {
+                if (document.getElementById("modal-terreno3d")?.style.display === "none") {
+                    window._t3dLoopActivo = false;
+                    return;
+                }
                 requestAnimationFrame(animT3D);
                 if (t3dTarget) {
                     t3dTheta += (t3dTarget.theta - t3dTheta) * 0.08;
@@ -2613,7 +2694,8 @@
                 if (window._tickPulso3D) window._tickPulso3D();
                 t3dRenderer.render(t3dScene, t3dCamera);
                 actualizarEtiquetasTerreno3D();
-            })();
+            };
+            window._animT3DFn();
         }
 
         let t3dPins = [];
@@ -2690,8 +2772,16 @@
         }
 
         function abrirGlobo3D() {
+            if (!puedeCambiarVista()) return;
+            cancelarAccionesEnCurso(false);
             document.getElementById("modal-globo3d").style.display = "flex";
-            if (globoIniciado) return;
+            if (globoIniciado) {
+                if (window._animGlobo3DFn && !window._globoLoopActivo) {
+                    window._globoLoopActivo = true;
+                    requestAnimationFrame(window._animGlobo3DFn);
+                }
+                return;
+            }
             globoIniciado = true;
 
             const cont = document.getElementById("contenedor-globo-3d");
@@ -2839,7 +2929,12 @@
             });
 
             const gLayer = document.getElementById("globo-labels-layer");
-            (function animar3D() {
+            window._globoLoopActivo = true;
+            window._animGlobo3DFn = function animar3D() {
+                if (document.getElementById("modal-globo3d")?.style.display === "none") {
+                    window._globoLoopActivo = false;
+                    return;
+                }
                 requestAnimationFrame(animar3D);
                 if (!drag && autoRotar3D) esferaMarte.rotation.y += 0.0011;
                 renderer.render(scene, camera);
@@ -2862,7 +2957,8 @@
                         gLayer.appendChild(el);
                     });
                 }
-            })();
+            };
+            window._animGlobo3DFn();
         }
 
         function enfocarMision3D(lat, lon, titulo, desc) {
@@ -3055,17 +3151,20 @@
         }
 
         function iniciarTourJurados() {
+            if (!puedeCambiarVista()) return;
+            cancelarAccionesEnCurso(true);
+            window._bloqueoVistaHasta = 0;
             abrirGlobo3D();
-            setTimeout(() => {
+            window._tourTimers.push(setTimeout(() => {
                 enfocarMision3D(18.44, 77.45, "Cráter Jezero • Base Octavia E. Butler", "Aterrizando en el sitio de exploración humana...");
-            }, 900);
-            setTimeout(() => {
+            }, 900));
+            window._tourTimers.push(setTimeout(() => {
                 aterrizarEnJezero();
                 activarEscenarioDemo("segura");
-            }, 2600);
-            setTimeout(() => {
+            }, 2600));
+            window._tourTimers.push(setTimeout(() => {
                 simularPasoAPaso();
-            }, 3800);
+            }, 3800));
         }
 
         async function iniciar() {
