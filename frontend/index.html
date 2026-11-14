@@ -531,9 +531,13 @@
             color: #202124 !important;
             border-bottom: 1px solid #e0e0e0 !important;
         }
-        .leaflet-control-scale {
-            margin-bottom: 8px !important;
-            margin-right: 4px !important;
+        .leaflet-bottom.leaflet-right .leaflet-control-scale {
+            position: absolute !important;
+            bottom: 24px !important;
+            right: 58px !important;
+            margin: 0 !important;
+            z-index: 1001 !important;
+            white-space: nowrap !important;
         }
         .leaflet-control-scale-line {
             background: rgba(11, 15, 25, 0.88) !important;
