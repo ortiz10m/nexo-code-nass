@@ -32,7 +32,13 @@
 
         /* Tono cálido marciano equilibrado sin quemar blancos */
         .capa-ctx {
-            filter: sepia(0.62) saturate(1.65) hue-rotate(-10deg) contrast(1.08) brightness(0.96);
+            filter: sepia(0.36) hue-rotate(-24deg) saturate(1.22) contrast(1.06) brightness(0.92);
+        }
+        #mapa.zoom-lejos .poi:not(.en-ruta):not(:hover) .poi-lbl {
+            display: none;
+        }
+        #mapa.zoom-lejos .poi:not(.en-ruta) .poi-ico {
+            transform: scale(0.78);
         }
 
         /* Panel izquierdo colapsable estilo NASA Mars Trek Dark Glass */
@@ -968,7 +974,7 @@
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
             <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
-                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.35s ease;">
+                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
                 <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
                     <div>
                         <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
@@ -1282,6 +1288,10 @@
         L.control.attribution({ prefix: false, position: "bottomright" }).addTo(mapa);
         L.control.zoom({ position: "bottomright" }).addTo(mapa);
         L.control.scale({ position: "bottomright", imperial: false }).addTo(mapa);
+        function actualizarClaseZoomMapa() {
+            document.getElementById("mapa")?.classList.toggle("zoom-lejos", mapa.getZoom() < 10);
+        }
+        mapa.on("zoomend", actualizarClaseZoomMapa);
         mapa.on("mousemove", (e) => {
             const el = document.getElementById("coords-mars");
             if (!el) return;
@@ -1313,7 +1323,7 @@
         // CTX global 5 m/px (servicio oficial que usa NASA Mars Trek por dentro: tiles 512 px)
         const capaCtx5m = L.tileLayer(
             "https://astro.arcgis.com/arcgis/rest/services/OnMars/CTX/MapServer/tile/{z}/{y}/{x}",
-            { tileSize: 512, zoomOffset: -1, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
+            { tileSize: 512, zoomOffset: -1, minZoom: 8, minNativeZoom: 2, maxNativeZoom: 13, maxZoom: 14, noWrap: true, keepBuffer: 3, className: "capa-ctx", attribution: "NASA MRO CTX 5 m/px (Caltech Murray Lab)" }
         );
 
         const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
