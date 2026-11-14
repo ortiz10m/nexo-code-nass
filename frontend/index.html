@@ -966,6 +966,42 @@
             #carrusel-lugares { display: none; }
         }
 
+    
+        /* ===== MODO CASCO xEMU (AR VISOR HUD) ===== */
+        .casco-ar-overlay {
+            position: absolute; inset: 0; pointer-events: none; z-index: 5;
+            background: radial-gradient(ellipse at center, transparent 58%, rgba(2, 6, 23, 0.72) 92%, rgba(0, 0, 0, 0.94) 100%);
+            box-shadow: inset 0 0 60px rgba(56, 189, 248, 0.16);
+        }
+        .casco-ar-overlay.alerta-tormenta {
+            box-shadow: inset 0 0 80px rgba(239, 68, 68, 0.55);
+            background: radial-gradient(ellipse at center, rgba(239, 68, 68, 0.08) 55%, rgba(69, 10, 10, 0.75) 95%, rgba(0, 0, 0, 0.95) 100%);
+        }
+        .casco-hud-borde {
+            position: absolute; inset: 14px; border-radius: 36px;
+            border: 1.5px solid rgba(56, 189, 248, 0.28);
+            pointer-events: none; z-index: 6;
+        }
+        .casco-reticula {
+            position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%);
+            border: 1.5px dashed rgba(34, 211, 238, 0.75); border-radius: 50%;
+            width: 110px; height: 110px; pointer-events: none; z-index: 6;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+        }
+        .casco-ruta-holo {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) perspective(260px) rotateX(55deg);
+            width: 180px; height: 220px; pointer-events: none; z-index: 5;
+            background: linear-gradient(180deg, rgba(56, 189, 248, 0) 0%, rgba(56, 189, 248, 0.35) 60%, rgba(34, 211, 238, 0.65) 100%);
+            border-left: 3px solid #38bdf8; border-right: 3px solid #38bdf8;
+        }
+        .casco-telemetria {
+            position: absolute; top: 88px; left: 26px; z-index: 12;
+            background: rgba(11, 16, 28, 0.78); border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 10px; padding: 8px 12px; color: #e0f2fe; font-size: 11px;
+            font-family: monospace; line-height: 1.55; pointer-events: none;
+        }
+
     </style>
 </head>
 <body>
@@ -1177,9 +1213,22 @@
                     Arrastra la imagen hacia los lados para girar 360° • Rumbo: <strong id="sv-rumbo">90° E</strong>
                 </div>
             </div>
-            <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button id="btn-audio-eva" class="sv-cerrar" style="background:rgba(56,189,248,0.22);border:1px solid rgba(56,189,248,0.5);" onclick="toggleAudioEVA()">🔊 Audio EVA</button>
+                <button class="sv-cerrar" onclick="cerrarStreetView()">✕ Volver al mapa</button>
+            </div>
         </div>
         <div id="sv-panorama" class="sv-visor"></div>
+        <div id="casco-ar-overlay" class="casco-ar-overlay"></div>
+        <div class="casco-hud-borde"></div>
+        <div class="casco-ruta-holo"></div>
+        <div class="casco-reticula"><span style="font-size:10px;color:#67e8f9;font-weight:700;background:rgba(11,16,28,0.8);padding:2px 6px;border-radius:6px;">🎯 CRISM</span></div>
+        <div id="casco-telemetria" class="casco-telemetria">
+            <div><strong>xEMU AR VISOR • JEZERO EVA</strong></div>
+            <div id="hud-casco-o2">O₂ RESERVA: 100% | RAD: 0.028 mSv/h</div>
+            <div id="hud-casco-hab">🏠 HÁBITAT: 112° ESE • LÍNEA UHF OK</div>
+            <div id="hud-casco-bio" style="color:#67e8f9;">🔬 BIOSIGNATURA: Carbonatos / Arcillas</div>
+        </div>
         <div id="sv-galeria-raw" class="sv-galeria-raw">
             <div style="font-size:11px;font-weight:700;color:#8ab4f8;">📸 PERSEVERANCE RAW API</div>
             <div id="sv-raw-lista" style="font-size:11px;color:#dadce0;margin-top:4px;">Cargando telemetría de cámara...</div>
@@ -1211,12 +1260,18 @@
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
                 <span>🪨 Real</span>
-                <input id="slider-xray-3d" type="range" min="0" max="100" value="35" oninput="actualizarXRay3D(this.value)" style="width:95px;accent-color:#38bdf8;cursor:pointer;" title="Comparador Rayos X: Realista vs Topografía MOLA">
+                <input id="slider-xray-3d" type="range" min="0" max="100" value="35" oninput="actualizarXRay3D(this.value)" style="width:80px;accent-color:#38bdf8;cursor:pointer;" title="Comparador Rayos X: Realista vs Topografía MOLA">
                 <span>🌈 MOLA</span>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <span style="color:#94a3b8;">🎮 WASD volar</span>
-                <button class="btn-paso-sv" style="background:rgba(56,189,248,0.2);border-color:#38bdf8;" onclick="exportarSTLJezero()">🖨️ Exportar .STL 3D</button>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <span>☀️ Sol:</span>
+                <input id="slider-sol-3d" type="range" min="6" max="18.5" step="0.5" value="12" oninput="actualizarHoraSol3D(this.value)" style="width:80px;accent-color:#f97316;cursor:pointer;" title="Hora del Sol en Marte (Amanecer → Atardecer Azul Mie)">
+                <span id="lbl-hora-sol" style="color:#fdba74;font-weight:700;">12:00</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+                <button class="btn-paso-sv" style="background:rgba(34,211,238,0.22);border-color:#22d3ee;" onclick="dispararPulsoEscaner3D()" title="Atajo: Barra Espaciadora">📡 Pulso [Espacio]</button>
+                <span id="lbl-capa-3d" style="color:#67e8f9;font-weight:700;">HiRISE DEM</span>
+                <button class="btn-paso-sv" style="background:rgba(56,189,248,0.2);border-color:#38bdf8;" onclick="exportarSTLJezero()">🖨️ .STL</button>
             </div>
         </div>
         <div style="position:absolute;right:20px;bottom:24px;z-index:30;display:flex;flex-direction:column;gap:6px;">
@@ -2079,6 +2134,12 @@
 
         async function mostrarStreetViewNodo(nodo) {
             document.getElementById("modal-streetview").style.display = "flex";
+            const ov = document.getElementById("casco-ar-overlay");
+            if (ov) ov.classList.toggle("alerta-tormenta", tormentaSimulada);
+            const o2Txt = document.getElementById("lbl-restante")?.innerText || "63%";
+            const radTxt = (climaEspacial.radiacion_msv_hora || 0.028).toFixed(3);
+            setTextoId("hud-casco-o2", `O₂ RESERVA: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? "⚠ TORMENTA SOLAR" : ""}`);
+            setTextoId("hud-casco-hab", `🏠 HÁBITAT: 112° ESE • ${nodo.sin_comunicacion ? "📵 SIN LÍNEA UHF" : "📡 UHF ACTIVA"}`);
             document.getElementById("sv-titulo").innerText = `${nodo.nombre} • Inclinación: ${nodo.pendiente}°`;
             document.getElementById("sv-subtitulo").innerText = nodo.valor_cientifico;
 
@@ -2146,6 +2207,32 @@
                     <span>${f.cam} • ${f.titulo.slice(0, 34)}</span>
                 </div>
             `).join("");
+        }
+
+        let evaAudioCtx = null, evaAudioOn = false, evaNoiseNode = null;
+        function toggleAudioEVA() {
+            const btn = document.getElementById("btn-audio-eva");
+            if (evaAudioOn && evaAudioCtx) {
+                evaAudioCtx.close(); evaAudioCtx = null; evaAudioOn = false;
+                if (btn) btn.innerText = "🔊 Audio EVA";
+                return;
+            }
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return;
+            evaAudioCtx = new AC();
+            const buf = evaAudioCtx.createBuffer(1, evaAudioCtx.sampleRate * 2, evaAudioCtx.sampleRate);
+            const data = buf.getChannelData(0);
+            for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.25;
+            const src = evaAudioCtx.createBufferSource();
+            src.buffer = buf; src.loop = true;
+            const filt = evaAudioCtx.createBiquadFilter();
+            filt.type = "lowpass"; filt.frequency.value = 180;
+            const gain = evaAudioCtx.createGain();
+            gain.gain.value = 0.22;
+            src.connect(filt); filt.connect(gain); gain.connect(evaAudioCtx.destination);
+            src.start();
+            evaAudioOn = true;
+            if (btn) btn.innerText = "🔇 Silenciar EVA";
         }
 
         function cerrarStreetView() {
@@ -2233,10 +2320,22 @@
             t3dRenderer.setSize(cont.clientWidth, cont.clientHeight);
             cont.appendChild(t3dRenderer.domElement);
 
-            t3dScene.add(new THREE.AmbientLight(0xffdec8, 0.65));
-            const sol = new THREE.DirectionalLight(0xfff0dd, 1.35);
+            const ambLight = new THREE.AmbientLight(0xffdec8, 0.62);
+            t3dScene.add(ambLight);
+            const sol = new THREE.DirectionalLight(0xfff0dd, 1.4);
             sol.position.set(8, 12, 6);
             t3dScene.add(sol);
+            window.actualizarHoraSol3D = function(hStr) {
+                const h = parseFloat(hStr);
+                const lbl = document.getElementById("lbl-hora-sol");
+                if (lbl) lbl.innerText = `${String(Math.floor(h)).padStart(2,"0")}:${h % 1 ? "30" : "00"}`;
+                const ang = ((h - 6) / 12.5) * Math.PI;
+                sol.position.set(Math.cos(ang) * 14, Math.max(1.2, Math.sin(ang) * 14), 5);
+                const esOcaso = h >= 16.5 || h <= 7.5;
+                t3dScene.background = new THREE.Color(esOcaso ? 0x101c33 : 0x26150e);
+                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x2a456b : 0x4a2618);
+                sol.color = new THREE.Color(esOcaso ? 0x93c5fd : 0xfff0dd);
+            };
 
             // Malla DEM 110x110 nítida con colores reales por elevación marciana
             const geo = new THREE.PlaneGeometry(14, 12, 110, 110);
@@ -2322,7 +2421,48 @@
                 if (k === "s" || k === "arrowdown") { t3dAutoOrbita = false; t3dTarget = null; t3dDist = Math.min(20, t3dDist + 0.5); }
                 if (k === "q") t3dPhi = Math.max(0.35, t3dPhi - 0.05);
                 if (k === "e") t3dPhi = Math.min(1.38, t3dPhi + 0.05);
+                if (k === " ") { e.preventDefault(); dispararPulsoEscaner3D(); }
             });
+
+            const pulsoRing = new THREE.Mesh(
+                new THREE.RingGeometry(0.15, 0.35, 64),
+                new THREE.MeshBasicMaterial({ color: 0x22d3ee, side: THREE.DoubleSide, transparent: true, opacity: 0 })
+            );
+            pulsoRing.rotation.x = -Math.PI / 2;
+            pulsoRing.position.y = 0.28;
+            t3dScene.add(pulsoRing);
+            let pulsoScale = 0, modoCapa3D = 0;
+            const NOMBRES_CAPA_3D = ["HiRISE DEM (Pendiente)", "THEMIS IR (Arena Blanda)", "CRISM (Biosignaturas)"];
+            window.dispararPulsoEscaner3D = function() {
+                pulsoScale = 0.1;
+                pulsoRing.material.opacity = 0.95;
+                modoCapa3D = (modoCapa3D + 1) % 3;
+                const lbl = document.getElementById("lbl-capa-3d");
+                if (lbl) lbl.innerText = NOMBRES_CAPA_3D[modoCapa3D];
+                const colAttr = geo.attributes.color;
+                for (let i = 0; i < pos.count; i++) {
+                    const vx = pos.getX(i), vz = pos.getZ(i), vy = pos.getY(i);
+                    const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
+                    if (modoCapa3D === 0) {
+                        colAttr.setXYZ(i, 0.42 + t * 0.42, 0.22 + t * 0.24, 0.14 + t * 0.14);
+                    } else if (modoCapa3D === 1) {
+                        const blanda = Math.exp(-((vx + 0.4)**2 + (vz - 0.5)**2) / 1.8);
+                        colAttr.setXYZ(i, 0.2 + blanda * 0.75, 0.25 + (1 - blanda) * 0.4, 0.55 - blanda * 0.3);
+                    } else {
+                        const bio = Math.exp(-((vx + 1.1)**2 + (vz + 0.1)**2) / 1.4);
+                        colAttr.setXYZ(i, 0.25 + bio * 0.1, 0.22 + bio * 0.72, 0.35 + bio * 0.65);
+                    }
+                }
+                colAttr.needsUpdate = true;
+            };
+            window._tickPulso3D = function() {
+                if (pulsoScale > 0) {
+                    pulsoScale += 0.22;
+                    pulsoRing.scale.set(pulsoScale, pulsoScale, 1);
+                    pulsoRing.material.opacity = Math.max(0, 0.95 - pulsoScale / 22);
+                    if (pulsoScale > 22) pulsoScale = 0;
+                }
+            };
 
             (function animT3D() {
                 requestAnimationFrame(animT3D);
@@ -2340,6 +2480,7 @@
                     t3dDist * Math.sin(t3dPhi) * Math.sin(t3dTheta)
                 );
                 t3dCamera.lookAt(0, 0.2, 0);
+                if (window._tickPulso3D) window._tickPulso3D();
                 t3dRenderer.render(t3dScene, t3dCamera);
                 actualizarEtiquetasTerreno3D();
             })();
@@ -2379,6 +2520,14 @@
                 const tube = new THREE.TubeGeometry(curve, 64, 0.045, 8, false);
                 const matT = new THREE.MeshBasicMaterial({ color: sel.viab.viable ? 0x38bdf8 : 0xef4444 });
                 t3dRutaGroup.add(new THREE.Mesh(tube, matT));
+                const astro3D = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+                astro3D.position.copy(vecs[0]).add(new THREE.Vector3(0, 0.12, 0));
+                t3dRutaGroup.add(astro3D);
+                if (document.getElementById("check-rover")?.checked) {
+                    const rover3D = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.14, 0.32), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.4 }));
+                    rover3D.position.copy(vecs[Math.min(2, vecs.length - 1)]).add(new THREE.Vector3(0.2, 0.1, 0.15));
+                    t3dRutaGroup.add(rover3D);
+                }
             }
         }
 
