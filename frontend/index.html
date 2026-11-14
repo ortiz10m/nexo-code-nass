@@ -673,13 +673,19 @@
 
         .sv-cerrar {
             pointer-events: auto;
-            background: #fff;
-            color: #202124;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 24px;
+            background: rgba(11, 16, 28, 0.92);
+            color: #f8fafc;
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            padding: 9px 16px;
+            border-radius: 999px;
             font-weight: 700;
             cursor: pointer;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+        }
+        .sv-cerrar:hover {
+            background: rgba(56, 189, 248, 0.22);
+            border-color: #38bdf8;
         }
 
         .sv-visor {
@@ -1487,9 +1493,9 @@
             <div id="rep-o2-desglose" style="background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.2);border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:#cbd5e1;"></div>
             <div id="rep-leccion" style="background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.3);border-radius:10px;padding:10px;font-size:12px;color:#e0f2fe;margin-bottom:14px;"></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                <button class="btn-azul" style="flex:1.4;font-size:11.5px;letter-spacing:0.3px;" onclick="cerrarReporteEVA(); abrirStreetViewActual();">VISOR CASCO AR 360° — INSPECCIONAR SITIO</button>
-                <button class="btn-gris" style="flex:1;font-size:11.5px;background:rgba(15,23,42,0.95);color:#7dd3fc;border:1px solid rgba(56,189,248,0.4);" onclick="cerrarReporteEVA(); abrirCuffChecklist();">PLAN DE MUÑECA EVA</button>
-                <button class="btn-gris" style="padding:8px 14px;font-size:11.5px;background:rgba(30,41,59,0.9);color:#f8fafc;border:1px solid rgba(148,163,184,0.4);" onclick="cerrarReporteEVA()">Cerrar</button>
+                <button id="rep-btn-360" class="btn-azul" style="flex:1.4;font-size:11.5px;letter-spacing:0.3px;" onclick="cerrarReporteEVA(); abrirStreetViewActual();">AR 360° HELMET VISOR — INSPECT SITE</button>
+                <button id="rep-btn-cuff" class="btn-gris" style="flex:1;font-size:11.5px;background:rgba(15,23,42,0.95);color:#7dd3fc;border:1px solid rgba(56,189,248,0.4);" onclick="cerrarReporteEVA(); abrirCuffChecklist();">EVA CUFF CHECKLIST</button>
+                <button id="rep-btn-close" class="btn-gris" style="padding:8px 14px;font-size:11.5px;background:rgba(30,41,59,0.9);color:#f8fafc;border:1px solid rgba(148,163,184,0.4);" onclick="cerrarReporteEVA()">Close</button>
             </div>
         </div>
     </div>
@@ -1620,7 +1626,7 @@
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
                 <span id="t3d-lbl-real">🪨 Real</span>
-                <input id="slider-xray-3d" type="range" min="0" max="100" value="35" oninput="actualizarXRay3D(this.value)" style="width:80px;accent-color:#38bdf8;cursor:pointer;" title="X-Ray Comparator: Real vs MOLA Elevation">
+                <input id="slider-xray-3d" type="range" min="0" max="100" value="0" oninput="actualizarXRay3D(this.value)" style="width:80px;accent-color:#38bdf8;cursor:pointer;" title="X-Ray Comparator: Real vs MOLA Elevation">
                 <span>🌈 MOLA</span>
             </div>
             <div style="display:flex;gap:6px;align-items:center;">
@@ -1995,23 +2001,54 @@
             ejecutarCalculoGoogleMaps();
         }
 
-        function dibujarNodosBase() {
+        const NODOS_EN_MAP = {
+            1: { n: "Octavia E. Butler Base (Habitat)", v: "Primary landing zone, pressurized habitat & nominal UHF relay." },
+            2: { n: "South Séítah Region (Dunes)", v: "Olivine & carbonate outcrops; ancient igneous bedrock sampling." },
+            3: { n: "Santa Cruz Hill (Vantage)", v: "Elevated vantage point for radar triangulation & eolian geology." },
+            4: { n: "Kodiak Butte (Steep Scarp)", v: "Ancient delta remnant; >20° scarp locked by xEMU safety rules." },
+            5: { n: "Three Forks Depot (Flat)", v: "Flat safe corridor & Mars Sample Return titanium tube cache." },
+            6: { n: "Belva Crater (UHF Shadow)", v: "Deep impact crater exposing >3.7 Ga subsurface strata; UHF shadow." },
+            7: { n: "Hogwallow Flats (Delta Front)", v: "Fine-grained mudstones & sulfates; #1 astrobiology biosignature target." },
+            8: { n: "Neretva Vallis (River Channel)", v: "Ancient inflow river channel feeding the Jezero paleolake." },
+            9: { n: "Máaz Formation (Volcanic Floor)", v: "Vesicular basaltic floor; key radiometric dating site." },
+            10: { n: "Artuby Ridge Dunes", v: "Compacted megadune ridge; cross-bedding & dust transport study." },
+            11: { n: "Bright Angel (Mineral Veins)", v: "Light-toned sulfate rocks & Cheyava Falls biosignature veins." },
+            12: { n: "West Jezero Rim (Extreme)", v: "Primordial >3.8 Ga crater rim; extreme >28° slope (NO-GO)." },
+            13: { n: "Valinor Hills (Ingenuity)", v: "Apollo 12-style human recovery of Ingenuity rotor blade & batteries after 72 flights." }
+        };
+        function nomNodo(pt) {
+            if (!pt) return "";
+            if ((typeof idiomaActual === "undefined" || idiomaActual === "en") && NODOS_EN_MAP[pt.id]) return NODOS_EN_MAP[pt.id].n;
+            return pt.nombre || "";
+        }
+        function nomCortoNodo(pt) {
+            return nomNodo(pt).split("(")[0].trim();
+        }
+        function valCientificoNodo(pt) {
+            if (!pt) return "";
+            if ((typeof idiomaActual === "undefined" || idiomaActual === "en") && NODOS_EN_MAP[pt.id]) return NODOS_EN_MAP[pt.id].v;
+            return pt.valor_cientifico || "";
+        }
+
+        function dibujarNodosBase(preservarSeleccion = false) {
+            const s1 = document.getElementById("select-inicio");
+            const s2 = document.getElementById("select-destino");
+            const prev1 = preservarSeleccion && s1?.value ? s1.value : "1";
+            const prev2 = preservarSeleccion && s2?.value ? s2.value : "7";
             capaNodos.clearLayers();
             capaPeligros.clearLayers();
             capaRedGrafo.clearLayers();
-            const s1 = document.getElementById("select-inicio");
-            const s2 = document.getElementById("select-destino");
             s1.innerHTML = "";
             s2.innerHTML = "";
 
-            // Mapa limpio estilo Mars Trek (sin telaraña de líneas de fondo)
-
+            const en = typeof idiomaActual === "undefined" || idiomaActual === "en";
             const boundsPts = [];
             puntosJezero.forEach(p => {
                 boundsPts.push([p.lat, p.lng]);
-                const tag = p.sin_comunicacion ? " (Sin radio)" : (p.pendiente > 20 ? ` (${p.pendiente}° Peligro)` : "");
-                s1.innerHTML += `<option value="${p.id}">${p.nombre}${tag}</option>`;
-                s2.innerHTML += `<option value="${p.id}">${p.nombre}${tag}</option>`;
+                const tag = p.sin_comunicacion ? (en ? " (No UHF)" : " (Sin radio)") : (p.pendiente > 20 ? ` (${p.pendiente}° ${en ? "Hazard" : "Peligro"})` : "");
+                const fullNom = nomNodo(p);
+                s1.innerHTML += `<option value="${p.id}">${fullNom}${tag}</option>`;
+                s2.innerHTML += `<option value="${p.id}">${fullNom}${tag}</option>`;
 
                 const peligro = p.pendiente > 20 || p.sin_comunicacion;
                 if (peligro) {
@@ -2023,11 +2060,11 @@
                         weight: 1.5,
                         dashArray: "5,5",
                         interactive: false
-                    }).bindTooltip(p.sin_comunicacion ? "Sombra de Radio UHF" : `Pendiente crítica ${p.pendiente}°`).addTo(capaPeligros);
+                    }).bindTooltip(p.sin_comunicacion ? (en ? "UHF Radio Shadow" : "Sombra de Radio UHF") : `${en ? "Critical slope" : "Pendiente crítica"} ${p.pendiente}°`).addTo(capaPeligros);
                 }
 
                 const tipoPoi = p.id === 1 ? "poi-base" : (peligro ? "poi-riesgo" : "poi-ciencia");
-                const nombreCorto = p.nombre.split("(")[0].trim();
+                const nombreCorto = nomCortoNodo(p);
                 const m = L.marker([p.lat, p.lng], {
                     riseOnHover: true,
                     zIndexOffset: p.id === 1 ? 500 : 0,
@@ -2041,7 +2078,7 @@
                 window._poiMarkers[p.id] = m;
 
                 m.bindTooltip(
-                    `<strong>${nombreCorto}</strong><br>Elev: ${p.elevacion_m ?? -2500} m • Pend: ${p.pendiente}° • ${p.sin_comunicacion ? "Sin UHF" : "UHF OK"}`,
+                    `<strong>${nombreCorto}</strong><br>Elev: ${p.elevacion_m ?? -2500} m • ${en ? "Slope" : "Pend"}: ${p.pendiente}° • ${p.sin_comunicacion ? (en ? "No UHF" : "Sin UHF") : "UHF OK"}`,
                     { direction: "bottom", offset: [0, 10], className: "etiqueta-lugar", opacity: 1 }
                 );
 
@@ -2051,10 +2088,10 @@
             });
 
             window._boundsJezero = boundsPts;
-            recentrarJezero();
+            if (!preservarSeleccion) recentrarJezero();
 
-            s1.value = "1";
-            s2.value = "7";
+            s1.value = prev1;
+            s2.value = prev2;
         }
 
         function renderizarCarruselLugares(destIdActivo) {
@@ -2065,7 +2102,7 @@
             cont.innerHTML = sitios.map(pt => {
                 const pel = pt.pendiente > 20 || pt.sin_comunicacion;
                 const foto = obtenerFotoNodoNASA(pt).url;
-                const nom = pt.nombre.split("(")[0].trim();
+                const nom = nomCortoNodo(pt);
                 const estado = pel
                     ? (pt.sin_comunicacion ? (en ? "📵 No UHF" : "📵 Sin UHF") : `⚠ ${pt.pendiente}°`)
                     : (en ? `✅ ${pt.pendiente}° Safe` : `✅ ${pt.pendiente}° Seguro`);
@@ -2077,7 +2114,7 @@
                             <div class="lugar-card-nom">${nom}</div>
                             <div class="lugar-card-meta" style="color:${pel ? "#fca5a5" : "#86efac"};">
                                 <span>${estado}</span>
-                                <button onclick="event.stopPropagation();agregarParadaIntermedia(${pt.id})" title="Agregar como parada intermedia" style="background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.35);border-radius:5px;padding:1px 5px;font-size:9.5px;font-weight:700;cursor:pointer;">+ Parada</button>
+                                <button onclick="event.stopPropagation();agregarParadaIntermedia(${pt.id})" title="Agregar como parada intermedia" style="background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.35);border-radius:5px;padding:1px 5px;font-size:9.5px;font-weight:700;cursor:pointer;">${en ? "+ Stop" : "+ Parada"}</button>
                             </div>
                         </div>
                     </div>
@@ -2115,7 +2152,7 @@
             const btn = document.getElementById("btn-toggle-carrusel");
             if (btn) {
                 const n = Math.max(0, (puntosJezero?.length || 1) - 1);
-                btn.innerText = colapsar ? `📍 Explorar sitios (${n})` : "▾ Ocultar sitios";
+                const en = idiomaActual === "en"; btn.innerText = colapsar ? (en ? `📍 Explore sites (${n})` : `📍 Explorar sitios (${n})`) : (en ? "▾ Hide sites" : "▾ Ocultar sitios");
             }
         }
 
@@ -2149,7 +2186,7 @@
             const badge = document.getElementById("insp-badge");
             badge.innerText = pel ? (en ? "🔴 NO-GO ZONE" : "🔴 ZONA NO-GO") : (prec ? (en ? "🟡 CAUTION" : "🟡 PRECAUCIÓN") : (en ? "🟢 EVA READY" : "🟢 APTO EVA"));
             badge.style.color = pel ? "#ff4d6d" : (prec ? "#fbbf24" : "#00ff9d");
-            document.getElementById("insp-titulo").innerText = pt.nombre;
+            document.getElementById("insp-titulo").innerText = nomNodo(pt);
             document.getElementById("insp-coords").innerText = `${pt.lat.toFixed(2)}°N, ${pt.lng.toFixed(2)}°E • ${pt.elevacion_m ?? -2500} m`;
             const suelo = pt.pendiente > 20 ? (en ? "Steep scarp" : "Talud crítico") : (pt.pendiente >= 10 ? (en ? "Smooth dunes" : "Dunas lisas") : (en ? "Firm regolith" : "Regolito firme"));
             document.getElementById("insp-chips").innerHTML = `
@@ -2157,7 +2194,7 @@
                 <span class="insp-chip">UHF: <strong>${pt.sin_comunicacion ? (en ? "Blocked" : "Bloqueada") : (en ? "Optimal" : "Óptima")}</strong></span>
                 <span class="insp-chip">${en ? "Terrain" : "Suelo"}: <strong>${suelo}</strong></span>
             `;
-            document.getElementById("insp-mision").innerText = pt.valor_cientifico || "";
+            document.getElementById("insp-mision").innerText = valCientificoNodo(pt);
             const acc = document.getElementById("insp-acciones");
             if (pel) {
                 acc.innerHTML = `
@@ -2226,7 +2263,7 @@
             const lbl = document.getElementById("lbl-paradas-cnt");
             if (!chip || !lbl) return;
             chip.style.display = paradasIntermedias.length ? "flex" : "none";
-            lbl.innerText = `${paradasIntermedias.length} parada(s) intermedia(s)`;
+            lbl.innerText = idiomaActual === "en" ? `${paradasIntermedias.length} intermediate stop(s)` : `${paradasIntermedias.length} parada(s) intermedia(s)`;
         }
 
         // Loop 60 FPS para mover el mapa 2D con WASD (protegido contra atajos Ctrl/Shift/Alt y pérdida de foco)
@@ -2319,7 +2356,7 @@
                 ruta.tiempo_estimado_min = Math.round((ruta.distancia_km / 2.6) * 60);
             }
 
-            if (!modoLocal) {
+            if (!modoLocal && idiomaActual === "es") {
                 const r2 = await fetch(`${URL_API}/evaluar_viabilidad`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -2515,7 +2552,7 @@
                 const imgEl = document.getElementById("destino-foto-img");
                 const nomEl = document.getElementById("destino-foto-nom");
                 if (imgEl) imgEl.src = fotoInfo.url;
-                if (nomEl) nomEl.innerText = destNodo.nombre.split("(")[0].trim();
+                if (nomEl) nomEl.innerText = nomCortoNodo(destNodo);
             }
             actualizarAnilloO2();
             renderizarCarruselLugares(pts[pts.length - 1]?.id);
@@ -2523,7 +2560,7 @@
             if (itCont) {
                 itCont.innerHTML = pts.map((p, i) => {
                     const pel = p.pendiente > 20 || p.sin_comunicacion;
-                    const nom = p.nombre.split("(")[0].trim();
+                    const nom = nomCortoNodo(p);
                     return `<span class="paso-chip ${pel ? 'peligro' : ''}">${i + 1}. ${nom}</span>`;
                 }).join(" → ");
             }
@@ -2572,7 +2609,7 @@
             let idx = 0;
             const actualizarHud = (i) => {
                 const frac = i / (pts.length - 1);
-                document.getElementById("hud-nodo").innerText = pts[i].nombre.split("(")[0].trim();
+                document.getElementById("hud-nodo").innerText = nomCortoNodo(pts[i]);
                 document.getElementById("hud-o2").innerText = `${Math.max(0, +(energiaIni - energiaReq * frac).toFixed(1))}%`;
                 document.getElementById("hud-elev").innerText = `${pts[i].elevacion_m ?? -2550} m`;
                 document.getElementById("hud-rad").innerText = `${(radTotal * frac).toFixed(3)} mSv`;
@@ -2635,23 +2672,23 @@
             const titulo = document.getElementById("rep-titulo");
             const sub = document.getElementById("rep-subtitulo");
 
+            const en = idiomaActual === "en";
             const abortada = !v.viable || v.energia_restante < 30;
             card.classList.toggle("abortada", abortada);
-            badge.innerText = abortada ? "EVA ABORTADA — SEGURIDAD NASA" : "EVA EXITOSA — MISIÓN NOMINAL";
+            badge.innerText = abortada ? (en ? "EVA ABORTED — NASA SAFETY" : "EVA ABORTADA — SEGURIDAD NASA") : (en ? "EVA SUCCESSFUL — NOMINAL MISSION" : "EVA EXITOSA — MISIÓN NOMINAL");
             badge.style.background = abortada ? "rgba(255,42,85,0.2)" : "rgba(0,255,157,0.16)";
             badge.style.color = abortada ? "#ff4d6d" : "#00ff9d";
             badge.style.border = `1px solid ${abortada ? "#ff2a55" : "#00ff9d"}`;
 
             const destNodo = r.ruta_calculada[r.ruta_calculada.length - 1] || {};
-            const dest = destNodo.nombre || "Destino";
-            const destCorto = dest.split("(")[0].trim();
+            const destCorto = nomCortoNodo(destNodo) || (en ? "Destination" : "Destino");
             const esRetorno = Boolean(document.getElementById("check-retorno")?.checked);
             titulo.innerText = abortada
-                ? `EVA ABORTADA hacia ${destCorto}`
-                : `Llegada segura a ${destCorto}`;
+                ? (en ? `EVA ABORTED toward ${destCorto}` : `EVA ABORTADA hacia ${destCorto}`)
+                : (en ? `Safe arrival at ${destCorto}` : `Llegada segura a ${destCorto}`);
             sub.innerText = abortada
-                ? `Reserva final proyectada ${v.energia_restante}% (< límite NASA 30%) o pendiente incompatible. ${(v.razones || []).join(" ")}`
-                : `${esRetorno ? "Misión Ida + Retorno asegurada" : "Tramo de Ida completado • Reserva de Retorno validada"} • ${(v.razones || []).join(" ")}`;
+                ? (en ? `Projected final reserve ${v.energia_restante}% (< NASA 30% limit) or unsafe slope. ${(v.razones || []).join(" ")}` : `Reserva final proyectada ${v.energia_restante}% (< límite NASA 30%) o pendiente incompatible. ${(v.razones || []).join(" ")}`)
+                : `${esRetorno ? (en ? "Round-trip mission secured" : "Misión Ida + Retorno asegurada") : (en ? "Outbound leg completed • Return reserve validated" : "Tramo de Ida completado • Reserva de Retorno validada")} • ${(v.razones || []).join(" ")}`;
 
             const fotoBox = document.getElementById("rep-foto-box");
             const nodoFull = puntosJezero.find(p => p.id === destNodo.id) || destNodo;
@@ -2663,10 +2700,10 @@
             const litros = r.litros_o2 ?? Math.round((r.kcal_totales || 0) * 0.21);
             const o2Color = abortada ? "#ff4d6d" : "#00ff9d";
             document.getElementById("rep-grid").innerHTML = `
-                <div class="rep-metric-aaa"><small>Distancia / Tiempo</small><strong><span id="cnt-km">0</span> km • <span id="cnt-min">0</span> min</strong></div>
-                <div class="rep-metric-aaa"><small>Oxígeno PLSS Final</small><strong style="color:${o2Color};"><span id="cnt-o2">0</span>% (de ${energiaIni}%)</strong></div>
-                <div class="rep-metric-aaa"><small>Gasto Metabólico</small><strong><span id="cnt-kcal">0</span> kcal • ${litros} L O₂</strong></div>
-                <div class="rep-metric-aaa"><small>Ciencia / Radiación</small><strong>${r.puntaje_cientifico ?? 78}/100 • ${r.radiacion_msv ?? 0} mSv</strong></div>
+                <div class="rep-metric-aaa"><small>${en ? "Distance / Time" : "Distancia / Tiempo"}</small><strong><span id="cnt-km">0</span> km • <span id="cnt-min">0</span> min</strong></div>
+                <div class="rep-metric-aaa"><small>${en ? "Final PLSS O₂" : "Oxígeno PLSS Final"}</small><strong style="color:${o2Color};"><span id="cnt-o2">0</span>% (${en ? "of" : "de"} ${energiaIni}%)</strong></div>
+                <div class="rep-metric-aaa"><small>${en ? "Metabolic Cost" : "Gasto Metabólico"}</small><strong><span id="cnt-kcal">0</span> kcal • ${litros} L O₂</strong></div>
+                <div class="rep-metric-aaa"><small>${en ? "Science / Radiation" : "Ciencia / Radiación"}</small><strong>${r.puntaje_cientifico ?? 78}/100 • ${r.radiacion_msv ?? 0} mSv</strong></div>
             `;
 
             const usadoPct = Math.max(0, +(energiaIni - v.energia_restante).toFixed(1));
@@ -2675,9 +2712,9 @@
             const margenLibre = Math.max(0, +(100 - usadoIda - resRet).toFixed(1));
             document.getElementById("rep-o2-desglose").innerHTML = `
                 <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                    <span>Usado Ida: <strong>${usadoIda}%</strong></span>
-                    <span>Reserva Retorno: <strong>${resRet}%</strong></span>
-                    <span>Margen + Emergencia NASA (30%): <strong style="color:${o2Color};">${margenLibre}%</strong></span>
+                    <span>${en ? "Outbound Used" : "Usado Ida"}: <strong>${usadoIda}%</strong></span>
+                    <span>${en ? "Return Reserve" : "Reserva Retorno"}: <strong>${resRet}%</strong></span>
+                    <span>${en ? "Margin + NASA Emergency (30%)" : "Margen + Emergencia NASA (30%)"}: <strong style="color:${o2Color};">${margenLibre}%</strong></span>
                 </div>
                 <div class="rep-o2-bar">
                     <div style="width:${usadoIda}%;background:#38bdf8;"></div>
@@ -2686,8 +2723,8 @@
                 </div>
             `;
 
-            const hallazgo = HALLAZGOS_MUESTRA[destNodo.id] || `Muestra recolectada en ${destCorto}: ${destNodo.valor_cientifico || "Registro geológico Jezero."}`;
-            document.getElementById("rep-leccion").innerHTML = `<strong style="color:#7dd3fc;">🔬 Hallazgo Científico del Sitio:</strong><br>${hallazgo}`;
+            const hallazgo = en ? valCientificoNodo(nodoFull) : (HALLAZGOS_MUESTRA[destNodo.id] || `Muestra recolectada en ${destCorto}: ${destNodo.valor_cientifico || "Registro geológico Jezero."}`);
+            document.getElementById("rep-leccion").innerHTML = `<strong style="color:#7dd3fc;">🔬 ${en ? "Site Scientific Finding:" : "Hallazgo Científico del Sitio:"}</strong><br>${hallazgo}`;
             modal.style.display = "flex";
 
             animarContador(document.getElementById("cnt-km"), Number(r.distancia_km || 0), 2, "");
@@ -2798,12 +2835,15 @@
             } catch (_) {}
             ret.classList.add("escaneando");
             out.style.display = "block";
-            out.innerHTML = `<span style="color:#38bdf8;">⚡ Escaneando espectro láser SuperCam / PIXL...</span>`;
+            const enScan = idiomaActual === "en";
+            out.innerHTML = `<span style="color:#38bdf8;">⚡ ${enScan ? "Scanning SuperCam / PIXL laser spectrum..." : "Escaneando espectro láser SuperCam / PIXL..."}</span>`;
             setTimeout(() => {
                 ret.classList.remove("escaneando");
-                const nom = svNodoActual.nombre.split("(")[0].trim();
-                const prio = svNodoActual.pendiente > 20 ? "⚠️ Terreno inestable (>20°) — Solo observación remota" : "✅ Alta prioridad de muestreo geológico (Olivino / Carbonatos / Sulfatos)";
-                out.innerHTML = `<strong style="color:#22c55e;">🔬 ${nom} • Lectura PIXL</strong><br>${svNodoActual.valor_cientifico}<br><span style="color:#7dd3fc;font-size:10.5px;">${prio}</span>`;
+                const nom = nomCortoNodo(svNodoActual);
+                const prio = svNodoActual.pendiente > 20
+                    ? (enScan ? "⚠️ Unstable slope (>20°) — Remote observation only" : "⚠️ Terreno inestable (>20°) — Solo observación remota")
+                    : (enScan ? "✅ High geological sampling priority (Olivine / Carbonates / Sulfates)" : "✅ Alta prioridad de muestreo geológico (Olivino / Carbonatos / Sulfatos)");
+                out.innerHTML = `<strong style="color:#22c55e;">🔬 ${nom} • ${enScan ? "PIXL Readout" : "Lectura PIXL"}</strong><br>${valCientificoNodo(svNodoActual)}<br><span style="color:#7dd3fc;font-size:10.5px;">${prio}</span>`;
             }, 420);
         }
 
@@ -2860,8 +2900,8 @@
             const enSV = idiomaActual === "en";
             setTextoId("hud-casco-o2", `O₂: ${o2Txt} | RAD: ${radTxt} mSv/h ${tormentaSimulada ? (enSV ? "⚠ STORM" : "⚠ TORMENTA") : ""}`);
             setTextoId("hud-casco-hab", `🏠 ${enSV ? "HABITAT" : "HÁBITAT"}: ${rumboHab}° • ${nodo.sin_comunicacion ? (enSV ? "📵 NO UHF" : "📵 SIN UHF") : "📡 UHF OK"}`);
-            document.getElementById("sv-titulo").innerText = `${nodo.nombre} • ${enSV ? "Slope" : "Inclinación"}: ${nodo.pendiente}°`;
-            document.getElementById("sv-subtitulo").innerText = nodo.valor_cientifico;
+            document.getElementById("sv-titulo").innerText = `${nomNodo(nodo)} • ${enSV ? "Slope" : "Inclinación"}: ${nodo.pendiente}°`;
+            document.getElementById("sv-subtitulo").innerText = valCientificoNodo(nodo);
 
             // Pines cardinales flotando en su rumbo real dentro del giro 360°
             const compassLayer = document.getElementById("sv-compass-pins");
@@ -2876,8 +2916,8 @@
                 pin.className = `sv-compass-pin ${pel ? "peligro" : ""}`;
                 pin.dataset.az = String(az);
                 pin.innerText = pel
-                    ? `⛔ ${vec.nombre.split("(")[0].trim()} (${vec.pendiente}° NO-GO)`
-                    : `📍 ${vec.nombre.split("(")[0].trim()} • ${az}° • ${distKm} km →`;
+                    ? `⛔ ${nomCortoNodo(vec)} (${vec.pendiente}° NO-GO)`
+                    : `📍 ${nomCortoNodo(vec)} • ${az}° • ${distKm} km →`;
                 pin.onclick = () => mostrarStreetViewNodo(vec);
                 compassLayer.appendChild(pin);
             });
@@ -2899,7 +2939,7 @@
                 const btn = document.createElement("button");
                 btn.className = "btn-paso-sv";
                 btn.style.cssText = "background:rgba(11,15,25,0.9);color:#7dd3fc;border:1px solid rgba(56,189,248,0.55);backdrop-filter:blur(6px);";
-                btn.innerText = `🧭 ${enSV ? "Next route stop" : "Siguiente parada en ruta"}: ${sigNodo.nombre.split("(")[0].trim()} • ${dSig} km (${azSig}°) →`;
+                btn.innerText = `🧭 ${enSV ? "Next route stop" : "Siguiente parada en ruta"}: ${nomCortoNodo(sigNodo)} • ${dSig} km (${azSig}°) →`;
                 btn.onclick = () => mostrarStreetViewNodo(sigNodo);
                 cajaPasos.appendChild(btn);
             }
@@ -3016,13 +3056,14 @@
             );
         }
 
-        // ================= TERRENO 3D NITIDO DEL CRATER JEZERO =================
+        // ================= MESA HOLOGRAFICA CIRCULAR 3D: CRATER JEZERO =================
         let t3dIniciado = false, t3dScene = null, t3dCamera = null, t3dRenderer = null;
         let t3dRutaGroup = null, t3dAutoOrbita = true;
-        let t3dTheta = 0.65, t3dPhi = 0.92, t3dDist = 11.5;
+        let t3dTheta = 0.82, t3dPhi = 0.94, t3dDist = 10.6;
+        let t3dDemPixels = null, t3dDemW = 0, t3dDemH = 0;
 
         function zoomTerreno3D(d) { t3dDist = Math.max(4.5, Math.min(20, t3dDist + d)); }
-        function resetTerreno3D() { t3dTheta = 0.65; t3dPhi = 0.92; t3dDist = 11.5; t3dAutoOrbita = true; }
+        function resetTerreno3D() { t3dTheta = 0.82; t3dPhi = 0.94; t3dDist = 10.6; t3dAutoOrbita = true; }
         function toggleAutoOrbita3D() { t3dAutoOrbita = !t3dAutoOrbita; }
         function cerrarTerreno3DJezero() { document.getElementById("modal-terreno3d").style.display = "none"; }
         function exportarSTLJezero() {
@@ -3049,20 +3090,61 @@
         }
 
         function latLngATerreno3D(lat, lng) {
-            const x = ((lng - 77.41) / 0.22) * 5.2;
-            const z = -((lat - 18.44) / 0.14) * 4.2;
-            return { x, z };
+            const sx = ((lng - 77.41) / 0.22) * 4.8;
+            const sz = -((lat - 18.44) / 0.14) * 4.2;
+            const nx = Math.max(-0.95, Math.min(0.95, sx / 6.5));
+            const nz = Math.max(-0.95, Math.min(0.95, sz / 6.5));
+            return {
+                x: nx * Math.sqrt(1 - 0.5 * nz * nz) * 6.4,
+                z: nz * Math.sqrt(1 - 0.5 * nx * nx) * 6.4
+            };
         }
 
         function alturaJezero3D(x, z) {
-            // Borde oeste elevado + Delta en terraza + Cráter Belva + Canal Neretva
-            const bordeOeste = Math.max(0, (-x - 1.2)) * 0.42;
-            const cratBelva = -0.55 * Math.exp(-((x + 0.1)**2 + (z + 1.5)**2) / 0.45);
-            const mesaKodiak = 0.55 * Math.exp(-((x + 1.8)**2 + (z - 1.3)**2) / 0.5);
-            const colinaSC = 0.42 * Math.exp(-((x + 0.5)**2 + (z - 1.7)**2) / 0.55);
-            const canalNeretva = -0.32 * Math.exp(-((z + 0.35 + x * 0.15)**2) / 0.25) * (x < 0.2 ? 1 : 0);
-            const microRelieve = 0.08 * Math.sin(x * 3.1) * Math.cos(z * 2.9) + 0.04 * Math.sin(x * 7.5 + z * 6.2);
-            return bordeOeste + cratBelva + mesaKodiak + colinaSC + canalNeretva + microRelieve;
+            const r = Math.hypot(x, z);
+            // Anillo del Cráter Jezero (elevado en el arco Oeste / Noroeste)
+            const westBias = Math.max(0, -x / 6.5);
+            const northBias = Math.max(0, -z / 6.5);
+            const rimArc = Math.max(0, (r - 4.1) / 2.3);
+            let rim = (rimArc * rimArc) * (0.45 + 1.15 * westBias + 0.45 * northBias);
+            // Brecha del cañón de entrada Neretva Vallis en el borde Oeste (z ~ -0.75)
+            const canyonBreach = Math.exp(-((z + 0.75) ** 2) / 0.32) * (x < -1.8 ? 0.82 : 0);
+            rim *= (1 - canyonBreach * 0.72);
+
+            // Abanico aluvial escalonado del Delta de Jezero (lóbulo real en terraza)
+            const dx = x + 1.65, dz = z + 0.25;
+            const dDelta = Math.hypot(dx * 0.85, dz * 0.95);
+            const deltaStep = dDelta < 2.25 ? (0.42 * (1 - Math.pow(dDelta / 2.25, 2.6))) : 0;
+
+            // Cráter de impacto Belva dentro del lóbulo deltaico (anillo elevado + cuenco profundo)
+            const rBelva = Math.hypot(x + 0.85, z + 0.18);
+            const cratBelva = -0.44 * Math.exp(-(rBelva ** 2) / 0.16) + 0.14 * Math.exp(-((rBelva - 0.52) ** 2) / 0.04);
+
+            // Mesa testigo Kodiak Butte (sur del delta) y Colina Santa Cruz
+            const rKodiak = Math.hypot(x + 1.45, z - 1.35);
+            const mesaKodiak = Math.min(0.38, 0.52 * Math.exp(-(rKodiak ** 2) / 0.18));
+            const colinaSC = 0.28 * Math.exp(-(((x + 0.25) ** 2) + ((z - 1.55) ** 2)) / 0.28);
+
+            // Relieve fotogramétrico real extraído de los píxeles de jezero-hi-res.jpg
+            let photoRelief = 0;
+            if (t3dDemPixels && t3dDemW > 0) {
+                const u = Math.max(0, Math.min(0.999, (x / 12.8) + 0.5));
+                const v = Math.max(0, Math.min(0.999, (z / 12.8) + 0.5));
+                const px = Math.floor(u * t3dDemW), py = Math.floor(v * t3dDemH);
+                const idx = (py * t3dDemW + px) * 4;
+                const lum = (t3dDemPixels[idx] * 0.3 + t3dDemPixels[idx + 1] * 0.59 + t3dDemPixels[idx + 2] * 0.11) / 255;
+                photoRelief = (lum - 0.44) * 0.26;
+            }
+            return rim + deltaStep + cratBelva + mesaKodiak + colinaSC + photoRelief - 0.12;
+        }
+
+        function colorMolaHipsometrico(vy) {
+            const t = Math.max(0, Math.min(1, (vy + 0.45) / 1.85));
+            if (t < 0.25) { const k = t / 0.25; return [0.10 + k * 0.05, 0.25 + k * 0.55, 0.75 + k * 0.20]; }
+            if (t < 0.50) { const k = (t - 0.25) / 0.25; return [0.15 + k * 0.25, 0.80 + k * 0.12, 0.95 - k * 0.70]; }
+            if (t < 0.75) { const k = (t - 0.50) / 0.25; return [0.40 + k * 0.55, 0.92 - k * 0.25, 0.25 - k * 0.15]; }
+            const k = (t - 0.75) / 0.25;
+            return [0.95 + k * 0.05, 0.67 - k * 0.35, 0.10 + k * 0.55];
         }
 
         function abrirTerreno3DJezero() {
@@ -3081,10 +3163,10 @@
             t3dIniciado = true;
             const cont = document.getElementById("contenedor-terreno-3d");
             t3dScene = new THREE.Scene();
-            t3dScene.background = new THREE.Color(0x0c111d);
-            t3dScene.fog = new THREE.FogExp2(0x161018, 0.022);
+            t3dScene.background = new THREE.Color(0x070b14);
+            t3dScene.fog = new THREE.FogExp2(0x0b101e, 0.018);
 
-            t3dCamera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 200);
+            t3dCamera = new THREE.PerspectiveCamera(42, cont.clientWidth / cont.clientHeight, 0.1, 200);
             t3dRenderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
             t3dRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             t3dRenderer.setSize(cont.clientWidth, cont.clientHeight);
@@ -3092,137 +3174,171 @@
             t3dRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
             cont.appendChild(t3dRenderer.domElement);
 
-            // Cúpula estelar tenue para profundidad orbital
+            // Cúpula estelar orbital
             const starVerts = [];
-            for (let s = 0; s < 260; s++) {
+            for (let s = 0; s < 320; s++) {
                 const th = Math.random() * Math.PI * 2;
-                const ph = Math.random() * Math.PI * 0.42;
-                const rr = 48 + Math.random() * 18;
-                starVerts.push(rr * Math.sin(ph) * Math.cos(th), rr * Math.cos(ph) + 4, rr * Math.sin(ph) * Math.sin(th));
+                const ph = Math.random() * Math.PI * 0.46;
+                const rr = 46 + Math.random() * 20;
+                starVerts.push(rr * Math.sin(ph) * Math.cos(th), rr * Math.cos(ph) + 3, rr * Math.sin(ph) * Math.sin(th));
             }
             const starGeo = new THREE.BufferGeometry();
             starGeo.setAttribute("position", new THREE.Float32BufferAttribute(starVerts, 3));
-            t3dScene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xcbd5e1, size: 0.18, transparent: true, opacity: 0.55 })));
+            t3dScene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xe2e8f0, size: 0.18, transparent: true, opacity: 0.65 })));
 
-            const hemiLight = new THREE.HemisphereLight(0xffe6cc, 0x1e293b, 0.72);
+            const hemiLight = new THREE.HemisphereLight(0xffeedd, 0x1e293b, 0.85);
             t3dScene.add(hemiLight);
-            const sol = new THREE.DirectionalLight(0xffedd5, 1.9);
+            const sol = new THREE.DirectionalLight(0xffedd5, 2.0);
             sol.castShadow = true;
             sol.shadow.mapSize.width = 1024;
             sol.shadow.mapSize.height = 1024;
             sol.shadow.camera.near = 1;
             sol.shadow.camera.far = 40;
-            sol.shadow.camera.left = -9;
-            sol.shadow.camera.right = 9;
-            sol.shadow.camera.top = 9;
-            sol.shadow.camera.bottom = -9;
+            sol.shadow.camera.left = -8;
+            sol.shadow.camera.right = 8;
+            sol.shadow.camera.top = 8;
+            sol.shadow.camera.bottom = -8;
             t3dScene.add(sol);
             window.actualizarHoraSol3D = function(hStr) {
                 const h = parseFloat(hStr);
                 const lbl = document.getElementById("lbl-hora-sol");
                 if (lbl) lbl.innerText = `${String(Math.floor(h)).padStart(2,"0")}:${h % 1 ? "30" : "00"}`;
                 const ang = ((h - 6) / 12.5) * Math.PI;
-                sol.position.set(Math.cos(ang) * 14, Math.max(2.6, Math.sin(ang) * 13), 5.5);
+                sol.position.set(Math.cos(ang) * 14, Math.max(2.8, Math.sin(ang) * 13), 5.5);
                 const esOcaso = h >= 17.5 || h <= 7.0;
-                t3dScene.background = new THREE.Color(esOcaso ? 0x0b1222 : 0x120e16);
-                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x142038 : 0x1d1418);
-                sol.color = new THREE.Color(esOcaso ? 0x93c5fd : (h >= 15.5 || h <= 8.5 ? 0xffd2a6 : 0xfff3e0));
-                sol.intensity = esOcaso ? 1.55 : ((h >= 15.5 || h <= 8.5) ? 2.05 : 1.7);
+                t3dScene.background = new THREE.Color(esOcaso ? 0x060b16 : 0x090d18);
+                t3dScene.fog.color = new THREE.Color(esOcaso ? 0x0c162c : 0x121320);
+                sol.color = new THREE.Color(esOcaso ? 0x93c5fd : (h >= 15.5 || h <= 8.5 ? 0xffcfa3 : 0xfff5e6));
+                sol.intensity = esOcaso ? 1.65 : ((h >= 15.5 || h <= 8.5) ? 2.1 : 1.75);
             };
             window.actualizarHoraSol3D(16.5);
 
-            // Malla DEM 110x110 luminosa para que brille la textura HD PIA24096
-            const geo = new THREE.PlaneGeometry(14, 12, 110, 110);
+            // Disco Circular de Terreno 128x128 mapeado suavemente (Squircular Disc Mapping R=6.4)
+            const SEG = 128;
+            const geo = new THREE.PlaneGeometry(12.8, 12.8, SEG, SEG);
             geo.rotateX(-Math.PI / 2);
             const pos = geo.attributes.position;
             const cols = new Float32Array(pos.count * 3);
             for (let i = 0; i < pos.count; i++) {
-                const vx = pos.getX(i), vz = pos.getZ(i);
-                const vy = alturaJezero3D(vx, vz);
-                pos.setY(i, vy);
-                const t = Math.max(0, Math.min(1, (vy + 0.5) / 2.2));
-                cols[i * 3] = 0.88 + t * 0.12;
-                cols[i * 3 + 1] = 0.84 + t * 0.14;
-                cols[i * 3 + 2] = 0.80 + t * 0.15;
+                const sx = pos.getX(i), sz = pos.getZ(i);
+                const nx = sx / 6.4, nz = sz / 6.4;
+                const cx = nx * Math.sqrt(Math.max(0, 1 - 0.5 * nz * nz)) * 6.4;
+                const cz = nz * Math.sqrt(Math.max(0, 1 - 0.5 * nx * nx)) * 6.4;
+                pos.setX(i, cx);
+                pos.setZ(i, cz);
+                cols[i * 3] = 0.98; cols[i * 3 + 1] = 0.95; cols[i * 3 + 2] = 0.92;
             }
             geo.setAttribute("color", new THREE.BufferAttribute(cols, 3));
-            geo.computeVertexNormals();
 
-            // Textura HD PIA24096 local + Comparador Rayos X (PIA24096 <-> MOLA)
+            const baseY = -0.88;
+            const skirtGeo = new THREE.BufferGeometry();
+            const topRimGeo = new THREE.BufferGeometry();
+
+            function reconstruirRelieveYFalda() {
+                for (let i = 0; i < pos.count; i++) {
+                    const cx = pos.getX(i), cz = pos.getZ(i);
+                    pos.setY(i, alturaJezero3D(cx, cz));
+                }
+                pos.needsUpdate = true;
+                geo.computeVertexNormals();
+
+                // Construir pared cilíndrica de maqueta siguiendo el perímetro exacto del disco
+                const perimIdx = [];
+                for (let c = 0; c <= SEG; c++) perimIdx.push(c);
+                for (let r = 1; r <= SEG; r++) perimIdx.push(r * (SEG + 1) + SEG);
+                for (let c = SEG - 1; c >= 0; c--) perimIdx.push(SEG * (SEG + 1) + c);
+                for (let r = SEG - 1; r >= 0; r--) perimIdx.push(r * (SEG + 1));
+
+                const sVerts = [], rPts = [];
+                for (let k = 0; k < perimIdx.length - 1; k++) {
+                    const ia = perimIdx[k], ib = perimIdx[k + 1];
+                    const ax = pos.getX(ia), ay = pos.getY(ia), az = pos.getZ(ia);
+                    const bx = pos.getX(ib), by = pos.getY(ib), bz = pos.getZ(ib);
+                    sVerts.push(ax, ay, az, bx, by, bz, ax, baseY, az);
+                    sVerts.push(bx, by, bz, bx, baseY, bz, ax, baseY, az);
+                    rPts.push(new THREE.Vector3(ax, ay + 0.015, az));
+                }
+                skirtGeo.setAttribute("position", new THREE.Float32BufferAttribute(sVerts, 3));
+                skirtGeo.computeVertexNormals();
+                topRimGeo.setFromPoints(rPts);
+                actualizarRutaTerreno3D();
+            }
+            reconstruirRelieveYFalda();
+
+            // Textura HD PIA24096 local + Comparador Hipsométrico MOLA Nítido
             const t3dCanvas = document.createElement("canvas");
             t3dCanvas.width = 1024; t3dCanvas.height = 1024;
             const t3dCtx = t3dCanvas.getContext("2d");
             t3dCtx.fillStyle = "#b86b43"; t3dCtx.fillRect(0, 0, 1024, 1024);
             const t3dTex = new THREE.CanvasTexture(t3dCanvas);
             t3dTex.anisotropy = Math.min(16, t3dRenderer.capabilities.getMaxAnisotropy() || 16);
-            const imgVik = new Image(), imgMola = new Image();
-            imgVik.crossOrigin = "anonymous"; imgMola.crossOrigin = "anonymous";
-            let vikOk = false, molaOk = false;
+            const imgVik = new Image();
+            imgVik.crossOrigin = "anonymous";
             window.actualizarXRay3D = function(val) {
                 const alpha = (parseFloat(val) || 0) / 100;
-                if (vikOk) { t3dCtx.globalAlpha = 1; t3dCtx.drawImage(imgVik, 0, 0, 1024, 1024); }
-                if (molaOk && alpha > 0) { t3dCtx.globalAlpha = alpha; t3dCtx.drawImage(imgMola, 0, 0, 1024, 1024); }
-                t3dCtx.globalAlpha = 1;
-                t3dTex.needsUpdate = true;
+                const colAttr = geo.attributes.color;
+                for (let i = 0; i < pos.count; i++) {
+                    const vy = pos.getY(i);
+                    const [mr, mg, mb] = colorMolaHipsometrico(vy);
+                    colAttr.setXYZ(i, (1 - alpha) * 0.98 + alpha * mr, (1 - alpha) * 0.95 + alpha * mg, (1 - alpha) * 0.92 + alpha * mb);
+                }
+                colAttr.needsUpdate = true;
             };
-            imgVik.onload = () => { vikOk = true; window.actualizarXRay3D(document.getElementById("slider-xray-3d")?.value || 35); };
-            imgMola.onload = () => { molaOk = true; window.actualizarXRay3D(document.getElementById("slider-xray-3d")?.value || 35); };
+            imgVik.onload = () => {
+                t3dCtx.drawImage(imgVik, 0, 0, 1024, 1024);
+                t3dTex.needsUpdate = true;
+                try {
+                    const demC = document.createElement("canvas");
+                    demC.width = 256; demC.height = 256;
+                    const dCtx = demC.getContext("2d");
+                    dCtx.drawImage(imgVik, 0, 0, 256, 256);
+                    t3dDemPixels = dCtx.getImageData(0, 0, 256, 256).data;
+                    t3dDemW = 256; t3dDemH = 256;
+                    reconstruirRelieveYFalda();
+                } catch (_) {}
+                window.actualizarXRay3D(document.getElementById("slider-xray-3d")?.value || 0);
+            };
             imgVik.src = "./jezero-hi-res.jpg";
-            imgMola.src = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/6/25/91.jpg";
 
-            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.82, metalness: 0.05 });
+            const mat = new THREE.MeshStandardMaterial({ map: t3dTex, vertexColors: true, roughness: 0.78, metalness: 0.06 });
             window._t3dMeshGeo = geo;
             const terrainMesh = new THREE.Mesh(geo, mat);
             terrainMesh.castShadow = true;
             terrainMesh.receiveShadow = true;
             t3dScene.add(terrainMesh);
 
-            // Maqueta geológica holográfica con corte estratificado + borde neón cian
-            const baseY = -0.82;
-            const skirtVerts = [];
-            const topRimPts = [];
-            const pushWall = (pts) => {
-                for (let k = 0; k < pts.length - 1; k++) {
-                    const a = pts[k], b = pts[k + 1];
-                    skirtVerts.push(a.x, a.y, a.z, b.x, b.y, b.z, a.x, baseY, a.z);
-                    skirtVerts.push(b.x, b.y, b.z, b.x, baseY, b.z, a.x, baseY, a.z);
-                }
-            };
-            const segX = 56, segZ = 48;
-            const north = [], south = [], west = [], east = [];
-            for (let i = 0; i <= segX; i++) {
-                const vx = -7 + (14 * i) / segX;
-                north.push({ x: vx, y: alturaJezero3D(vx, -6), z: -6 });
-                south.push({ x: vx, y: alturaJezero3D(vx, 6), z: 6 });
-            }
-            for (let j = 0; j <= segZ; j++) {
-                const vz = -6 + (12 * j) / segZ;
-                west.push({ x: -7, y: alturaJezero3D(-7, vz), z: vz });
-                east.push({ x: 7, y: alturaJezero3D(7, vz), z: vz });
-            }
-            pushWall(north); pushWall(south); pushWall(west); pushWall(east);
-            [...north, ...east, ...[...south].reverse(), ...[...west].reverse()].forEach(p => topRimPts.push(new THREE.Vector3(p.x, p.y + 0.015, p.z)));
-
-            const skirtGeo = new THREE.BufferGeometry();
-            skirtGeo.setAttribute("position", new THREE.Float32BufferAttribute(skirtVerts, 3));
-            skirtGeo.computeVertexNormals();
-            const skirtMat = new THREE.MeshStandardMaterial({ color: 0x261d1c, roughness: 0.85, metalness: 0.18, side: THREE.DoubleSide });
+            // Pared cilíndrica del bloque geológico + Anillos Holográficos Cian + Radar Polar
+            const skirtMat = new THREE.MeshStandardMaterial({ color: 0x1c1924, roughness: 0.75, metalness: 0.28, side: THREE.DoubleSide });
             t3dScene.add(new THREE.Mesh(skirtGeo, skirtMat));
+            t3dScene.add(new THREE.LineLoop(topRimGeo, new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85 })));
 
-            // Borde holográfico superior e inferior del bloque
-            const rimMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.72 });
-            t3dScene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(topRimPts), rimMat));
-            const botRimPts = [
-                new THREE.Vector3(-7, baseY, -6), new THREE.Vector3(7, baseY, -6),
-                new THREE.Vector3(7, baseY, 6), new THREE.Vector3(-7, baseY, 6)
-            ];
-            t3dScene.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(botRimPts), new THREE.LineBasicMaterial({ color: 0x0ea5e9, transparent: true, opacity: 0.5 })));
+            const baseRing = new THREE.Mesh(
+                new THREE.RingGeometry(6.38, 6.48, 128),
+                new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
+            );
+            baseRing.rotation.x = -Math.PI / 2;
+            baseRing.position.y = baseY + 0.01;
+            t3dScene.add(baseRing);
 
-            const grid = new THREE.GridHelper(18, 36, 0x38bdf8, 0x1e293b);
-            grid.position.y = baseY - 0.02;
-            grid.material.opacity = 0.24;
-            grid.material.transparent = true;
-            t3dScene.add(grid);
+            const outerHalo = new THREE.Mesh(
+                new THREE.RingGeometry(6.75, 6.82, 128),
+                new THREE.MeshBasicMaterial({ color: 0x0ea5e9, side: THREE.DoubleSide, transparent: true, opacity: 0.35 })
+            );
+            outerHalo.rotation.x = -Math.PI / 2;
+            outerHalo.position.y = baseY;
+            t3dScene.add(outerHalo);
+
+            const baseDisc = new THREE.Mesh(
+                new THREE.CircleGeometry(6.45, 96),
+                new THREE.MeshBasicMaterial({ color: 0x090d16, side: THREE.DoubleSide })
+            );
+            baseDisc.rotation.x = -Math.PI / 2;
+            baseDisc.position.y = baseY;
+            t3dScene.add(baseDisc);
+
+            const polarGrid = new THREE.PolarGridHelper(7.6, 16, 8, 96, 0x1e3a5f, 0x172554);
+            polarGrid.position.y = baseY - 0.02;
+            t3dScene.add(polarGrid);
 
             t3dRutaGroup = new THREE.Group();
             t3dScene.add(t3dRutaGroup);
@@ -3272,13 +3388,14 @@
             pulsoRing.position.y = 0.28;
             t3dScene.add(pulsoRing);
             let pulsoScale = 0, modoCapa3D = 0;
-            const NOMBRES_CAPA_3D = ["HiRISE DEM (Pendiente)", "THEMIS IR (Arena Blanda)", "CRISM (Biosignaturas)"];
+            const NOMBRES_CAPA_3D_ES = ["HiRISE DEM (Pendiente)", "THEMIS IR (Arena Blanda)", "CRISM (Biosignaturas)"];
+            const NOMBRES_CAPA_3D_EN = ["HiRISE DEM (Slope)", "THEMIS IR (Soft Sand)", "CRISM (Biosignatures)"];
             window.dispararPulsoEscaner3D = function() {
                 pulsoScale = 0.1;
                 pulsoRing.material.opacity = 0.95;
                 modoCapa3D = (modoCapa3D + 1) % 3;
                 const lbl = document.getElementById("lbl-capa-3d");
-                if (lbl) lbl.innerText = NOMBRES_CAPA_3D[modoCapa3D];
+                if (lbl) lbl.innerText = (idiomaActual === "en" ? NOMBRES_CAPA_3D_EN : NOMBRES_CAPA_3D_ES)[modoCapa3D];
                 const colAttr = geo.attributes.color;
                 for (let i = 0; i < pos.count; i++) {
                     const vx = pos.getX(i), vz = pos.getZ(i), vy = pos.getY(i);
@@ -3317,7 +3434,7 @@
                     t3dDist += (t3dTarget.dist - t3dDist) * 0.08;
                     if (Math.abs(t3dTarget.dist - t3dDist) < 0.05) t3dTarget = null;
                 } else if (!drag && t3dAutoOrbita) {
-                    t3dTheta += 0.0022;
+                    t3dTheta = 0.82 + Math.sin(Date.now() * 0.00035) * 0.52;
                 }
                 t3dCamera.position.set(
                     t3dDist * Math.sin(t3dPhi) * Math.cos(t3dTheta),
@@ -3357,7 +3474,7 @@
                 );
                 pin.position.set(x, yHead, z);
                 t3dRutaGroup.add(pin);
-                t3dPins.push({ pos: new THREE.Vector3(x, yHead + 0.16, z), nombre: pt.nombre.split("(")[0].trim(), peligro });
+                t3dPins.push({ pos: new THREE.Vector3(x, yHead + 0.16, z), nombre: nomCortoNodo(pt), peligro });
             });
 
             const sel = cacheAlternativas[alternativaActiva];
@@ -3717,21 +3834,26 @@
         }
 
         function evaluarViabilidadLocal(disp, req, pend, sinRad, radMsv = 0) {
+            const en = typeof idiomaActual === "undefined" || idiomaActual === "en";
             const rest = +(disp - req).toFixed(1);
             let viable = true, razones = [];
-            if (sinRad) { viable = false; razones.push("Sombra de radio UHF: Pierdes comunicación con el Hábitat."); }
-            if (pend > 20) { viable = false; razones.push(`Pendiente de ${pend}° supera el límite seguro de 20° del traje xEMU.`); }
-            if (rest < 30) { viable = false; razones.push(`Reserva final de ${Math.max(0, rest)}% inferior al 30% exigido por la NASA.`); }
-            if (radMsv > 1.5) { viable = false; razones.push(`Dosis solar (${radMsv} mSv) supera el límite EVA (1.5 mSv) por tormenta activa.`); }
-            if (viable) razones.push(`Ruta segura (${pend}° máx.) y reserva saludable del ${rest}%.`);
+            if (sinRad) { viable = false; razones.push(en ? "UHF Radio Shadow: Line-of-sight communication with Habitat is lost." : "Sombra de radio UHF: Pierdes comunicación con el Hábitat."); }
+            if (pend > 20) { viable = false; razones.push(en ? `Slope of ${pend}° exceeds the 20° xEMU suit stability limit.` : `Pendiente de ${pend}° supera el límite seguro de 20° del traje xEMU.`); }
+            if (rest < 30) { viable = false; razones.push(en ? `Final O₂ reserve (${Math.max(0, rest)}%) falls below NASA's mandatory 30% limit.` : `Reserva final de ${Math.max(0, rest)}% inferior al 30% exigido por la NASA.`); }
+            if (radMsv > 1.5) { viable = false; razones.push(en ? `Solar dose (${radMsv} mSv) exceeds EVA safe threshold (1.5 mSv) due to active storm.` : `Dosis solar (${radMsv} mSv) supera el límite EVA (1.5 mSv) por tormenta activa.`); }
+            if (viable) razones.push(en ? `Verified safe route (${pend}° max slope) with healthy ${rest}% O₂ reserve.` : `Ruta segura (${pend}° máx.) y reserva saludable del ${rest}%.`);
 
             const hist = sinRad
-                ? { mision: "Anomalía similar: Mars Polar Lander (1999)", leccion: "Pérdida de contacto en terreno sin línea directa de comunicación." }
+                ? (en ? { mision: "Similar Anomaly: Mars Polar Lander (1999)", leccion: "Loss of telemetry in terrain lacking direct line-of-sight communication." }
+                      : { mision: "Anomalía similar: Mars Polar Lander (1999)", leccion: "Pérdida de contacto en terreno sin línea directa de comunicación." })
                 : pend > 20
-                ? { mision: "Anomalía similar: Rover Spirit (2009)", leccion: "Atrapado permanentemente al cruzar una pendiente pronunciada." }
+                ? (en ? { mision: "Similar Anomaly: Spirit Rover (2009)", leccion: "Permanently immobilized while crossing a steep high-slip slope." }
+                      : { mision: "Anomalía similar: Rover Spirit (2009)", leccion: "Atrapado permanentemente al cruzar una pendiente pronunciada." })
                 : rest < 30
-                ? { mision: "Anomalía similar: Rover Opportunity (2018)", leccion: "Agotamiento crítico de reservas energéticas sin margen de retorno." }
-                : { mision: "Referencia nominal: Perseverance (Jezero)", leccion: "Recorrido equivalente a las rutas seguras validadas en Three Forks." };
+                ? (en ? { mision: "Similar Anomaly: Opportunity Rover (2018)", leccion: "Critical depletion of energy reserves without safe return margin." }
+                      : { mision: "Anomalía similar: Rover Opportunity (2018)", leccion: "Agotamiento crítico de reservas energéticas sin margen de retorno." })
+                : (en ? { mision: "Nominal Reference: Perseverance (Jezero)", leccion: "Traverse profile matches validated safe corridors at Three Forks." }
+                      : { mision: "Referencia nominal: Perseverance (Jezero)", leccion: "Recorrido equivalente a las rutas seguras validadas en Three Forks." });
 
             return { viable, energia_restante: Math.max(0, rest), razones, detalle_historico: hist };
         }
@@ -3875,9 +3997,15 @@
             setTextoId("chaos-btn-uhf", en ? "📡 UHF Link Loss (Enforce safe corridor)" : "📡 Pérdida de enlace UHF (Forzar corredor seguro)");
             setTextoId("chaos-btn-reset", en ? "↺ Restore Nominal EVA (Safe Mode)" : "↺ Restaurar EVA Nominal (Modo Seguro)");
             setTextoId("btn-detener-tour", en ? "⏹ Stop Tour" : "⏹ Detener Tour");
+            setTextoId("rep-btn-360", en ? "AR 360° HELMET VISOR — INSPECT SITE" : "VISOR CASCO AR 360° — INSPECCIONAR SITIO");
+            setTextoId("rep-btn-cuff", en ? "EVA CUFF CHECKLIST" : "PLAN DE MUÑECA EVA");
+            setTextoId("rep-btn-close", en ? "Close" : "Cerrar");
+            if (puntosJezero.length) dibujarNodosBase(true);
+            actualizarChipParadas();
             setCarruselColapsado(document.body.classList.contains("carrusel-oculto"));
             cargarClimaEspacial();
             ejecutarCalculoGoogleMaps();
+            if (t3dIniciado) actualizarRutaTerreno3D();
             const metLabels = document.querySelectorAll(".metrica-pill small");
             if (metLabels.length >= 3) {
                 metLabels[0].innerText = en ? "Science Return" : "Retorno Científico";
@@ -3920,23 +4048,24 @@
             if (!puedeCambiarVista()) return;
             cancelarAccionesEnCurso(true);
             window._bloqueoVistaHasta = 0;
+            const en = idiomaActual === "en";
             const bar = document.getElementById("tour-subtitulo-bar");
             const txt = document.getElementById("tour-subtitulo-txt");
             if (bar && txt) {
-                txt.innerText = "Paso 1/3: Inserción orbital en Cráter Jezero (Globo 3D)";
+                txt.innerText = en ? "Step 1/3: Orbital insertion over Jezero Crater (3D Globe)" : "Paso 1/3: Inserción orbital en Cráter Jezero (Globo 3D)";
                 bar.style.display = "flex";
             }
             abrirGlobo3D();
             window._tourTimers.push(setTimeout(() => {
-                enfocarMision3D(18.44, 77.45, "Cráter Jezero • Base Octavia E. Butler", "Aterrizando en el sitio de exploración humana...");
+                enfocarMisionPorClave("persev");
             }, 1000));
             window._tourTimers.push(setTimeout(() => {
-                if (txt) txt.innerText = "Paso 2/3: Escaneo de pendiente (<20°), radio UHF y anillo O₂";
+                if (txt) txt.innerText = en ? "Step 2/3: Scanning slope (<20°), UHF line-of-sight & O₂ ring" : "Paso 2/3: Escaneo de pendiente (<20°), radio UHF y anillo O₂";
                 aterrizarEnJezero();
                 activarEscenarioDemo("segura");
             }, 3000));
             window._tourTimers.push(setTimeout(() => {
-                if (txt) txt.innerText = "Paso 3/3: Ejecución de caminata EVA y telemetría en vivo";
+                if (txt) txt.innerText = en ? "Step 3/3: Executing EVA traverse & live telemetry" : "Paso 3/3: Ejecución de caminata EVA y telemetría en vivo";
                 simularPasoAPaso();
             }, 5200));
             window._tourTimers.push(setTimeout(() => {
@@ -3956,36 +4085,65 @@
             const sel = cacheAlternativas[alternativaActiva];
             const pts = sel?.ruta?.ruta_calculada || [];
             if (!pts.length) return;
+            const en = idiomaActual === "en";
             const energiaIni = parseFloat(document.getElementById("slider-energia")?.value || "100");
             const req = sel.ruta.energia_requerida || 0;
             const bingoO2 = Math.min(100, +(30 + req * 0.5).toFixed(1));
             const conRover = document.getElementById("check-rover")?.checked;
-            document.getElementById("cuff-titulo").innerText = `EVA: ${pts[0].nombre.split("(")[0].trim()} → ${pts[pts.length - 1].nombre.split("(")[0].trim()}`;
-            document.getElementById("cuff-sub").innerText = `Equipo: ${conRover ? "Rover Presurizado" : "Traje xEMU"} • Regla NASA: Retornar si O₂ ≤ ${bingoO2}%`;
+            const tMin = sel.ruta.tiempo_estimado_min || sel.ruta.tiempo_min || 0;
+            document.getElementById("cuff-titulo").innerText = `EVA: ${nomCortoNodo(pts[0])} → ${nomCortoNodo(pts[pts.length - 1])}`;
+            document.getElementById("cuff-sub").innerText = en
+                ? `Mode: ${conRover ? "Pressurized Rover" : "xEMU Suit"} • NASA Rule: Turn back if O₂ ≤ ${bingoO2}%`
+                : `Equipo: ${conRover ? "Rover Presurizado" : "Traje xEMU"} • Regla NASA: Retornar si O₂ ≤ ${bingoO2}%`;
             document.getElementById("cuff-resumen").innerHTML = `
-                <div class="cuff-box"><small>Distancia Total</small><strong>${sel.ruta.distancia_km} km</strong></div>
-                <div class="cuff-box"><small>Tiempo Estimado</small><strong>${sel.ruta.tiempo_min} min</strong></div>
-                <div class="cuff-box"><small>Bingo O₂ (Retorno)</small><strong style="color:#fbbf24;">${bingoO2}%</strong></div>
-                <div class="cuff-box"><small>Reserva Final</small><strong style="color:${energiaIni - req >= 30 ? "#22c55e" : "#ef4444"};">${Math.max(0, +(energiaIni - req).toFixed(1))}%</strong></div>
+                <div class="cuff-box"><small>${en ? "Total Distance" : "Distancia Total"}</small><strong>${sel.ruta.distancia_km} km</strong></div>
+                <div class="cuff-box"><small>${en ? "Estimated Time" : "Tiempo Estimado"}</small><strong>${tMin} min</strong></div>
+                <div class="cuff-box"><small>${en ? "Bingo O₂ (Turnback)" : "Bingo O₂ (Retorno)"}</small><strong style="color:#fbbf24;">${bingoO2}%</strong></div>
+                <div class="cuff-box"><small>${en ? "Final Reserve" : "Reserva Final"}</small><strong style="color:${energiaIni - req >= 30 ? "#22c55e" : "#ef4444"};">${Math.max(0, +(energiaIni - req).toFixed(1))}%</strong></div>
             `;
             document.getElementById("cuff-pasos").innerHTML = pts.map((pt, i) => {
-                const rumbo = i < pts.length - 1 ? `Rumbo ${calcularRumboGrados(pt, pts[i + 1])}° (${distanciaMarcianaKm(pt, pts[i + 1]).toFixed(2)} km)` : "Destino final • Muestra / Refugio";
+                const rumbo = i < pts.length - 1
+                    ? `${en ? "Bearing" : "Rumbo"} ${calcularRumboGrados(pt, pts[i + 1])}° (${distanciaMarcianaKm(pt, pts[i + 1]).toFixed(2)} km)`
+                    : (en ? "Final Target • Sample / Shelter" : "Destino final • Muestra / Refugio");
                 return `<div style="background:rgba(15,23,42,0.85);padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);">
                     <div style="display:flex;justify-content:space-between;font-weight:700;color:#f8fafc;">
-                        <span>${i + 1}. ${pt.nombre.split("(")[0].trim()}</span>
+                        <span>${i + 1}. ${nomCortoNodo(pt)}</span>
                         <span style="color:#38bdf8;">${rumbo}</span>
                     </div>
-                    <div style="color:#94a3b8;font-size:11px;margin-top:2px;">${pt.valor_cientifico || "Punto de control de navegación Jezero"} • Pend: ${pt.pendiente}° • ${pt.sin_comunicacion ? "⚠️ Sin UHF" : "📡 UHF OK"}</div>
+                    <div style="color:#94a3b8;font-size:11px;margin-top:2px;">${valCientificoNodo(pt)} • ${en ? "Slope" : "Pend"}: ${pt.pendiente}° • ${pt.sin_comunicacion ? (en ? "⚠️ No UHF" : "⚠️ Sin UHF") : "📡 UHF OK"}</div>
                 </div>`;
             }).join("");
             document.getElementById("modal-cuff").style.display = "flex";
         }
 
         function abrirCajaBlanca() {
+            const en = idiomaActual === "en";
             const sel = cacheAlternativas[alternativaActiva];
-            const r = sel?.ruta || { distancia_km: 0, tiempo_min: 0, energia_requerida: 0, pendiente_maxima: 0, radiacion_msv: 0 };
+            const r = sel?.ruta || { distancia_km: 0, tiempo_estimado_min: 0, energia_requerida: 0, pendiente_maxima: 0, radiacion_msv: 0 };
+            const tMin = r.tiempo_estimado_min || r.tiempo_min || 0;
             const radH = climaEspacial?.radiacion_msv_hora || 0.028;
-            document.getElementById("cb-contenido").innerHTML = `
+            document.getElementById("cb-contenido").innerHTML = en ? `
+                <div class="eq-card">
+                    <strong>1. Martian Geodesy (Spherical Haversine)</strong>
+                    <div class="eq-formula">d = 2 · 3,396.19 km · arcsin(√(sin²(Δφ/2) + cos φ₁ cos φ₂ sin²(Δλ/2)))</div>
+                    <div>Active route distance: <strong>${r.distancia_km} km</strong> (True equatorial radius of Mars).</div>
+                </div>
+                <div class="eq-card">
+                    <strong>2. Metabolic O₂ Consumption &amp; Slope Penalty</strong>
+                    <div class="eq-formula">O₂_req = Σ [ d_km · 90 kcal · (1 + (slope/10)^1.7) · f_load ] / 3600</div>
+                    <div>Max slope: <strong>${r.pendiente_maxima}°</strong> • Computed O₂ cost: <strong>${r.energia_requerida}%</strong> (+ mandatory NASA 30% reserve).</div>
+                </div>
+                <div class="eq-card">
+                    <strong>3. UHF Radio Line-of-Sight (Martian Horizon)</strong>
+                    <div class="eq-formula">d_horizon = √(2 · R_Mars · h_antenna) • Blocked in depressions &gt; 20°</div>
+                    <div>Evaluates continuous UHF relay link with Octavia E. Butler Habitat across every node.</div>
+                </div>
+                <div class="eq-card">
+                    <strong>4. Cumulative Radiation Dose (NASA DONKI)</strong>
+                    <div class="eq-formula">Dose = (${tMin} min / 60) · ${radH} mSv/h = ${r.radiacion_msv} mSv</div>
+                    <div>Active telemetry source: <strong>${climaEspacial?.fuente || "MSL-RAD / DONKI"}</strong>.</div>
+                </div>
+            ` : `
                 <div class="eq-card">
                     <strong>1. Geodesia Marciana (Haversine)</strong>
                     <div class="eq-formula">d = 2 · 3,396.19 km · arcsin(√(sin²(Δφ/2) + cos φ₁ cos φ₂ sin²(Δλ/2)))</div>
@@ -4003,7 +4161,7 @@
                 </div>
                 <div class="eq-card">
                     <strong>4. Dosis de Radiación Acumulada (NASA DONKI)</strong>
-                    <div class="eq-formula">Dosis = (${r.tiempo_min} min / 60) · ${radH} mSv/h = ${r.radiacion_msv} mSv</div>
+                    <div class="eq-formula">Dosis = (${tMin} min / 60) · ${radH} mSv/h = ${r.radiacion_msv} mSv</div>
                     <div>Fuente activa: <strong>${climaEspacial?.fuente || "MSL-RAD / DONKI"}</strong>.</div>
                 </div>
             `;
