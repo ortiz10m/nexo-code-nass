@@ -919,7 +919,7 @@
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
             <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
-                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25671/PIA25671~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.35s ease;">
+                <img id="destino-foto-img" src="https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.35s ease;">
                 <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
                     <div>
                         <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
@@ -999,12 +999,17 @@
 
     <div class="chips-superiores">
         <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;font-weight:700;">🏔️ Terreno 3D</button>
-        <button id="btn-ctx" class="chip-gmaps activo" onclick="cambiarMapaBase('ctx')">Satélite HD (5m/px)</button>
-        <button id="btn-color" class="chip-gmaps" onclick="cambiarMapaBase('color')">Color Viking</button>
-        <button id="btn-mola" class="chip-gmaps" onclick="cambiarMapaBase('mola')">Altitud MOLA</button>
-        <button id="btn-mola-overlay" class="chip-gmaps" onclick="toggleMolaOverlay()">Fusión MOLA 40%</button>
-        <button id="btn-termica" class="chip-gmaps" onclick="toggleCapaTermica()">Capa Térmica</button>
-        <button id="btn-peligros" class="chip-gmaps activo" onclick="togglePeligros()">Zonas de Riesgo</button>
+        <div style="position:relative;">
+            <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Capas ▾</button>
+            <div id="menu-capas" style="display:none;position:absolute;top:42px;right:0;flex-direction:column;gap:4px;background:rgba(11,16,28,0.96);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:6px;min-width:175px;box-shadow:0 8px 24px rgba(0,0,0,0.6);z-index:1100;">
+                <button id="btn-ctx" class="chip-gmaps activo" style="text-align:left;" onclick="cambiarMapaBase('ctx')">Satélite HD (5m/px)</button>
+                <button id="btn-color" class="chip-gmaps" style="text-align:left;" onclick="cambiarMapaBase('color')">Color Viking</button>
+                <button id="btn-mola" class="chip-gmaps" style="text-align:left;" onclick="cambiarMapaBase('mola')">Altitud MOLA</button>
+                <button id="btn-mola-overlay" class="chip-gmaps" style="text-align:left;" onclick="toggleMolaOverlay()">Fusión MOLA 40%</button>
+                <button id="btn-termica" class="chip-gmaps" style="text-align:left;" onclick="toggleCapaTermica()">Capa Térmica</button>
+                <button id="btn-peligros" class="chip-gmaps activo" style="text-align:left;" onclick="togglePeligros()">Zonas de Riesgo</button>
+            </div>
+        </div>
         <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-weight:700;">🎬 Tour Demo</button>
         <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
     </div>
@@ -1460,9 +1465,9 @@
                 }).addTo(capaNodos);
 
                 m.bindTooltip(p.nombre.split("(")[0].trim(), {
-                    permanent: true,
-                    direction: p.id === 2 || p.id === 3 ? "bottom" : "top",
-                    offset: p.id === 2 || p.id === 3 ? [0, 8] : [0, -8],
+                    permanent: (p.id === 1 || p.id === 7),
+                    direction: p.id === 1 ? "right" : "left",
+                    offset: p.id === 1 ? [10, 0] : [-10, 0],
                     className: "etiqueta-lugar"
                 });
 
@@ -1840,7 +1845,7 @@
         // Galería HD verificada de NASA Mars / Perseverance (funciona también sin backend en GitHub Pages)
         const GALERIA_NASA_MARS = [
             { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~medium.jpg", titulo: "Mastcam-Z 360° Panorama (Jezero)", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA25671/PIA25671~medium.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Borde del Delta de Jezero", cam: "Mastcam-Z" },
             { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~medium.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
             { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
             { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~medium.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
@@ -2413,6 +2418,7 @@
             setTextoId("btn-abrir-panel", en ? "☰ Plan EVA" : "☰ Planificar EVA");
             setTextoId("btn-tour", en ? "🎬 Demo Tour" : "🎬 Tour Demo");
             setTextoId("btn-terreno3d", en ? "🏔️ 3D Terrain" : "🏔️ Terreno 3D");
+            setTextoId("btn-capas-menu", en ? "🛰️ Layers ▾" : "🛰️ Capas ▾");
             setTextoId("lbl-detalles-tec", en ? "📊 NASA Telemetry, Payload & MOLA" : "📊 Telemetría NASA, Carga y Perfil MOLA");
             setTextoId("sec-plss", en ? "1. Life Support (xEMU Suit)" : "1. Soporte Vital (Traje xEMU)");
             setTextoId("sec-equipo", en ? "2. Science Payload & Mobility" : "2. Equipo Científico y Movilidad");
