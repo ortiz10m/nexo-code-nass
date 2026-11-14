@@ -940,7 +940,7 @@
             position: absolute;
             bottom: 58px;
             left: 410px;
-            right: 72px;
+            right: 92px;
             z-index: 995;
             display: flex;
             gap: 10px;
@@ -1067,13 +1067,22 @@
                 </div>
             </div>
             <div class="sec-titulo" id="sec-plss">1. Soporte Vital (Traje xEMU)</div>
+            <div style="display:flex;gap:5px;margin-bottom:-4px;">
+                <button class="escenario-btn" id="tab-ligero" onclick="elegirModoEquipo('ligero')">🏃 Ligero</button>
+                <button class="escenario-btn" id="tab-xemu" onclick="elegirModoEquipo('xemu')">🧑‍🚀 xEMU</button>
+                <button class="escenario-btn" id="tab-rover" onclick="elegirModoEquipo('rover')">🚙 Con Rover</button>
+            </div>
+            <div id="chip-paradas" style="display:none;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.35);border-radius:8px;padding:4px 8px;font-size:11px;color:#7dd3fc;">
+                <span id="lbl-paradas-cnt">0 paradas extra</span>
+                <button onclick="limpiarParadas()" style="background:none;border:none;color:#f87171;font-weight:700;cursor:pointer;font-size:11px;">✕ Limpiar</button>
+            </div>
             <div class="panel-oxigeno">
                 <div class="oxigeno-top">
                     <span><span id="lbl-ox-ini">Oxígeno inicial del traje:</span> <strong id="lbl-oxigeno">100%</strong></span>
                     <span><span id="lbl-ox-fin">Reserva final:</span> <strong id="lbl-restante">--%</strong></span>
                 </div>
                 <input type="range" id="slider-energia" min="40" max="100" value="100" style="width:100%;margin-bottom:6px;"
-                       oninput="document.getElementById('lbl-oxigeno').innerText=this.value+'%'" onchange="recalcularDesdeUI()">
+                       oninput="document.getElementById('lbl-oxigeno').innerText=this.value+'%'; actualizarAnilloO2(this.value)" onchange="recalcularDesdeUI()">
                 <div class="barra-plss">
                     <div id="barra-restante" class="relleno-plss" style="width:70%;background:#188038;"></div>
                     <div class="linea-30" title="30% reserva mínima obligatoria NASA"></div>
@@ -1352,6 +1361,8 @@
 
         let capaRutas = L.layerGroup();
         let capaNodos = L.layerGroup();
+        let capaAnilloO2 = L.layerGroup().addTo(mapa);
+        let paradasIntermedias = [];
         let capaPeligros = L.layerGroup();
         let capaTermica = L.layerGroup();
         let verPeligros = true;
@@ -1387,7 +1398,7 @@
 
         const mapa = L.map("mapa", {
             crs: CRS_NASA_MARS,
-            preferCanvas: false,
+            preferCanvas: true,
             zoomAnimation: true,
             fadeAnimation: true,
             zoomSnap: 0.25,
@@ -1698,7 +1709,7 @@
                             <div class="lugar-card-nom">${nom}</div>
                             <div class="lugar-card-meta" style="color:${pel ? "#fca5a5" : "#86efac"};">
                                 <span>${estado}</span>
-                                <span style="color:#94a3b8;">${pt.elevacion_m ?? -2500}m</span>
+                                <button onclick="event.stopPropagation();agregarParadaIntermedia(${pt.id})" title="Agregar como parada intermedia" style="background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.35);border-radius:5px;padding:1px 5px;font-size:9.5px;font-weight:700;cursor:pointer;">+ Parada</button>
                             </div>
                         </div>
                     </div>
@@ -1714,6 +1725,81 @@
             const pt = puntosJezero.find(x => x.id === id);
             if (pt) mapa.panTo([pt.lat, pt.lng], { animate: true, duration: 0.6 });
         }
+
+        function actualizarAnilloO2(oxPctVal) {
+            capaAnilloO2.clearLayers();
+            const base = puntosJezero.find(x => x.id === 1) || { lat: 18.4447, lng: 77.5200 };
+            const ox = parseFloat(oxPctVal ?? document.getElementById("slider-energia")?.value ?? 100);
+            const conRover = Boolean(document.getElementById("check-rover")?.checked);
+            const carga = parseFloat(document.getElementById("select-carga")?.value || "0");
+            const factor = (conRover ? 1.45 : 1.0) * (1 - carga / 110);
+            const utilPct = Math.max(0, ox - 30);
+            const radioKm = Math.max(1.2, (utilPct / 70) * 11.5 * factor);
+            const color = ox < 45 ? "#ef4444" : (conRover ? "#38bdf8" : "#22c55e");
+            L.circle([base.lat, base.lng], {
+                radius: radioKm * 1000,
+                color,
+                weight: 2,
+                dashArray: "6, 6",
+                fillColor: color,
+                fillOpacity: 0.06,
+                interactive: false
+            }).addTo(capaAnilloO2);
+        }
+
+        function elegirModoEquipo(modo) {
+            const sel = document.getElementById("select-carga");
+            const chk = document.getElementById("check-rover");
+            if (modo === "ligero") { if (sel) sel.value = "0"; if (chk) chk.checked = false; }
+            if (modo === "xemu") { if (sel) sel.value = "12"; if (chk) chk.checked = false; }
+            if (modo === "rover") { if (sel) sel.value = "0"; if (chk) chk.checked = true; }
+            ["ligero", "xemu", "rover"].forEach(m => {
+                const b = document.getElementById("tab-" + m);
+                if (b) b.style.borderColor = m === modo ? "#38bdf8" : "rgba(255,255,255,0.14)";
+            });
+            actualizarAnilloO2();
+            ejecutarCalculoGoogleMaps();
+        }
+
+        function agregarParadaIntermedia(id) {
+            if (!paradasIntermedias.includes(id)) paradasIntermedias.push(id);
+            actualizarChipParadas();
+            ejecutarCalculoGoogleMaps();
+        }
+        function limpiarParadas() {
+            paradasIntermedias = [];
+            actualizarChipParadas();
+            ejecutarCalculoGoogleMaps();
+        }
+        function actualizarChipParadas() {
+            const chip = document.getElementById("chip-paradas");
+            const lbl = document.getElementById("lbl-paradas-cnt");
+            if (!chip || !lbl) return;
+            chip.style.display = paradasIntermedias.length ? "flex" : "none";
+            lbl.innerText = `${paradasIntermedias.length} parada(s) intermedia(s)`;
+        }
+
+        // Loop 60 FPS para mover el mapa 2D con WASD cuando los modales 3D están cerrados
+        const teclasMapa = new Set();
+        window.addEventListener("keydown", e => {
+            if (["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement?.tagName)) return;
+            if (document.getElementById("modal-terreno3d")?.style.display === "flex") return;
+            if (document.getElementById("modal-globo3d")?.style.display === "flex") return;
+            const k = e.key.toLowerCase();
+            if (["w","a","s","d","arrowup","arrowdown","arrowleft","arrowright"].includes(k)) teclasMapa.add(k);
+        });
+        window.addEventListener("keyup", e => teclasMapa.delete(e.key.toLowerCase()));
+        (function loopPan60FPS() {
+            if (teclasMapa.size > 0) {
+                let dx = 0, dy = 0;
+                if (teclasMapa.has("w") || teclasMapa.has("arrowup")) dy -= 8;
+                if (teclasMapa.has("s") || teclasMapa.has("arrowdown")) dy += 8;
+                if (teclasMapa.has("a") || teclasMapa.has("arrowleft")) dx -= 8;
+                if (teclasMapa.has("d") || teclasMapa.has("arrowright")) dx += 8;
+                if (dx !== 0 || dy !== 0) mapa.panBy([dx, dy], { animate: false });
+            }
+            requestAnimationFrame(loopPan60FPS);
+        })();
 
         function togglePanel() {
             const oculto = document.body.classList.toggle("panel-oculto");
@@ -1807,7 +1893,15 @@
                     pedirModalidadRuta(inicio_id, destino_id, energia, false, retorno)
                 ]);
 
-                cacheAlternativas = { segura: opSegura, directa: opDirecta };
+                if (paradasIntermedias.length > 0 && opSegura?.ruta?.ruta_calculada) {
+                const mapPts = {}; puntosJezero.forEach(x => mapPts[x.id] = x);
+                const extras = paradasIntermedias.map(id => mapPts[id]).filter(Boolean);
+                if (extras.length) {
+                    const basePts = opSegura.ruta.ruta_calculada;
+                    opSegura.ruta.ruta_calculada = [basePts[0], ...extras, basePts[basePts.length - 1]];
+                }
+            }
+            cacheAlternativas = { segura: opSegura, directa: opDirecta };
                 const firmaA = opSegura.ruta.ruta_calculada.map(n => n.id).join("-");
                 const firmaB = opDirecta.ruta.ruta_calculada.map(n => n.id).join("-");
                 const sonDistintas = firmaA !== firmaB;
@@ -1966,6 +2060,7 @@
                 if (imgEl) imgEl.src = fotoInfo.url;
                 if (nomEl) nomEl.innerText = destNodo.nombre.split("(")[0].trim();
             }
+            actualizarAnilloO2();
             renderizarCarruselLugares(pts[pts.length - 1]?.id);
             const itCont = document.getElementById("itinerario-pasos");
             if (itCont) {
@@ -2101,8 +2196,8 @@
             { url: "https://images-assets.nasa.gov/image/PIA26373/PIA26373~medium.jpg", titulo: "Ascenso hacia el Borde del Cráter", cam: "Navcam" },
             { url: "https://images-assets.nasa.gov/image/PIA25172/PIA25172~medium.jpg", titulo: "Colina Santa Cruz (Jezero)", cam: "Mastcam-Z" },
             { url: "https://images-assets.nasa.gov/image/PIA24596/PIA24596~medium.jpg", titulo: "Primera Ruta en Cráter Jezero", cam: "Navcam" },
-            { url: "https://images-assets.nasa.gov/image/PIA24264/PIA24264~medium.jpg", titulo: "Base Octavia E. Butler", cam: "Mastcam-Z" },
-            { url: "https://images-assets.nasa.gov/image/PIA15691/PIA15691~medium.jpg", titulo: "Horizonte Marciano HD", cam: "Mastcam" }
+            { url: "https://images-assets.nasa.gov/image/PIA25889/PIA25889~medium.jpg", titulo: "Cráter Belva (152 fotos Mastcam-Z)", cam: "Mastcam-Z" },
+            { url: "https://images-assets.nasa.gov/image/PIA25287/PIA25287~medium.jpg", titulo: "Delta de Jezero (Mastcam-Z)", cam: "Mastcam-Z" }
         ];
         function obtenerFotoNodoNASA(nodo) {
             if (!nodo) return GALERIA_NASA_MARS[0];
