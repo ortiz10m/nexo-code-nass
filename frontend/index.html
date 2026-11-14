@@ -35,17 +35,19 @@
             filter: sepia(0.18) saturate(1.12) contrast(1.05) brightness(0.95);
         }
 
-        /* Panel izquierdo colapsable */
+        /* Panel izquierdo colapsable estilo NASA Mars Trek Dark Glass */
         .gmaps-panel {
             position: absolute;
             top: 12px;
             left: 12px;
             max-height: calc(100vh - 24px);
             width: 384px;
-            background: rgba(255, 255, 255, 0.96);
-            backdrop-filter: blur(10px);
+            background: rgba(11, 16, 28, 0.90);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: #f1f5f9;
             border-radius: 14px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -62,8 +64,8 @@
 
         .gmaps-top {
             padding: 14px 16px 12px;
-            background: #fff;
-            border-bottom: 1px solid #dadce0;
+            background: rgba(15, 23, 42, 0.65);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .marca-fila {
@@ -74,15 +76,15 @@
         }
 
         .marca-logo {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
-            color: #202124;
+            color: #f8fafc;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .marca-logo span { color: #d93025; }
+        .marca-logo span { color: #f97316; }
 
         .chip-backend {
             font-size: 11px;
@@ -136,41 +138,41 @@
 
         .inputs-ab select {
             width: 100%;
-            padding: 9px 10px;
-            border: 1px solid #dadce0;
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
             border-radius: 8px;
-            font-size: 13px;
-            color: #202124;
-            background: #f8f9fa;
+            font-size: 12.5px;
+            color: #f1f5f9;
+            background: rgba(15, 23, 42, 0.9);
             outline: none;
             font-family: inherit;
         }
 
         .inputs-ab select:focus {
-            border-color: #1a73e8;
-            background: #fff;
+            border-color: #38bdf8;
+            background: #0f172a;
         }
 
         .btn-invertir {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            border: 1px solid #dadce0;
-            background: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(30, 41, 59, 0.85);
             cursor: pointer;
-            font-size: 15px;
-            color: #5f6368;
+            font-size: 14px;
+            color: #cbd5e1;
         }
 
-        .btn-invertir:hover { background: #f1f3f4; }
+        .btn-invertir:hover { background: rgba(51, 65, 85, 0.95); color: #fff; }
 
         .barra-opciones {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 10px;
-            font-size: 12px;
-            color: #5f6368;
+            font-size: 11.5px;
+            color: #94a3b8;
         }
 
         .barra-opciones label {
@@ -189,16 +191,17 @@
         }
 
         .opcion-ruta {
-            border: 1px solid #dadce0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.6);
             border-radius: 10px;
-            padding: 11px 12px;
+            padding: 10px 12px;
             cursor: pointer;
             transition: all 0.15s;
         }
 
-        .opcion-ruta:hover { background: #f8f9fa; }
-        .opcion-ruta.seleccionada { border: 2px solid #1a73e8; background: #f4f8fe; }
-        .opcion-ruta.peligrosa.seleccionada { border-color: #d93025; background: #fef7f6; }
+        .opcion-ruta:hover { background: rgba(30, 41, 59, 0.8); }
+        .opcion-ruta.seleccionada { border: 1.5px solid #38bdf8; background: rgba(14, 116, 144, 0.2); }
+        .opcion-ruta.peligrosa.seleccionada { border-color: #ef4444; background: rgba(127, 29, 29, 0.25); }
 
         .ruta-fila-1 {
             display: flex;
@@ -206,14 +209,14 @@
             align-items: baseline;
         }
 
-        .ruta-via { font-size: 13px; font-weight: 700; color: #202124; }
-        .ruta-tiempo { font-size: 15px; font-weight: 700; color: #188038; }
-        .ruta-tiempo.rojo { color: #d93025; }
-        .ruta-sub { font-size: 12px; color: #5f6368; margin-top: 3px; }
+        .ruta-via { font-size: 13px; font-weight: 700; color: #f8fafc; }
+        .ruta-tiempo { font-size: 15px; font-weight: 700; color: #4ade80; }
+        .ruta-tiempo.rojo { color: #f87171; }
+        .ruta-sub { font-size: 11.5px; color: #94a3b8; margin-top: 3px; }
 
         .panel-oxigeno {
-            background: #f8f9fa;
-            border: 1px solid #dadce0;
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 10px;
             padding: 10px 12px;
         }
@@ -228,7 +231,7 @@
 
         .barra-plss {
             height: 8px;
-            background: #e8eaed;
+            background: rgba(255, 255, 255, 0.14);
             border-radius: 99px;
             position: relative;
             overflow: hidden;
@@ -246,32 +249,32 @@
             top: 0;
             bottom: 0;
             width: 2px;
-            background: #202124;
+            background: #f8fafc;
         }
 
         .alerta-box {
             padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 12.5px;
+            border-radius: 10px;
+            font-size: 12px;
             line-height: 1.45;
         }
 
-        .alerta-ok { background: #e6f4ea; color: #137333; }
-        .alerta-mal { background: #fce8e6; color: #c5221f; }
+        .alerta-ok { background: rgba(22, 101, 52, 0.28); color: #86efac; border: 1px solid rgba(74, 222, 128, 0.25); }
+        .alerta-mal { background: rgba(153, 27, 27, 0.35); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.35); }
         .alerta-box ul { padding-left: 16px; margin-top: 4px; }
 
         .historia-card {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 10px;
             padding: 10px 12px;
             font-size: 12px;
             line-height: 1.45;
-            color: #334155;
+            color: #cbd5e1;
         }
 
         .historia-card strong {
-            color: #0f172a;
+            color: #f8fafc;
             display: block;
             margin-bottom: 2px;
         }
@@ -279,9 +282,9 @@
         .sec-titulo {
             font-size: 10.5px;
             font-weight: 700;
-            letter-spacing: 0.6px;
+            letter-spacing: 0.7px;
             text-transform: uppercase;
-            color: #64748b;
+            color: #94a3b8;
             margin-bottom: -4px;
         }
 
@@ -289,8 +292,8 @@
             display: flex;
             gap: 8px;
             padding: 10px 16px;
-            border-top: 1px solid #e2e8f0;
-            background: #fff;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(11, 16, 28, 0.96);
             flex-shrink: 0;
         }
 
@@ -309,9 +312,9 @@
         .btn-azul:hover { background: #1557b0; }
 
         .btn-gris {
-            background: #fff;
-            color: #1a73e8;
-            border: 1px solid #dadce0;
+            background: rgba(30, 41, 59, 0.85);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.35);
             padding: 9px 12px;
             border-radius: 20px;
             font-weight: 500;
@@ -755,7 +758,7 @@
             text-align: center;
         }
         .metrica-pill small { display: block; color: #5f6368; font-size: 10px; }
-        .metrica-pill strong { font-size: 12.5px; color: #202124; }
+        .metrica-pill strong { font-size: 12.5px; color: #f8fafc; }
         .hud-caminata {
             position: absolute;
             bottom: 24px;
@@ -872,11 +875,14 @@
                     <div class="metrica-pill"><small>Radiación EVA</small><strong id="met-rad">-- mSv</strong></div>
                     <div class="metrica-pill"><small>Consumo O₂</small><strong id="met-o2">-- L</strong></div>
                 </div>
-                <div style="display:flex;justify-content:space-between;color:#5f6368;font-size:10.5px;margin-bottom:3px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:10.5px;margin-bottom:4px;">
                     <span id="lbl-perfil-mola">Perfil Topográfico MOLA</span>
-                    <span id="lbl-desnivel">Elevación (m)</span>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <span id="lbl-desnivel">Elevación (m)</span>
+                        <button onclick="exportarPerfilCSV()" title="Exportar perfil MOLA a CSV (estilo Mars Trek)" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);border-radius:6px;padding:1px 6px;font-size:10px;font-weight:700;cursor:pointer;">⬇ CSV</button>
+                    </div>
                 </div>
-                <svg id="svg-perfil" viewBox="0 0 320 56" style="width:100%;height:56px;background:#fff;border-radius:6px;border:1px solid #e0e0e0;"></svg>
+                <svg id="svg-perfil" viewBox="0 0 320 56" style="width:100%;height:56px;background:#090e1a;border-radius:6px;border:1px solid rgba(255,255,255,0.12);"></svg>
                 <div id="itinerario-pasos" class="itinerario-pasos"></div>
             </div>
 
@@ -945,6 +951,7 @@
     </div>
 
     <div class="leyenda-mapa">
+        <span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span>
         <span>🟢 Hábitat</span>
         <span>⚪ Seguro</span>
         <span>🔴 Peligro (&gt;20° / Sin UHF)</span>
@@ -1084,6 +1091,25 @@
         L.control.attribution({ prefix: false, position: "bottomright" }).addTo(mapa);
         L.control.zoom({ position: "bottomright" }).addTo(mapa);
         L.control.scale({ position: "bottomright", imperial: false }).addTo(mapa);
+        mapa.on("mousemove", (e) => {
+            const el = document.getElementById("coords-mars");
+            if (!el) return;
+            const lat = e.latlng.lat.toFixed(3);
+            const lng = e.latlng.lng.toFixed(3);
+            el.innerText = `${Math.abs(lat)}° ${lat >= 0 ? "N" : "S"}, ${Math.abs(lng)}° ${lng >= 0 ? "E" : "W"}`;
+        });
+        function exportarPerfilCSV() {
+            const sel = cacheAlternativas[alternativaActiva];
+            const pts = sel?.ruta?.ruta_calculada || [];
+            if (!pts.length) return;
+            const rows = ["Step,Site,Lat,Lon,Elevation_m,Slope_deg,UHF_Comms"];
+            pts.forEach((pt, i) => rows.push(`${i + 1},"${pt.nombre}",${pt.lat},${pt.lng},${pt.elevacion_m ?? -2500},${pt.pendiente},${pt.sin_comunicacion ? "NO" : "YES"}`));
+            const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "mars_maps_jezero_eva_profile.csv";
+            a.click();
+        }
 
         let capaRedGrafo = L.layerGroup().addTo(mapa);
 
@@ -2109,8 +2135,8 @@
             if (badgeApi) badgeApi.innerText = modoLocal ? (en ? "Offline mode" : "Modo autónomo") : (en ? "Python live" : "Python conectado");
             const ley = document.querySelector(".leyenda-mapa");
             if (ley) ley.innerHTML = en
-                ? "<span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span><span>🖱️ Right click: Free route</span>"
-                : "<span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span><span>🖱️ Clic derecho: Ruta libre</span>";
+                ? `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span>`
+                : `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span>`;
             const metLabels = document.querySelectorAll(".metrica-pill small");
             if (metLabels.length >= 3) {
                 metLabels[0].innerText = en ? "Science Return" : "Retorno Científico";
