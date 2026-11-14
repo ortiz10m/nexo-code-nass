@@ -819,7 +819,7 @@
                     <div class="linea-30" title="30% reserva mínima obligatoria NASA"></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5f6368;margin-top:4px;">
-                    <span>0%</span><span>Límite emergencia NASA (30%)</span><span>100%</span>
+                    <span>0%</span><span id="lbl-limite-nasa">Límite emergencia NASA (30%)</span><span>100%</span>
                 </div>
             </div>
 
@@ -844,7 +844,7 @@
                     <div class="metrica-pill"><small>Consumo O₂</small><strong id="met-o2">-- L</strong></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;color:#5f6368;font-size:10.5px;margin-bottom:3px;">
-                    <span>Perfil Topográfico MOLA</span>
+                    <span id="lbl-perfil-mola">Perfil Topográfico MOLA</span>
                     <span id="lbl-desnivel">Elevación (m)</span>
                 </div>
                 <svg id="svg-perfil" viewBox="0 0 320 56" style="width:100%;height:56px;background:#fff;border-radius:6px;border:1px solid #e0e0e0;"></svg>
@@ -862,8 +862,8 @@
             </div>
         </div>
         <div class="acciones-inferiores">
-            <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">? Caminar ruta</button>
-            <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">????? Street View 360?</button>
+            <button id="btn-caminar" class="btn-azul" onclick="simularPasoAPaso()">▶ Caminar ruta</button>
+            <button id="btn-sv-abrir" class="btn-gris" onclick="abrirStreetViewActual()">🧑‍🚀 Street View 360°</button>
         </div>
     </aside>
 
@@ -955,14 +955,14 @@
     <div id="modal-globo3d" class="modal-fullscreen">
         <div class="sv-topbar">
             <div class="sv-card-info">
-                <div style="font-size:11px;color:#fbbc04;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
+                <div id="globo-kicker" style="font-size:11px;color:#fbbc04;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
                 <h3 id="globo-sub" style="font-size:16px;margin:3px 0;">Explorador Global de Misiones NASA</h3>
                 <p id="globo-desc" style="font-size:12px;color:#dadce0;">Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.</p>
             </div>
-            <button class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
+            <button id="btn-cerrar-globo" class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
         </div>
         <div id="contenedor-globo-3d"></div>
-        <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:12;font-size:12px;backdrop-filter:blur(6px);">
+        <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:30;font-size:12px;backdrop-filter:blur(6px);">
             <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">CÓDIGO DE COLORES • MISIONES</div>
             <div style="display:flex;flex-direction:column;gap:7px;">
                 <div style="display:flex;align-items:flex-start;gap:8px;">
@@ -983,7 +983,12 @@
                 </div>
             </div>
         </div>
-        <div class="lista-misiones-3d">
+                <div style="position:absolute;right:20px;bottom:84px;z-index:30;display:flex;flex-direction:column;gap:6px;">
+            <button onclick="zoomGlobo3D(-0.35)" title="Acercar" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:18px;font-weight:700;cursor:pointer;">+</button>
+            <button onclick="zoomGlobo3D(0.35)" title="Alejar" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:18px;font-weight:700;cursor:pointer;">−</button>
+            <button onclick="resetVistaGlobo3D()" title="Vista orbital completa" style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.28);background:rgba(15,23,42,0.88);color:#fff;font-size:14px;font-weight:700;cursor:pointer;">⟲</button>
+        </div>
+        <div class="lista-misiones-3d" style="z-index:30;">
             <button class="btn-paso-sv" onclick="aterrizarEnJezero()">📍 Perseverance (Cráter Jezero - Tu Mapa)</button>
             <button class="btn-paso-sv" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.')">Curiosity</button>
             <button class="btn-paso-sv" onclick="enfocarMision3D(-14.56, 175.47, 'Spirit (Cráter Gusev, 2009)', 'Atrapado permanentemente al cruzar una pendiente con arena blanda oculta.')">Spirit (Fallo Pendiente)</button>
@@ -1042,7 +1047,7 @@
             zoomControl: false,
             attributionControl: false,
             minZoom: 1,
-            maxZoom: 11,
+            maxZoom: 15,
             maxBounds: [[-90, -180], [90, 180]],
             maxBoundsViscosity: 1.0
         }).setView([18.448, 77.418], 10);
@@ -1056,29 +1061,29 @@
         // Capas WMTS oficiales de NASA Mars Trek ajustadas al índice exacto de matriz
         const capaVikingBase = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 7, maxZoom: 13, noWrap: true, attribution: "NASA Mars Trek" }
+            { maxNativeZoom: 7, maxZoom: 15, noWrap: true, attribution: "NASA Mars Trek" }
         );
 
         const capaCtx5m = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/CTX_beta01_uncontrolled_5m_Caltech/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 11, maxZoom: 11, opacity: 0.78, noWrap: true, attribution: "NASA / Caltech CTX 5m/px" }
+            { maxNativeZoom: 11, maxZoom: 15, opacity: 0.85, noWrap: true, attribution: "NASA / Caltech CTX 5m/px" }
         );
 
         const grupoSateliteHD = L.layerGroup([capaVikingBase, capaCtx5m]);
 
         const capaSoloViking = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 7, maxZoom: 13, noWrap: true, attribution: "NASA Viking Color" }
+            { maxNativeZoom: 7, maxZoom: 15, noWrap: true, attribution: "NASA Viking Color" }
         );
 
         const capaMola = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 6, maxZoom: 13, noWrap: true, attribution: "NASA MGS MOLA" }
+            { maxNativeZoom: 6, maxZoom: 15, noWrap: true, attribution: "NASA MGS MOLA" }
         );
 
         const capaMolaOverlay = L.tileLayer(
             "https://trek.nasa.gov/tiles/Mars/EQ/Mars_MGS_MOLA_ClrShade_merge_global_463m/1.0.0/default/default028mm/{z}/{y}/{x}.jpg",
-            { maxNativeZoom: 6, maxZoom: 13, opacity: 0.42, noWrap: true, attribution: "Overlay Topográfico MOLA" }
+            { maxNativeZoom: 6, maxZoom: 15, opacity: 0.42, noWrap: true, attribution: "Overlay Topográfico MOLA" }
         );
 
         let baseActiva = grupoSateliteHD;
@@ -1509,7 +1514,7 @@
                         <span class="ruta-via">${item.titulo}</span>
                         <span class="ruta-tiempo ${!v.viable ? 'rojo' : ''}">${r.tiempo_estimado_min} min</span>
                     </div>
-                    <div class="ruta-sub">${r.distancia_km} km • Pendiente máx: ${r.pendiente_maxima}° • Esfuerzo: ${r.kcal_totales} kcal</div>
+                    <div class="ruta-sub">${r.distancia_km} km • ${idiomaActual === "en" ? "Max slope" : "Pendiente máx"}: ${r.pendiente_maxima}° • ${idiomaActual === "en" ? "Effort" : "Esfuerzo"}: ${r.kcal_totales} kcal</div>
                 `;
                 cont.appendChild(div);
             });
@@ -1770,6 +1775,16 @@
             );
         }
 
+        let camaraGlobo3D = null;
+        function zoomGlobo3D(delta) {
+            if (!camaraGlobo3D) return;
+            camaraGlobo3D.position.z = Math.max(1.42, Math.min(4.8, camaraGlobo3D.position.z + delta));
+        }
+        function resetVistaGlobo3D() {
+            if (camaraGlobo3D) camaraGlobo3D.position.z = 2.65;
+            autoRotar3D = true;
+        }
+
         function abrirGlobo3D() {
             document.getElementById("modal-globo3d").style.display = "flex";
             if (globoIniciado) return;
@@ -1777,38 +1792,67 @@
 
             const cont = document.getElementById("contenedor-globo-3d");
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(45, cont.clientWidth / cont.clientHeight, 0.1, 1000);
-            camera.position.z = 2.9;
+            scene.background = new THREE.Color(0x03050c);
+            const camera = new THREE.PerspectiveCamera(42, cont.clientWidth / cont.clientHeight, 0.1, 1000);
+            camera.position.z = 2.65;
+            camaraGlobo3D = camera;
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
             renderer.setSize(cont.clientWidth, cont.clientHeight);
             cont.appendChild(renderer.domElement);
 
-            scene.add(new THREE.AmbientLight(0xffffff, 0.72));
-            const sol = new THREE.DirectionalLight(0xffeedd, 1.1);
-            sol.position.set(3, 2, 5);
+            // Campo estelar 3D de fondo
+            const starGeo = new THREE.BufferGeometry();
+            const starPos = new Float32Array(1400 * 3);
+            for (let i = 0; i < starPos.length; i++) starPos[i] = (Math.random() - 0.5) * 90;
+            starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+            scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xe2e8f0, size: 0.09, transparent: true, opacity: 0.78 })));
+
+            scene.add(new THREE.AmbientLight(0xffeedd, 0.78));
+            const sol = new THREE.DirectionalLight(0xfff1e0, 1.25);
+            sol.position.set(3.5, 2.0, 4.5);
             scene.add(sol);
 
-            // Pintar los dos hemisferios reales de Marte desde NASA Mars Trek (tiles z=0, x=0 y x=1)
+            // Textura 2048x1024 progresiva desde NASA Mars Trek (z=1 base + z=2 HD 8x4 tiles)
             const canvasTex = document.createElement("canvas");
-            canvasTex.width = 1024;
-            canvasTex.height = 512;
+            canvasTex.width = 2048;
+            canvasTex.height = 1024;
             const ctx = canvasTex.getContext("2d");
-            ctx.fillStyle = "#b34b22";
-            ctx.fillRect(0, 0, 1024, 512);
+            ctx.fillStyle = "#9e4b2b";
+            ctx.fillRect(0, 0, 2048, 1024);
             const texMarte = new THREE.CanvasTexture(canvasTex);
+            texMarte.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 
-            const mat = new THREE.MeshStandardMaterial({ map: texMarte, roughness: 0.88 });
-            esferaMarte = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), mat);
+            const mat = new THREE.MeshStandardMaterial({
+                map: texMarte,
+                bumpMap: texMarte,
+                bumpScale: 0.015,
+                roughness: 0.86,
+                metalness: 0.04
+            });
+            esferaMarte = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 96), mat);
             scene.add(esferaMarte);
+
+            // Halo atmosférico naranja estilo Mars Trek (Fresnel glow)
+            const atmoMat = new THREE.ShaderMaterial({
+                uniforms: { glowColor: { value: new THREE.Color(0xff8c52) } },
+                vertexShader: "varying vec3 vNormal; void main() { vNormal = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+                fragmentShader: "uniform vec3 glowColor; varying vec3 vNormal; void main() { float intensity = pow(0.66 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2); gl_FragColor = vec4(glowColor, 1.0) * intensity * 1.35; }",
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                depthWrite: false
+            });
+            scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.045, 64, 64), atmoMat));
 
             // Pines 3D reales sobre la superficie de Marte para cada misión NASA
             const misiones3D = [
-                { lat: 18.44, lon: 77.45, color: 0x22c55e, tam: 0.032 }, // Perseverance (Jezero)
-                { lat: -4.58, lon: 137.44, color: 0x3b82f6, tam: 0.026 }, // Curiosity
-                { lat: -14.56, lon: 175.47, color: 0xef4444, tam: 0.026 }, // Spirit
-                { lat: -1.94, lon: 354.47, color: 0xef4444, tam: 0.026 }, // Opportunity
-                { lat: 4.50, lon: 135.62, color: 0xfacc15, tam: 0.026 } // InSight
+                { lat: 18.44, lon: 77.45, color: 0x22c55e, tam: 0.028 },
+                { lat: -4.58, lon: 137.44, color: 0x3b82f6, tam: 0.023 },
+                { lat: -14.56, lon: 175.47, color: 0xef4444, tam: 0.023 },
+                { lat: -1.94, lon: 354.47, color: 0xef4444, tam: 0.023 },
+                { lat: 4.50, lon: 135.62, color: 0xfacc15, tam: 0.023 }
             ];
             misiones3D.forEach(m => {
                 const pin = new THREE.Mesh(
@@ -1819,31 +1863,60 @@
                 esferaMarte.add(pin);
             });
 
-            const baseTileUrl = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/0/0/";
-            [0, 1].forEach(xIndex => {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => {
-                    ctx.drawImage(img, xIndex * 512, 0, 512, 512);
-                    texMarte.needsUpdate = true;
-                };
-                img.src = baseTileUrl + xIndex + ".jpg";
-            });
+            const baseViking = "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0/default/default028mm/";
+            for (let y = 0; y < 2; y++) {
+                for (let x = 0; x < 4; x++) {
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => { ctx.drawImage(img, x * 512, y * 512, 512, 512); texMarte.needsUpdate = true; };
+                    img.src = `${baseViking}1/${y}/${x}.jpg`;
+                }
+            }
+            for (let y = 0; y < 4; y++) {
+                for (let x = 0; x < 8; x++) {
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => { ctx.drawImage(img, x * 256, y * 256, 256, 256); texMarte.needsUpdate = true; };
+                    img.src = `${baseViking}2/${y}/${x}.jpg`;
+                }
+            }
 
             let drag = false, px = 0, py = 0;
             renderer.domElement.addEventListener("mousedown", e => { drag = true; autoRotar3D = false; px = e.clientX; py = e.clientY; });
             window.addEventListener("mouseup", () => { drag = false; });
             window.addEventListener("mousemove", e => {
                 if (!drag) return;
-                esferaMarte.rotation.y += (e.clientX - px) * 0.006;
-                esferaMarte.rotation.x = Math.max(-1.2, Math.min(1.2, esferaMarte.rotation.x + (e.clientY - py) * 0.006));
+                esferaMarte.rotation.y += (e.clientX - px) * 0.0055;
+                esferaMarte.rotation.x = Math.max(-1.2, Math.min(1.2, esferaMarte.rotation.x + (e.clientY - py) * 0.0055));
                 px = e.clientX;
                 py = e.clientY;
+            });
+            renderer.domElement.addEventListener("wheel", e => {
+                e.preventDefault();
+                zoomGlobo3D(e.deltaY * 0.0012);
+            }, { passive: false });
+            renderer.domElement.addEventListener("touchstart", e => {
+                if (e.touches.length === 1) { drag = true; autoRotar3D = false; px = e.touches[0].clientX; py = e.touches[0].clientY; }
+            }, { passive: true });
+            renderer.domElement.addEventListener("touchend", () => { drag = false; });
+            renderer.domElement.addEventListener("touchmove", e => {
+                if (!drag || e.touches.length !== 1) return;
+                esferaMarte.rotation.y += (e.touches[0].clientX - px) * 0.006;
+                esferaMarte.rotation.x = Math.max(-1.2, Math.min(1.2, esferaMarte.rotation.x + (e.touches[0].clientY - py) * 0.006));
+                px = e.touches[0].clientX;
+                py = e.touches[0].clientY;
+            }, { passive: true });
+
+            window.addEventListener("resize", () => {
+                if (!cont.clientWidth || !cont.clientHeight) return;
+                camera.aspect = cont.clientWidth / cont.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(cont.clientWidth, cont.clientHeight);
             });
 
             (function animar3D() {
                 requestAnimationFrame(animar3D);
-                if (!drag && autoRotar3D) esferaMarte.rotation.y += 0.0014;
+                if (!drag && autoRotar3D) esferaMarte.rotation.y += 0.0011;
                 renderer.render(scene, camera);
             })();
         }
@@ -1954,23 +2027,35 @@
         }
 
         let idiomaActual = "es";
+        function setTextoId(id, txt) { const el = document.getElementById(id); if (el) el.innerText = txt; }
         function toggleIdioma() {
             idiomaActual = idiomaActual === "es" ? "en" : "es";
             const en = idiomaActual === "en";
-            document.getElementById("btn-lang").innerText = en ? "🌐 ES" : "🌐 EN";
-            document.getElementById("lbl-retorno").innerText = en ? "Round trip to Habitat" : "Ida y vuelta al Hábitat";
-            document.getElementById("lbl-clic-der").innerText = en ? "Right click on map = Free point" : "Clic derecho en el mapa = Ruta libre";
-            document.getElementById("lbl-ox-ini").innerText = en ? "Initial suit O₂:" : "Oxígeno inicial del traje:";
-            document.getElementById("lbl-ox-fin").innerText = en ? "Final reserve:" : "Reserva final:";
-            document.getElementById("btn-caminar").innerText = en ? "▶ Walk route" : "▶ Caminar ruta";
-            document.getElementById("btn-sv-abrir").innerText = en ? "🧑‍🚀 Street View 360°" : "🧑‍🚀 Street View 360°";
-            document.getElementById("btn-ctx").innerText = en ? "HD Satellite (5m/px)" : "Satélite HD (5m/px)";
-            document.getElementById("btn-color").innerText = en ? "Viking Color" : "Color Viking";
-            document.getElementById("btn-mola").innerText = en ? "MOLA Elevation" : "Altitud MOLA";
-            document.getElementById("btn-mola-overlay").innerText = en ? "MOLA Fusion 40%" : "Fusión MOLA 40%";
-            document.getElementById("btn-termica").innerText = en ? "Thermal Layer" : "Capa Térmica";
-            document.getElementById("btn-peligros").innerText = en ? "Hazard Zones" : "Zonas de Riesgo";
-            document.querySelector(".cuadro-globo-btn").innerText = en ? "3D Globe" : "Globo 3D";
+            document.documentElement.lang = idiomaActual;
+            setTextoId("btn-lang", en ? "🌐 ES" : "🌐 EN");
+            setTextoId("sec-plss", en ? "1. Life Support (xEMU Suit)" : "1. Soporte Vital (Traje xEMU)");
+            setTextoId("sec-equipo", en ? "2. Science Payload & Mobility" : "2. Equipo Científico y Movilidad");
+            setTextoId("lbl-limite-nasa", en ? "NASA emergency limit (30%)" : "Límite emergencia NASA (30%)");
+            setTextoId("lbl-perfil-mola", en ? "MOLA Elevation Profile" : "Perfil Topográfico MOLA");
+            setTextoId("lbl-retorno", en ? "Round trip to Habitat" : "Ida y vuelta al Hábitat");
+            setTextoId("lbl-clic-der", en ? "Right click on map = Free point" : "Clic derecho en el mapa = Ruta libre");
+            setTextoId("lbl-ox-ini", en ? "Initial suit O₂:" : "Oxígeno inicial del traje:");
+            setTextoId("lbl-ox-fin", en ? "Final reserve:" : "Reserva final:");
+            setTextoId("btn-caminar", en ? "▶ Walk route" : "▶ Caminar ruta");
+            setTextoId("btn-sv-abrir", en ? "🧑‍🚀 Street View 360°" : "🧑‍🚀 Street View 360°");
+            setTextoId("btn-ctx", en ? "HD Satellite (5m/px)" : "Satélite HD (5m/px)");
+            setTextoId("btn-color", en ? "Viking Color" : "Color Viking");
+            setTextoId("btn-mola", en ? "MOLA Elevation" : "Altitud MOLA");
+            setTextoId("btn-mola-overlay", en ? "MOLA Fusion 40%" : "Fusión MOLA 40%");
+            setTextoId("btn-termica", en ? "Thermal Layer" : "Capa Térmica");
+            setTextoId("btn-peligros", en ? "Hazard Zones" : "Zonas de Riesgo");
+            setTextoId("globo-kicker", en ? "3D ORBITAL VIEW • PLANET MARS" : "VISTA ORBITAL 3D • PLANETA MARTE");
+            setTextoId("globo-sub", en ? "NASA Global Mission Explorer" : "Explorador Global de Misiones NASA");
+            setTextoId("globo-desc", en ? "Drag the planet, scroll to zoom, or pick a NASA mission below." : "Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.");
+            setTextoId("btn-cerrar-globo", en ? "✕ Land in Jezero Crater" : "✕ Aterrizar en Cráter Jezero");
+            setTextoId("globo-ley-titulo", en ? "COLOR CODE • MISSIONS" : "CÓDIGO DE COLORES • MISIONES");
+            const globoBtn = document.querySelector(".cuadro-globo-btn");
+            if (globoBtn) globoBtn.innerText = en ? "3D Globe" : "Globo 3D";
             const cargaSel = document.getElementById("select-carga");
             if (cargaSel && cargaSel.options.length >= 3) {
                 cargaSel.options[0].text = en ? "🎒 Standard Suit (0 kg)" : "🎒 Traje estándar (0 kg)";
