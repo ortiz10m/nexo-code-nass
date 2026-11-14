@@ -533,27 +533,30 @@
         }
         .leaflet-bottom.leaflet-right .leaflet-control-scale {
             position: absolute !important;
-            bottom: 24px !important;
-            right: 58px !important;
+            bottom: 26px !important;
+            right: 62px !important;
             margin: 0 !important;
             z-index: 1001 !important;
             white-space: nowrap !important;
         }
         .leaflet-control-scale-line {
-            background: rgba(11, 15, 25, 0.88) !important;
+            background: rgba(11, 15, 25, 0.92) !important;
             color: #f8fafc !important;
             border: 1.5px solid #38bdf8 !important;
-            border-top: none !important;
-            border-radius: 0 0 6px 6px;
-            font-size: 10.5px !important;
+            border-radius: 6px !important;
+            font-size: 11px !important;
             font-weight: 700 !important;
-            padding: 2px 8px !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55) !important;
+            line-height: 1.25 !important;
+            padding: 4px 10px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
         }
         .leyenda-mapa {
             position: absolute;
             bottom: 20px;
             left: 498px;
+            max-width: calc(100vw - 690px);
+            overflow: hidden;
+            white-space: nowrap;
             background: rgba(11, 15, 25, 0.82);
             color: #e2e8f0;
             padding: 6px 14px;
@@ -962,9 +965,9 @@
         /* ===== Carrusel visual de lugares estilo NASA Eyes / Google Earth ===== */
         #carrusel-lugares {
             position: absolute;
-            bottom: 58px;
-            left: 410px;
-            right: 150px;
+            bottom: 62px;
+            left: 498px;
+            right: 158px;
             z-index: 995;
             display: flex;
             gap: 10px;
@@ -993,8 +996,8 @@
         body.carrusel-oculto #carrusel-lugares { display: none !important; }
         .btn-toggle-carrusel {
             position: absolute;
-            bottom: 56px;
-            left: 410px;
+            bottom: 60px;
+            left: 498px;
             z-index: 996;
             background: rgba(11, 15, 25, 0.88);
             color: #7dd3fc;
@@ -1136,9 +1139,10 @@
         .btn-chaos:hover { background: rgba(239, 68, 68, 0.28); }
         @media (max-width: 1320px), (max-height: 760px) {
             .gmaps-panel { width: 336px; max-height: calc(100vh - 24px); }
-            #carrusel-lugares { left: 360px; right: 145px; }
-            .btn-toggle-carrusel { left: 360px; }
-            .leyenda-mapa { left: 446px; font-size: 10.5px; gap: 8px; }
+            .cuadro-globo-btn { left: 360px; }
+            #carrusel-lugares { left: 452px; right: 156px; }
+            .btn-toggle-carrusel { left: 452px; }
+            .leyenda-mapa { left: 452px; max-width: calc(100vw - 640px); font-size: 10.5px; gap: 8px; }
             .lugar-card { flex: 0 0 148px; }
         }
 
