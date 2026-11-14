@@ -944,6 +944,27 @@
             <button class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
         </div>
         <div id="contenedor-globo-3d"></div>
+        <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:12;font-size:12px;backdrop-filter:blur(6px);">
+            <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">CÓDIGO DE COLORES • MISIONES</div>
+            <div style="display:flex;flex-direction:column;gap:7px;">
+                <div style="display:flex;align-items:flex-start;gap:8px;">
+                    <span style="width:11px;height:11px;border-radius:50%;background:#22c55e;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #22c55e;"></span>
+                    <div><strong>Verde — Zona Segura</strong><br><span style="color:#cbd5e1;font-size:11px;">Perseverance (Cráter Jezero). Sitio activo elegido para EVA humana.</span></div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px;">
+                    <span style="width:11px;height:11px;border-radius:50%;background:#3b82f6;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #3b82f6;"></span>
+                    <div><strong>Azul — Operación Nominal</strong><br><span style="color:#cbd5e1;font-size:11px;">Curiosity (Cráter Gale). Ciencia continua sin fallos críticos.</span></div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px;">
+                    <span style="width:11px;height:11px;border-radius:50%;background:#facc15;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #facc15;"></span>
+                    <div><strong>Amarillo — Precaución</strong><br><span style="color:#cbd5e1;font-size:11px;">InSight (Elysium). Degradación gradual de energía por polvo.</span></div>
+                </div>
+                <div style="display:flex;align-items:flex-start;gap:8px;">
+                    <span style="width:11px;height:11px;border-radius:50%;background:#ef4444;margin-top:3px;flex-shrink:0;box-shadow:0 0 8px #ef4444;"></span>
+                    <div><strong>Rojo — Fallo Crítico (NO-GO)</strong><br><span style="color:#cbd5e1;font-size:11px;">Spirit (&gt;20° pendiente) y Opportunity (0% energía). Base de nuestras alertas.</span></div>
+                </div>
+            </div>
+        </div>
         <div class="lista-misiones-3d">
             <button class="btn-paso-sv" onclick="aterrizarEnJezero()">📍 Perseverance (Cráter Jezero - Tu Mapa)</button>
             <button class="btn-paso-sv" onclick="enfocarMision3D(-4.58, 137.44, 'Curiosity (Cráter Gale, 2012)', 'Operativo ascendiendo el Monte Sharp sin fallos críticos.')">Curiosity</button>
