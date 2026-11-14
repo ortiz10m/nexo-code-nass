@@ -879,55 +879,54 @@
         .acciones-inferiores button { padding: 10px 12px; font-size: 13px; white-space: nowrap; }
 
     
-        /* ===== Lugares del mapa: iconos grandes y etiquetas legibles ===== */
+        /* ===== Pines Tácticos HUD estilo SpaceX / NASA ===== */
         .poi-wrap { background: none !important; border: none !important; }
-        .poi { position: relative; width: 0; height: 0; }
-        .poi-ico {
-            position: absolute; left: -17px; top: -17px;
-            width: 34px; height: 34px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 16px; line-height: 1;
-            background: rgba(11, 16, 28, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12), 0 4px 12px rgba(0, 0, 0, 0.6);
-            transition: transform 0.15s ease, border-color 0.15s ease;
-            cursor: pointer;
+        .tac-pin { position: relative; width: 0; height: 0; cursor: pointer; }
+        .tac-dot {
+            position: absolute; left: -5px; top: -5px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #00f0ff; border: 2px solid #09111e;
+            box-shadow: 0 0 10px #00f0ff, 0 0 0 3px rgba(0, 240, 255, 0.22);
+            transition: transform 0.15s ease;
         }
-        .poi:hover .poi-ico { transform: scale(1.18); }
-        .poi-base .poi-ico { left: -20px; top: -20px; width: 40px; height: 40px; font-size: 19px; border-color: #22c55e; box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.28), 0 4px 14px rgba(0, 0, 0, 0.6); }
-        .poi-riesgo .poi-ico { border-color: #ef4444; box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.25), 0 4px 12px rgba(0, 0, 0, 0.6); }
-        .en-ruta .poi-ico { border-color: #38bdf8; background: #0c3a5c; box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.3), 0 4px 14px rgba(0, 0, 0, 0.6); }
-        .poi-lbl {
-            position: absolute; white-space: nowrap;
-            background: rgba(11, 16, 28, 0.9); color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            padding: 3px 9px; border-radius: 8px;
-            font-size: 12px; font-weight: 600; letter-spacing: 0.1px;
+        .tac-pin:hover .tac-dot { transform: scale(1.35); }
+        .tac-pin.poi-base .tac-dot { background: #22c55e; box-shadow: 0 0 12px #22c55e, 0 0 0 4px rgba(34, 197, 94, 0.28); }
+        .tac-pin.poi-riesgo .tac-dot { background: #ff2a55; box-shadow: 0 0 12px #ff2a55, 0 0 0 4px rgba(255, 42, 85, 0.28); }
+        .tac-pin.en-ruta .tac-dot { background: #38bdf8; box-shadow: 0 0 14px #38bdf8, 0 0 0 5px rgba(56, 189, 248, 0.35); }
+        .tac-stem {
+            position: absolute; left: -0.5px; bottom: 5px;
+            width: 1px; height: 20px;
+            background: linear-gradient(180deg, rgba(0, 240, 255, 0.85), rgba(0, 240, 255, 0.15));
             pointer-events: none;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
         }
-        .en-ruta .poi-lbl { border-color: rgba(56, 189, 248, 0.6); color: #e0f2fe; }
-        .poi-riesgo .poi-lbl { color: #fecaca; }
-        .lbl-right { left: 25px; top: -12px; }
-        .lbl-left { right: 25px; top: -12px; }
-        .lbl-top { bottom: 25px; left: 0; transform: translateX(-50%); }
-        .lbl-bottom { top: 25px; left: 0; transform: translateX(-50%); }
+        .tac-pin.poi-base .tac-stem { background: linear-gradient(180deg, #22c55e, rgba(34,197,94,0.15)); }
+        .tac-pin.poi-riesgo .tac-stem { background: linear-gradient(180deg, #ff2a55, rgba(255,42,85,0.15)); }
+        .tac-card {
+            position: absolute; left: 0; bottom: 25px; transform: translateX(-50%);
+            white-space: nowrap;
+            background: rgba(9, 14, 26, 0.88);
+            border: 1px solid rgba(0, 240, 255, 0.38);
+            clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+            padding: 3px 9px; color: #e2e8f0;
+            font-size: 10.5px; font-weight: 600; letter-spacing: 0.2px;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+        }
+        .tac-pin.poi-base .tac-card { border-color: rgba(34, 197, 94, 0.65); color: #bbf7d0; }
+        .tac-pin.poi-riesgo .tac-card { border-color: rgba(255, 42, 85, 0.65); color: #fecdd3; }
+        .tac-card small { color: #94a3b8; font-weight: 500; margin-left: 4px; font-size: 9.5px; }
+        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(:hover) .tac-card,
+        #mapa.zoom-lejos .tac-pin:not(.en-ruta):not(:hover) .tac-stem { display: none; }
         .pin-ab {
-            width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+            width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: 800; color: #fff;
-            border: 3px solid #fff; cursor: grab;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
-            animation: pulsoAB 1.8s ease-in-out infinite;
+            font-size: 12px; font-weight: 800; color: #fff;
+            border: 2px solid #fff; cursor: grab;
+            box-shadow: 0 0 14px rgba(0, 240, 255, 0.55);
         }
         .pin-a { background: #16a34a; }
-        .pin-b { background: #2563eb; }
-        @keyframes pulsoAB {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45), 0 4px 14px rgba(0, 0, 0, 0.6); }
-            50% { box-shadow: 0 0 0 9px rgba(255, 255, 255, 0), 0 4px 14px rgba(0, 0, 0, 0.6); }
-        }
+        .pin-b { background: #0284c7; }
 
-    
         /* ===== Carrusel visual de lugares estilo NASA Eyes / Google Earth ===== */
         #carrusel-lugares {
             position: absolute;
@@ -1129,8 +1128,8 @@
     </aside>
 
     <div class="chips-superiores">
-        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:linear-gradient(135deg,#ea580c,#c2410c);color:#fff;font-weight:700;">🪐 Globo 3D</button>
-        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;font-weight:700;">🏔️ Terreno 3D</button>
+        <button id="btn-globo-top" class="chip-gmaps" onclick="abrirGlobo3D()" style="background:rgba(255,255,255,0.06);color:#fdba74;border:1px solid rgba(249,115,22,0.45);font-weight:600;">🪐 Globo 3D</button>
+        <button id="btn-terreno3d" class="chip-gmaps" onclick="abrirTerreno3DJezero()" style="background:rgba(56,189,248,0.14);color:#7dd3fc;border:1px solid rgba(56,189,248,0.5);font-weight:600;">🏔️ Terreno 3D</button>
         <div style="position:relative;">
             <button id="btn-capas-menu" class="chip-gmaps" onclick="const m=document.getElementById('menu-capas');m.style.display=m.style.display==='flex'?'none':'flex';">🛰️ Capas ▾</button>
             <div id="menu-capas" style="display:none;position:absolute;top:42px;right:0;flex-direction:column;gap:4px;background:rgba(11,16,28,0.96);border:1px solid rgba(255,255,255,0.16);border-radius:12px;padding:6px;min-width:175px;box-shadow:0 8px 24px rgba(0,0,0,0.6);z-index:1100;">
@@ -1142,7 +1141,7 @@
                 <button id="btn-peligros" class="chip-gmaps activo" style="text-align:left;" onclick="togglePeligros()">Zonas de Riesgo</button>
             </div>
         </div>
-        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-weight:700;">🎬 Tour Demo</button>
+        <button id="btn-tour" class="chip-gmaps" onclick="iniciarTourJurados()" style="background:rgba(255,255,255,0.06);color:#e2e8f0;border:1px solid rgba(255,255,255,0.22);font-weight:600;">🎬 Tour Demo</button>
         <button id="btn-solar" class="chip-gmaps chip-solar" onclick="toggleSimularTormenta()" title="Datos en vivo NASA DONKI Space Weather (Clic para simular Tormenta Solar)">☀️ DONKI: Cargando...</button>
     </div>
 
@@ -1636,8 +1635,6 @@
                     }).bindTooltip(p.sin_comunicacion ? "Sombra de Radio UHF" : `Pendiente crítica ${p.pendiente}°`).addTo(capaPeligros);
                 }
 
-                const ICONOS_POI = { 1: "🏠", 2: "🏜️", 3: "⛰️", 4: "⚠️", 5: "📦", 6: "⚠️", 7: "🪨", 8: "🌊", 9: "🌋", 10: "🏜️", 11: "💎", 12: "⚠️" };
-                const DIR_LBL = { 1: "right", 2: "bottom", 3: "bottom", 4: "left", 5: "top", 6: "top", 7: "top", 8: "right", 9: "right", 10: "right", 11: "left", 12: "top" };
                 const tipoPoi = p.id === 1 ? "poi-base" : (peligro ? "poi-riesgo" : "poi-ciencia");
                 const nombreCorto = p.nombre.split("(")[0].trim();
                 const m = L.marker([p.lat, p.lng], {
@@ -1646,15 +1643,15 @@
                     icon: L.divIcon({
                         className: "poi-wrap",
                         iconSize: [0, 0],
-                        html: `<div class="poi ${tipoPoi}"><div class="poi-ico">${ICONOS_POI[p.id] || "📍"}</div><div class="poi-lbl lbl-${DIR_LBL[p.id] || "right"}">${nombreCorto}</div></div>`
+                        html: `<div class="tac-pin ${tipoPoi}"><div class="tac-stem"></div><div class="tac-card">${nombreCorto}<small>${p.pendiente}°</small></div><div class="tac-dot"></div></div>`
                     })
                 }).addTo(capaNodos);
                 window._poiMarkers = window._poiMarkers || {};
                 window._poiMarkers[p.id] = m;
 
                 m.bindTooltip(
-                    `<strong>${nombreCorto}</strong><br>Pendiente ${p.pendiente}° • ${p.sin_comunicacion ? "📵 Sin radio UHF" : "📡 Con radio"}<br><span style="opacity:.8">Clic = ir aquí</span>`,
-                    { direction: "top", offset: [0, -22], className: "etiqueta-lugar", opacity: 1 }
+                    `<strong>${nombreCorto}</strong><br>Elev: ${p.elevacion_m ?? -2500} m • Pend: ${p.pendiente}° • ${p.sin_comunicacion ? "Sin UHF" : "UHF OK"}`,
+                    { direction: "bottom", offset: [0, 10], className: "etiqueta-lugar", opacity: 1 }
                 );
 
                 m.on("click", () => {
@@ -1842,17 +1839,31 @@
                 const coords = item.datos.ruta.ruta_calculada.map(p => [p.lat, p.lng]);
                 const color = !activa ? "#9aa0a6" : (item.datos.viab.viable ? "#1a73e8" : "#d93025");
 
-                const polyBorde = L.polyline(coords, {
-                    color: "#0f172a",
-                    weight: activa ? 9 : 7,
-                    opacity: activa ? 0.65 : 0.25
+                // Suavizar la trayectoria con puntos intermedios orgánicos bordeando dunas/relieve
+                const coordsCurva = [];
+                for (let ci = 0; ci < coords.length - 1; ci++) {
+                    const p0 = coords[ci], p1 = coords[ci + 1];
+                    const dLat = p1[0] - p0[0], dLng = p1[1] - p0[1];
+                    const signo = (ci % 2 === 0 ? 1 : -1) * 0.14;
+                    for (let step = 0; step < 6; step++) {
+                        const t = step / 6;
+                        const arco = Math.sin(t * Math.PI) * signo;
+                        coordsCurva.push([p0[0] + dLat * t - dLng * arco, p0[1] + dLng * t + dLat * arco]);
+                    }
+                }
+                if (coords.length) coordsCurva.push(coords[coords.length - 1]);
+
+                const colorLaser = !activa ? "#64748b" : (item.datos.viab.viable ? "#00f0ff" : "#ff2a55");
+                const polyBorde = L.polyline(coordsCurva, {
+                    color: colorLaser,
+                    weight: activa ? 8 : 5,
+                    opacity: activa ? 0.24 : 0.14
                 }).addTo(capaRutas);
 
-                const poly = L.polyline(coords, {
-                    color: activa ? (item.datos.viab.viable ? "#38bdf8" : "#ef4444") : color,
-                    weight: activa ? 5 : 3.5,
-                    opacity: activa ? 0.95 : 0.55,
-                    className: activa ? "ruta-animada-svg" : ""
+                const poly = L.polyline(coordsCurva, {
+                    color: colorLaser,
+                    weight: activa ? 2.4 : 1.8,
+                    opacity: activa ? 0.98 : 0.55
                 }).addTo(capaRutas);
 
                 poly.on("click", () => seleccionarAlternativa(item.k));
