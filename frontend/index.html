@@ -1009,7 +1009,7 @@
         .lugar-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
         .lugar-card.activo { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
         .lugar-card.peligro.activo { border-color: #ef4444; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.35), 0 8px 22px rgba(0, 0, 0, 0.6); }
-        .lugar-card-img { width: 100%; height: 64px; object-fit: cover; object-position: center 68%; display: block; transform: scale(1.42); }
+        .lugar-card-img { width: 100%; height: 64px; object-fit: cover; object-position: center 42%; display: block; transform: scale(1.26); }
         body.carrusel-oculto #carrusel-lugares { display: none !important; }
         .btn-toggle-carrusel {
             position: absolute;
@@ -1376,7 +1376,7 @@
                 <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
                     <button id="btn-lang" onclick="toggleIdioma()" style="display:none;border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 ES</button>
                     <span id="badge-api" class="chip-backend" title="Active xEMU Deterministic Physics Engine + NASA APIs" style="white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:10px;max-width:125px;overflow:hidden;text-overflow:ellipsis;">⚡ xEMU Engine</span>
-                    <button id="btn-toggle-panel" onclick="togglePanel()" title="Ocultar tarjeta" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
+                    <button id="btn-toggle-panel" onclick="togglePanel()" title="Collapse panel" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
                 </div>
             </div>
 
@@ -1390,7 +1390,7 @@
                     <select id="select-inicio" onchange="recalcularDesdeUI()"></select>
                     <select id="select-destino" onchange="recalcularDesdeUI()"></select>
                 </div>
-                <button class="btn-invertir" onclick="invertirPuntos()" title="Invertir origen y destino">⇅</button>
+                <button class="btn-invertir" onclick="invertirPuntos()" title="Swap origin and destination">⇅</button>
             </div>
 
             <div class="barra-opciones">
@@ -1412,8 +1412,8 @@
                 <span id="hero-viab-txt">🟢 SAFE EVA • Good air margin</span>
                 <span id="hero-viab-pct" style="font-size:13px;font-weight:700;">--% O₂</span>
             </div>
-            <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Abrir Vista 360° del destino" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
-                <img id="destino-foto-img" src="./panos/delta_pia25172.jpg" alt="Vista NASA Marte" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
+            <div id="destino-foto-card" onclick="abrirStreetViewActual()" title="Open 360° Helmet Visor at destination" style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.16);height:112px;cursor:pointer;background:#0f172a;flex-shrink:0;">
+                <img id="destino-foto-img" src="./panos/delta_pia25172.jpg" alt="NASA Mars View" onerror="this.onerror=null;this.src='./panos/delta_pia25172.jpg';" style="width:100%;height:100%;object-fit:cover;transform:scale(1.22);display:block;transition:transform 0.35s ease;">
                 <div style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,16,28,0.1) 20%, rgba(11,16,28,0.88) 100%);display:flex;align-items:flex-end;justify-content:space-between;padding:8px 10px;">
                     <div>
                         <div id="destino-foto-tag" style="font-size:10px;font-weight:700;color:#38bdf8;letter-spacing:0.5px;">NASA PERSEVERANCE • JEZERO</div>
@@ -1432,7 +1432,7 @@
                 <strong>🧑‍🚀 xEMU Suit:</strong> Standard pressurized NASA suit (+12 kg sample kit). Enforces max 20° slope &amp; 30% O₂ reserve.
             </div>
             <div id="chip-paradas" style="display:none;justify-content:space-between;align-items:center;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.35);border-radius:8px;padding:4px 8px;font-size:11px;color:#7dd3fc;">
-                <span id="lbl-paradas-cnt">0 paradas extra</span>
+                <span id="lbl-paradas-cnt">0 extra stops</span>
                 <button id="btn-limpiar-paradas" onclick="limpiarParadas()" style="background:none;border:none;color:#f87171;font-weight:700;cursor:pointer;font-size:11px;">✕ Clear</button>
             </div>
             <div class="panel-oxigeno">
@@ -1444,7 +1444,7 @@
                        oninput="document.getElementById('lbl-oxigeno').innerText=this.value+'%'; actualizarAnilloO2(this.value)" onchange="recalcularDesdeUI()">
                 <div class="barra-plss">
                     <div id="barra-restante" class="relleno-plss" style="width:70%;background:#188038;"></div>
-                    <div class="linea-30" title="30% reserva mínima obligatoria NASA"></div>
+                    <div class="linea-30" title="30% mandatory NASA emergency O₂ reserve"></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;font-size:10.5px;color:#5f6368;margin-top:4px;">
                     <span>0%</span><span id="lbl-limite-nasa">NASA emergency limit (30%)</span><span>100%</span>
@@ -1472,13 +1472,13 @@
                 <div class="metricas-grid">
                     <div class="metrica-pill"><small>Retorno Científico</small><strong id="met-ciencia">--/100</strong></div>
                     <div class="metrica-pill"><small>Radiación EVA</small><strong id="met-rad">-- mSv</strong></div>
-                    <div class="metrica-pill"><small>Consumo O₂</small><strong id="met-o2">-- L</strong></div>
+                    <div class="metrica-pill"><small>O₂ Consumed</small><strong id="met-o2">-- L</strong></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:10.5px;margin-bottom:4px;">
-                    <span id="lbl-perfil-mola">Perfil Topográfico MOLA</span>
+                    <span id="lbl-perfil-mola">MOLA Topographic Profile</span>
                     <div style="display:flex;gap:6px;align-items:center;">
-                        <span id="lbl-desnivel">Elevación (m)</span>
-                        <button onclick="exportarPerfilCSV()" title="Exportar perfil MOLA a CSV (estilo Mars Trek)" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);border-radius:6px;padding:1px 6px;font-size:10px;font-weight:700;cursor:pointer;">⬇ CSV</button>
+                        <span id="lbl-desnivel">Elevation (m)</span>
+                        <button onclick="exportarPerfilCSV()" title="Export MOLA elevation profile to CSV (Mars Trek style)" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);border-radius:6px;padding:1px 6px;font-size:10px;font-weight:700;cursor:pointer;">⬇ CSV</button>
                     </div>
                 </div>
                 <svg id="svg-perfil" viewBox="0 0 320 56" style="width:100%;height:56px;background:#090e1a;border-radius:6px;border:1px solid rgba(255,255,255,0.12);"></svg>
@@ -1486,13 +1486,13 @@
             </div>
 
             <div id="caja-alerta" class="alerta-box alerta-ok">
-                <strong id="titulo-alerta">Evaluando terreno...</strong>
+                <strong id="titulo-alerta">Evaluating terrain...</strong>
                 <ul id="lista-razones"></ul>
             </div>
 
             <div class="historia-card">
-                <strong id="hist-titulo">Comparación histórica NASA</strong>
-                <span id="hist-texto">Cargando archivo de misiones marcianas...</span>
+                <strong id="hist-titulo">NASA Historical Comparison</strong>
+                <span id="hist-texto">Loading Martian mission archive...</span>
             </div>
                 </div>
             </details>
@@ -1628,21 +1628,21 @@
 
     <div class="leyenda-mapa">
         <span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span>
-        <span>🟢 Hábitat</span>
-        <span>⚪ Seguro</span>
-        <span>🔴 Peligro (&gt;20° / Sin UHF)</span>
-        <span>🖱️ Clic derecho: Ruta libre</span>
+        <span>🟢 Habitat</span>
+        <span>⚪ Safe</span>
+        <span>🔴 Hazard (&gt;20° / No UHF)</span>
+        <span>🖱️ Right click: Free route</span>
     </div>
 
-    <button id="btn-toggle-carrusel" class="btn-toggle-carrusel" onclick="toggleCarruselLugares()">▾ Ocultar sitios</button>
+    <button id="btn-toggle-carrusel" class="btn-toggle-carrusel" onclick="toggleCarruselLugares()">▾ Hide sites</button>
         <div id="inspector-sitio">
         <div class="insp-foto-wrap">
-            <img id="insp-img" src="" alt="Vista del sitio" />
-            <span id="insp-badge" class="insp-estado-badge">🟢 APTO EVA</span>
+            <img id="insp-img" src="./panos/delta_pia25172.jpg" alt="Site view" onerror="this.onerror=null;this.src='./panos/delta_pia25172.jpg';" />
+            <span id="insp-badge" class="insp-estado-badge">🟢 EVA READY</span>
             <button class="insp-cerrar" onclick="cerrarInspectorSitio()">✕</button>
         </div>
         <div class="insp-body">
-            <div id="insp-titulo" style="font-size:14px;font-weight:800;color:#ffffff;">Sitio Jezero</div>
+            <div id="insp-titulo" style="font-size:14px;font-weight:800;color:#ffffff;">Jezero Site</div>
             <div id="insp-coords" style="font-size:11px;color:#7dd3fc;font-family:monospace;margin-top:2px;">18.45°N, 77.42°E • -2,550 m</div>
             <div id="insp-chips" class="insp-chips"></div>
             <p id="insp-mision" style="font-size:11.5px;color:#cbd5e1;line-height:1.4;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;"></p>
@@ -2306,12 +2306,12 @@
                 const act = pt.id === destIdActivo ? "activo" : "";
                 return `
                     <div class="lugar-card ${pel ? "peligro" : ""} ${act}" onclick="seleccionarLugarCarrusel(${pt.id})">
-                        <div style="overflow:hidden;height:64px;"><img class="lugar-card-img" src="${foto}" alt="${nom}" loading="lazy"></div>
+                        <div style="overflow:hidden;height:64px;"><img class="lugar-card-img" src="${foto}" alt="${nom}" loading="lazy" onerror="this.onerror=null;this.src='./panos/delta_pia25172.jpg';"></div>
                         <div class="lugar-card-body">
                             <div class="lugar-card-nom">${nom}</div>
                             <div class="lugar-card-meta" style="color:${pel ? "#fca5a5" : "#86efac"};">
                                 <span>${estado}</span>
-                                <button onclick="event.stopPropagation();agregarParadaIntermedia(${pt.id})" title="Agregar como parada intermedia" style="background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.35);border-radius:5px;padding:1px 5px;font-size:9.5px;font-weight:700;cursor:pointer;">${en ? "+ Stop" : "+ Parada"}</button>
+                                <button onclick="event.stopPropagation();agregarParadaIntermedia(${pt.id})" title="Add as intermediate waypoint" style="background:rgba(56,189,248,0.18);color:#7dd3fc;border:1px solid rgba(56,189,248,0.35);border-radius:5px;padding:1px 5px;font-size:9.5px;font-weight:700;cursor:pointer;">${en ? "+ Stop" : "+ Parada"}</button>
                             </div>
                         </div>
                     </div>
@@ -2964,12 +2964,12 @@
 
         // Panoramas 100% Perseverance en Cráter Jezero (alojados localmente: cero InSight, cero lag offline)
         const GALERIA_NASA_MARS = [
-            { url: "./panos/threeforks_pia25734.jpg", titulo: "Depósito Three Forks 360° (PIA25734)", cam: "Mastcam-Z" },
+            { url: "./panos/delta_pia25172.jpg", titulo: "Three Forks & Delta Front 360° (PIA25172)", cam: "Mastcam-Z" },
             { url: "./panos/vanzyl_pia24836.jpg", titulo: "Van Zyl Overlook / Séítah 360° (PIA24836)", cam: "Mastcam-Z" },
-            { url: "./panos/delta_pia25172.jpg", titulo: "Frente del Delta Jezero (PIA25172)", cam: "Mastcam-Z" },
-            { url: "./panos/belva_pia25889.jpg", titulo: "Cráter Belva 360° Completo (PIA25889)", cam: "Mastcam-Z" },
-            { url: "./panos/tubes_pia25663.jpg", titulo: "Depósito Three Forks • Tubos de Titanio (PIA25663)", cam: "Mastcam-Z" },
-            { url: "./panos/rim_pia26373.jpg", titulo: "Borde del Cráter Jezero / Neretva (PIA26373)", cam: "Navcam" }
+            { url: "./panos/delta_pia25172.jpg", titulo: "Jezero Delta Scarp (PIA25172)", cam: "Mastcam-Z" },
+            { url: "./panos/belva_pia25889.jpg", titulo: "Belva Crater 360° Panorama (PIA25889)", cam: "Mastcam-Z" },
+            { url: "./panos/tubes_pia25663.jpg", titulo: "Three Forks Depot • Titanium Sample Tube (PIA25663)", cam: "Mastcam-Z" },
+            { url: "./panos/spirit_slope_clean.jpg", titulo: "Jezero Crater Rim & Neretva Slope (PIA26373)", cam: "Navcam" }
         ];
         const PANOS_HORIZONTE_360 = [
             { url: "./panos/delta_pia25172.jpg", titulo: "Jezero Delta Front 360° (PIA25172)", cam: "Mastcam-Z" },
@@ -3184,7 +3184,7 @@
             }
 
             const listaRaw = document.getElementById("sv-raw-lista");
-            listaRaw.innerHTML = "Consultando Perseverance Raw API...";
+            listaRaw.innerHTML = enSV ? "Querying Perseverance Raw API..." : "Consultando Perseverance Raw API...";
 
             try {
                 if (!modoLocal) {
@@ -3659,6 +3659,13 @@
                     if (pulsoScale > 22) pulsoScale = 0;
                 }
             };
+
+            window.addEventListener("resize", () => {
+                if (!cont.clientWidth || !cont.clientHeight) return;
+                t3dCamera.aspect = cont.clientWidth / cont.clientHeight;
+                t3dCamera.updateProjectionMatrix();
+                t3dRenderer.setSize(cont.clientWidth, cont.clientHeight);
+            });
 
             window._t3dLoopActivo = true;
             window._animT3DFn = function animT3D() {
@@ -4477,7 +4484,7 @@
                 <div class="eq-card">
                     <strong>4. Dosis de Radiación Acumulada (NASA DONKI)</strong>
                     <div class="eq-formula">Dosis = (${tMin} min / 60) · ${radH} mSv/h = ${r.radiacion_msv} mSv</div>
-                    <div>Fuente activa: <strong>${climaEspacial?.fuente || "MSL-RAD / DONKI"}</strong>.</div>
+                    <div>${en ? "Active telemetry source:" : "Fuente activa:"} <strong>${climaEspacial?.fuente || "MSL-RAD / DONKI"}</strong>.</div>
                 </div>
             `;
             document.getElementById("modal-cajablanca").style.display = "flex";
