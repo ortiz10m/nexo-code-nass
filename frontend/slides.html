@@ -42,10 +42,10 @@
 
         /* Top bar */
         .hud-top {
-            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            position: fixed; top: 0; left: 0; right: 0; height: 52px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 32px;
-            background: rgba(5, 8, 15, 0.95);
+            padding: 0 28px;
+            background: rgba(5, 8, 15, 0.96);
             backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(56, 189, 248, 0.35);
             z-index: 100;
@@ -117,8 +117,9 @@
         .deck { position: relative; width: 100vw; height: 100vh; z-index: 2; }
         .slide {
             position: absolute; inset: 0;
-            padding: 70px 44px 62px;
-            display: flex; flex-direction: column; justify-content: space-between; gap: 14px;
+            height: 100vh; max-height: 100vh; overflow: hidden;
+            padding: 58px 36px 52px;
+            display: flex; flex-direction: column; justify-content: space-between; gap: 10px;
             opacity: 0; pointer-events: none;
             transform: translateY(10px);
             transition: opacity 0.3s ease, transform 0.3s ease;
@@ -130,18 +131,18 @@
         .slide-meta {
             display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid var(--hairline);
-            padding-bottom: 8px; margin-bottom: 10px;
+            padding-bottom: 5px; margin-bottom: 6px;
         }
         .slide-kicker {
-            font-family: var(--mono); font-size: 13px; font-weight: 800;
-            letter-spacing: 1.8px; text-transform: uppercase; color: var(--cyan);
+            font-family: var(--mono); font-size: 12px; font-weight: 800;
+            letter-spacing: 1.6px; text-transform: uppercase; color: var(--cyan);
         }
         .slide-coords {
-            font-family: var(--mono); font-size: 12px; color: #cbd5e1; letter-spacing: 1px;
+            font-family: var(--mono); font-size: 11.5px; color: #cbd5e1; letter-spacing: 1px;
         }
         .slide-headline {
-            font-size: clamp(30px, 3.3vw, 48px);
-            font-weight: 900; letter-spacing: -0.03em; line-height: 1.08;
+            font-size: clamp(26px, 2.8vw, 40px);
+            font-weight: 900; letter-spacing: -0.03em; line-height: 1.06;
             color: #ffffff;
         }
         .slide-headline .accent { color: var(--cyan); }
@@ -150,7 +151,7 @@
 
         /* ===== SLIDE 1: FULL-BLEED KEYNOTE POSTER WITH PHOTO GALLERY STRIP ===== */
         .s1-poster {
-            position: relative; flex: 1;
+            position: relative; flex: 1; min-height: 0;
             border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 14px; overflow: hidden;
             display: flex; flex-direction: column; justify-content: space-between;
@@ -166,70 +167,70 @@
         }
         .s1-main {
             position: relative; z-index: 2;
-            padding: 36px 46px 16px;
-            display: grid; grid-template-columns: 1.35fr 0.95fr; gap: 36px; align-items: center;
-            flex: 1;
+            padding: 18px 34px 10px;
+            display: grid; grid-template-columns: 1.38fr 0.92fr; gap: 28px; align-items: center;
+            flex: 1; min-height: 0;
         }
         .s1-tag {
             display: inline-flex; align-items: center; gap: 8px;
-            font-family: var(--mono); font-size: 13px; font-weight: 800;
-            letter-spacing: 1.6px; text-transform: uppercase;
+            font-family: var(--mono); font-size: 11.5px; font-weight: 800;
+            letter-spacing: 1.4px; text-transform: uppercase;
             color: #7dd3fc; background: rgba(56, 189, 248, 0.16);
             border: 1px solid rgba(56, 189, 248, 0.45);
-            padding: 6px 14px; border-radius: 6px; margin-bottom: 14px;
+            padding: 4px 12px; border-radius: 6px; margin-bottom: 8px;
         }
         .s1-title {
-            font-size: clamp(54px, 6.8vw, 96px);
+            font-size: clamp(42px, 5vw, 72px);
             font-weight: 950; letter-spacing: -0.04em; line-height: 0.94;
-            color: #fff; margin-bottom: 12px;
+            color: #fff; margin-bottom: 6px;
             text-shadow: 0 8px 30px rgba(0,0,0,0.6);
         }
         .s1-subtitle {
-            font-size: clamp(22px, 2.3vw, 32px);
-            font-weight: 700; color: #7dd3fc; margin-bottom: 16px; line-height: 1.25;
+            font-size: clamp(18px, 1.8vw, 24px);
+            font-weight: 700; color: #7dd3fc; margin-bottom: 8px; line-height: 1.2;
         }
         .s1-lead {
-            font-size: clamp(16px, 1.45vw, 20px); line-height: 1.55; color: #f1f5f9;
+            font-size: clamp(14px, 1.22vw, 17px); line-height: 1.42; color: #f1f5f9;
         }
         .s1-right-cards {
-            display: flex; flex-direction: column; gap: 14px;
+            display: flex; flex-direction: column; gap: 10px;
         }
         .s1-mini-photo {
-            display: grid; grid-template-columns: 120px 1fr;
-            background: rgba(8, 13, 26, 0.88);
+            display: grid; grid-template-columns: 115px 1fr;
+            background: rgba(8, 13, 26, 0.90);
             border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 10px; overflow: hidden;
             backdrop-filter: blur(10px);
         }
         .s1-mini-photo img {
-            width: 100%; height: 88px; object-fit: cover;
+            width: 100%; height: 76px; object-fit: cover;
             border-right: 1px solid var(--hairline);
         }
         .s1-mini-photo div {
-            padding: 10px 14px; display: flex; flex-direction: column; justify-content: center;
+            padding: 8px 12px; display: flex; flex-direction: column; justify-content: center;
         }
         .s1-ticker {
-            position: relative; z-index: 2;
+            position: relative; z-index: 2; flex-shrink: 0;
             display: grid; grid-template-columns: repeat(4, 1fr);
             border-top: 1px solid rgba(148, 163, 184, 0.28);
-            background: rgba(5, 8, 15, 0.92);
+            background: rgba(5, 8, 15, 0.95);
             backdrop-filter: blur(12px);
         }
         .s1-stat {
-            padding: 18px 28px;
+            padding: 10px 24px;
             border-right: 1px solid rgba(148, 163, 184, 0.2);
         }
         .s1-stat:last-child { border-right: none; }
         .s1-stat-val {
-            font-family: var(--mono); font-size: clamp(24px, 2.4vw, 34px); font-weight: 900; color: #fff;
+            font-family: var(--mono); font-size: clamp(20px, 2vw, 28px); font-weight: 900; color: #fff;
         }
         .s1-stat-lbl {
-            font-size: 13px; color: #cbd5e1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; margin-top: 4px;
+            font-size: 11.5px; color: #cbd5e1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin-top: 2px;
         }
 
         /* ===== SLIDE 2: EDITORIAL SPLIT + PHOTO FORENSIC TIMELINE ===== */
         .s2-layout {
-            flex: 1; display: grid; grid-template-columns: 1fr 1.35fr; gap: 32px; align-items: stretch;
+            flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1.35fr; gap: 26px; align-items: stretch;
         }
         .s2-left {
             display: flex; flex-direction: column; justify-content: space-between;
@@ -287,13 +288,13 @@
         .s3-txt { font-size: 14px; color: #cbd5e1; line-height: 1.4; }
 
         .s3-math-grid {
-            flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+            flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
         }
         .s3-eq-card {
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 18px 24px; border: 1px solid var(--hairline);
+            padding: 14px 20px; border: 1px solid var(--hairline);
             border-left: 5px solid var(--cyan); border-radius: 10px;
-            background: rgba(9, 14, 26, 0.92);
+            background: rgba(9, 14, 26, 0.92); min-height: 0;
         }
         .s3-eq-top {
             display: flex; justify-content: space-between; align-items: center;
@@ -380,11 +381,11 @@
         }
         .bar-fill { height: 100%; border-radius: 99px; }
         .s5-bottom {
-            flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+            flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
         }
         .s5-panel {
-            border: 1px solid var(--hairline); border-radius: 12px; padding: 22px 26px;
-            background: rgba(10, 15, 28, 0.9); display: flex; flex-direction: column; justify-content: space-between;
+            border: 1px solid var(--hairline); border-radius: 12px; padding: 16px 22px;
+            background: rgba(10, 15, 28, 0.9); display: flex; flex-direction: column; justify-content: space-between; min-height: 0;
         }
         .s5-mini-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px;
@@ -420,18 +421,18 @@
 
         /* ===== SLIDE 7: COMMAND CENTER FINALE ===== */
         .s7-grid {
-            flex: 1; display: grid; grid-template-columns: 1.3fr 0.95fr; gap: 32px; align-items: stretch;
+            flex: 1; min-height: 0; display: grid; grid-template-columns: 1.3fr 0.95fr; gap: 24px; align-items: stretch;
         }
         .s7-pillars {
-            display: grid; grid-template-rows: repeat(3, 1fr); gap: 14px;
+            display: grid; grid-template-rows: repeat(3, 1fr); gap: 10px; min-height: 0;
         }
         .s7-pillar {
-            display: grid; grid-template-columns: 60px 1fr; gap: 18px; align-items: center;
-            padding: 18px 24px; border: 1px solid var(--hairline); border-radius: 12px;
-            background: rgba(10, 15, 28, 0.88);
+            display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: center;
+            padding: 14px 20px; border: 1px solid var(--hairline); border-radius: 12px;
+            background: rgba(10, 15, 28, 0.88); min-height: 0;
         }
         .s7-p-num {
-            font-family: var(--mono); font-size: 32px; font-weight: 900; color: var(--cyan);
+            font-family: var(--mono); font-size: 28px; font-weight: 900; color: var(--cyan);
             text-align: center;
         }
         .s7-launchpad {
@@ -439,16 +440,16 @@
             background:
                 linear-gradient(180deg, rgba(8, 13, 25, 0.88), rgba(5, 8, 15, 0.96)),
                 url("./panos/threeforks_pia25734.jpg") center/cover no-repeat;
-            padding: 28px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            text-align: center;
+            padding: 18px 22px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            text-align: center; min-height: 0;
         }
 
         /* Bottom navigation bar */
         .hud-bottom {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 52px;
+            position: fixed; bottom: 0; left: 0; right: 0; height: 46px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 36px;
-            background: rgba(5, 8, 15, 0.94);
+            padding: 0 32px;
+            background: rgba(5, 8, 15, 0.96);
             border-top: 1px solid var(--hairline);
             z-index: 100;
         }
@@ -515,18 +516,18 @@
                         <p class="s1-lead">
                             Satellite maps show where rocks are—<strong>not whether an astronaut inside a pressurized NASA xEMU spacesuit will survive walking there</strong>. <strong>NEXO-ARES</strong> fuses real NASA/JPL &amp; ESA telemetry with deterministic biomedical physics so astronauts explore Jezero Crater and return alive.
                         </p>
-                        <div style="margin-top:12px;padding:12px 16px;background:rgba(16,185,129,0.12);border-left:4px solid var(--green);border-radius:0 8px 8px 0;">
+                        <div style="margin-top:10px;padding:10px 14px;background:rgba(16,185,129,0.12);border-left:4px solid var(--green);border-radius:0 8px 8px 0;">
                             <div style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:900;letter-spacing:1px;">★ CORE VALUE PROPOSITION // THE NEXO-ARES BREAKTHROUGH</div>
-                            <div style="font-size:14px;color:#f8fafc;margin-top:3px;line-height:1.42;">
+                            <div style="font-size:13.5px;color:#f8fafc;margin-top:3px;line-height:1.38;">
                                 Unlike passive orbital viewers (<em>Mars Trek</em>) or hallucinating AI wrappers, <strong>NEXO-ARES is the first deterministic life-support navigation OS</strong>: uniting true Martian geodesy, xEMU metabolic O₂ physics, &gt;20° slope lockout, live DONKI radiation, 3D <code>.STL</code> terrain printing, and a 360° AR helmet visor.
                             </div>
                         </div>
-                        <div style="margin-top:10px;padding:10px 14px;background:rgba(15,23,42,0.92);border:1px solid rgba(56,189,248,0.45);border-radius:8px;font-size:13px;line-height:1.45;color:#f8fafc;">
-                            <div><strong style="color:var(--cyan);font-family:var(--mono);">CHALLENGE:</strong> NASA Space Apps Challenge — Planetary Exploration &amp; Human EVA Operations (Jezero Crater, Mars)</div>
-                            <div style="margin-top:3px;"><strong style="color:#fcd34d;font-family:var(--mono);">TEAM NEXO CODE (Neiva, Colombia):</strong> David Santiago Ortiz Rincon • Daniel Zea Tamayo • Samuel Esteban Ramirez</div>
-                        </div>
-                        <div style="margin-top:12px;display:flex;gap:12px;align-items:center;">
-                            <button class="btn-next-big" style="padding:10px 22px;font-size:13.5px;" onclick="cambiarSlide(1)">▶ START 7-SLIDE PRESENTATION (NEXT SLIDE →)</button>
+                        <div style="margin-top:10px;display:flex;gap:12px;align-items:stretch;">
+                            <div style="flex:1;padding:8px 12px;background:rgba(15,23,42,0.92);border:1px solid rgba(56,189,248,0.45);border-radius:8px;font-size:12px;line-height:1.38;color:#f8fafc;">
+                                <div><strong style="color:var(--cyan);font-family:var(--mono);">CHALLENGE:</strong> NASA Space Apps — Planetary Exploration &amp; Human EVA Operations</div>
+                                <div style="margin-top:2px;"><strong style="color:#fcd34d;font-family:var(--mono);">TEAM NEXO CODE (Neiva, CO):</strong> David Santiago Ortiz Rincon • Daniel Zea Tamayo • Samuel Esteban Ramirez</div>
+                            </div>
+                            <button class="btn-next-big" style="padding:10px 18px;font-size:13px;white-space:nowrap;" onclick="cambiarSlide(1)">▶ NEXT SLIDE →</button>
                         </div>
                     </div>
 
@@ -1049,7 +1050,7 @@
                     <div style="font-family:var(--mono);font-size:13px;color:var(--cyan);font-weight:900;letter-spacing:1.5px;">
                         LIVE TELEMETRY ACCESS // SCAN QR OR LAUNCH
                     </div>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=38bdf8&bgcolor=05080f&data=https%3A%2F%2Fortiz10m.github.io%2Fnexo-code-nass%2Ffrontend%2Findex.html" alt="QR NEXO-ARES" style="width:164px;height:164px;border:2px solid var(--cyan);padding:8px;border-radius:12px;background:#05080f;box-shadow:0 0 28px rgba(56,189,248,0.35);">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&color=38bdf8&bgcolor=05080f&data=https%3A%2F%2Fortiz10m.github.io%2Fnexo-code-nass%2Ffrontend%2Findex.html" alt="QR NEXO-ARES" style="width:138px;height:138px;border:2px solid var(--cyan);padding:6px;border-radius:12px;background:#05080f;box-shadow:0 0 24px rgba(56,189,248,0.35);">
                     <div style="font-family:var(--mono);font-size:13.5px;color:#fff;font-weight:700;word-break:break-all;background:rgba(5,8,15,0.85);padding:6px 12px;border-radius:6px;">
                         ortiz10m.github.io/nexo-code-nass/frontend/index.html
                     </div>
