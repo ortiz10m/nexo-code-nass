@@ -3,10 +3,21 @@
 [![NASA Space Apps 2026](https://img.shields.io/badge/NASA_Space_Apps_2026-Global_Nominee_Candidate-0284c7?style=for-the-badge)](https://www.spaceappschallenge.org/)
 [![Live Interactive App](https://img.shields.io/badge/🚀_Launch_Live_System-NEXO--ARES_OS-10b981?style=for-the-badge)](https://ortiz10m.github.io/nexo-code-nass/frontend/index.html)
 [![7-Slide Keynote Deck](https://img.shields.io/badge/📊_7--Slide_Briefing-Interactive_Deck-f97316?style=for-the-badge)](https://ortiz10m.github.io/nexo-code-nass/frontend/slides.html)
-[![License: MIT](https://img.shields.io/badge/License-MIT_Open_Science-38bdf8?style=for-the-badge)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT_Open_Science-38bdf8?style=for-the-badge)](./LICENSE)
 
 > **"NASA Mars Trek was built to view Mars from a desk on Earth; NEXO-ARES was built to keep the first human astronaut alive while walking across Jezero Crater."**  
+> **Official Challenge:** NASA Space Apps Challenge — Planetary Exploration & Human EVA Operations (Jezero Crater, Mars)  
 > **Location:** Neiva, Huila, Colombia 🇨🇴 • **Team Nexo Code:** David Santiago Ortiz Rincón • Samuel Esteban Ramírez • Daniel Zea Tamayo • Mailyn Yuliana Rojas • Diego Fernando Vargas Ramírez.
+
+---
+
+## 🖥️ NEXO-ARES Live Production Interface Preview
+
+![NEXO-ARES 2D Tactical EVA Console](./frontend/panos/ui_2d_map.jpg)
+
+| 🪐 Engine 01: 3D Planetary Globe | 🏔️ Engine 03: 3D Crater Holotable & `.STL` | 🧑‍🚀 Engine 04: AR 360° Helmet Visor + PIXL |
+| :---: | :---: | :---: |
+| ![3D Mars Globe](./frontend/panos/ui_3d_globe.jpg) | ![3D Crater Holotable](./frontend/panos/ui_3d_holotable.jpg) | ![AR 360 Helmet Visor](./frontend/panos/ui_360_visor.jpg) |
 
 ---
 
@@ -126,7 +137,7 @@ cd nexo-code-nass
 python -m venv venv
 # Windows PowerShell:
 .\venv\Scripts\activate
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 uvicorn backend.main:app --reload --port 8000
 ```
 * **Tactical EVA App:** `http://127.0.0.1:8000/app` (or open `frontend/index.html` directly)
