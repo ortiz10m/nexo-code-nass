@@ -314,46 +314,50 @@
             padding: 8px 12px; border-radius: 0 6px 6px 0;
         }
 
-        /* ===== SLIDE 4: 4 VISUAL ENGINES WITH 100% REAL LOCAL PHOTOS ===== */
+        /* ===== SLIDE 4: 4 VISUAL ENGINES WITH 100% REAL UI SCREENSHOTS ===== */
         .s4-showcase {
-            flex: 1; display: grid; grid-template-columns: 1.25fr 1fr; gap: 22px;
+            flex: 1; min-height: 0; max-height: calc(100vh - 215px);
+            display: grid; grid-template-columns: 1.28fr 1fr; gap: 18px;
         }
         .s4-hero-shot {
-            position: relative; border: 1px solid rgba(56, 189, 248, 0.45);
+            position: relative; min-height: 0;
+            border: 1px solid rgba(56, 189, 248, 0.55);
             border-radius: 12px; overflow: hidden;
-            background: url("./panos/belva_pia25889.jpg") center/cover no-repeat;
+            background: url("./panos/ui_2d_map.jpg") center top/cover no-repeat;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 22px;
+            padding: 16px 18px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
         }
         .s4-hero-top-badges {
             display: flex; flex-wrap: wrap; gap: 8px; z-index: 2;
         }
         .s4-chip {
-            font-family: var(--mono); font-size: 12px; font-weight: 800;
-            background: rgba(5, 8, 15, 0.86); border: 1px solid var(--cyan);
-            color: #7dd3fc; padding: 6px 12px; border-radius: 6px; backdrop-filter: blur(8px);
+            font-family: var(--mono); font-size: 11.5px; font-weight: 800;
+            background: rgba(5, 8, 15, 0.90); border: 1px solid var(--cyan);
+            color: #7dd3fc; padding: 5px 11px; border-radius: 6px; backdrop-filter: blur(8px);
         }
         .s4-hero-overlay {
-            background: rgba(5, 8, 15, 0.90);
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            background: rgba(5, 8, 15, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             backdrop-filter: blur(12px);
             border-radius: 10px;
-            padding: 22px 24px;
+            padding: 14px 18px;
             z-index: 2;
         }
         .s4-stack {
-            display: grid; grid-template-rows: repeat(3, 1fr); gap: 14px;
+            display: grid; grid-template-rows: repeat(3, 1fr); gap: 12px; min-height: 0;
         }
         .s4-strip {
-            display: grid; grid-template-columns: 165px 1fr;
-            border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden;
-            background: rgba(10, 15, 28, 0.92);
+            display: grid; grid-template-columns: 185px 1fr; min-height: 0;
+            border: 1px solid rgba(56, 189, 248, 0.32); border-radius: 10px; overflow: hidden;
+            background: rgba(10, 15, 28, 0.94);
         }
         .s4-thumb {
-            width: 100%; height: 100%; object-fit: cover; border-right: 1px solid var(--hairline);
+            width: 100%; height: 100%; object-fit: cover; object-position: center;
+            border-right: 1px solid var(--hairline);
         }
         .s4-strip-body {
-            padding: 14px 20px; display: flex; flex-direction: column; justify-content: center;
+            padding: 10px 16px; display: flex; flex-direction: column; justify-content: center;
         }
 
         /* ===== SLIDE 5: TELEMETRY TABLE + FILLED BOTTOM CARDS ===== */
@@ -509,42 +513,46 @@
                         <h1 class="s1-title">NEXO-ARES</h1>
                         <div class="s1-subtitle">Astronaut Routing &amp; Extravehicular Survival Operating System</div>
                         <p class="s1-lead">
-                            Satellite maps show where rocks are—<strong>not whether an astronaut inside a pressurized NASA xEMU spacesuit will survive walking there</strong>. <strong>NEXO-ARES</strong> fuses real NASA/JPL telemetry with deterministic biomedical physics so astronauts explore Jezero Crater and return alive.
+                            Satellite maps show where rocks are—<strong>not whether an astronaut inside a pressurized NASA xEMU spacesuit will survive walking there</strong>. <strong>NEXO-ARES</strong> fuses real NASA/JPL &amp; ESA telemetry with deterministic biomedical physics so astronauts explore Jezero Crater and return alive.
                         </p>
-                        <div style="margin-top:16px;padding:14px 18px;background:rgba(16,185,129,0.12);border-left:4px solid var(--green);border-radius:0 8px 8px 0;">
-                            <div style="font-family:var(--mono);font-size:11.5px;color:var(--green);font-weight:900;letter-spacing:1px;">★ CORE VALUE PROPOSITION // THE NEXO-ARES BREAKTHROUGH</div>
-                            <div style="font-size:14.5px;color:#f8fafc;margin-top:4px;line-height:1.45;">
+                        <div style="margin-top:12px;padding:12px 16px;background:rgba(16,185,129,0.12);border-left:4px solid var(--green);border-radius:0 8px 8px 0;">
+                            <div style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:900;letter-spacing:1px;">★ CORE VALUE PROPOSITION // THE NEXO-ARES BREAKTHROUGH</div>
+                            <div style="font-size:14px;color:#f8fafc;margin-top:3px;line-height:1.42;">
                                 Unlike passive orbital viewers (<em>Mars Trek</em>) or hallucinating AI wrappers, <strong>NEXO-ARES is the first deterministic life-support navigation OS</strong>: uniting true Martian geodesy, xEMU metabolic O₂ physics, &gt;20° slope lockout, live DONKI radiation, 3D <code>.STL</code> terrain printing, and a 360° AR helmet visor.
                             </div>
                         </div>
-                        <div style="margin-top:16px;display:flex;gap:12px;align-items:center;">
-                            <button class="btn-next-big" style="padding:12px 24px;font-size:14px;" onclick="cambiarSlide(1)">▶ START 7-SLIDE PRESENTATION (NEXT SLIDE →)</button>
+                        <div style="margin-top:10px;padding:10px 14px;background:rgba(15,23,42,0.92);border:1px solid rgba(56,189,248,0.45);border-radius:8px;font-size:13px;line-height:1.45;color:#f8fafc;">
+                            <div><strong style="color:var(--cyan);font-family:var(--mono);">CHALLENGE:</strong> NASA Space Apps Challenge — Planetary Exploration &amp; Human EVA Operations (Jezero Crater, Mars)</div>
+                            <div style="margin-top:3px;"><strong style="color:#fcd34d;font-family:var(--mono);">TEAM NEXO CODE (Neiva, Colombia):</strong> David Santiago Ortiz Rincon • Daniel Zea Tamayo • Samuel Esteban Ramirez</div>
+                        </div>
+                        <div style="margin-top:12px;display:flex;gap:12px;align-items:center;">
+                            <button class="btn-next-big" style="padding:10px 22px;font-size:13.5px;" onclick="cambiarSlide(1)">▶ START 7-SLIDE PRESENTATION (NEXT SLIDE →)</button>
                         </div>
                     </div>
 
                     <div class="s1-right-cards">
                         <div class="s1-mini-photo">
-                            <img src="./jezero-hi-res.jpg" alt="Jezero Orbital Mosaic">
+                            <img src="./panos/ui_2d_map.jpg" alt="NEXO-ARES 2D Tactical Interface">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--cyan);font-weight:800;">NASA CTX ORBITAL MOSAIC (5m/px)</span>
-                                <strong style="font-size:16px;color:#fff;margin:2px 0;">7 Real-Time Scientific Layers</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;">HD Satellite, MOLA Elevation, THEMIS Thermal &amp; CRISM Bio.</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--cyan);font-weight:800;">NASA + ESA MARS EXPRESS HRSC INGESTION</span>
+                                <strong style="font-size:16px;color:#fff;margin:2px 0;">7 Real-Time Scientific Layers + O₂ Ring</strong>
+                                <span style="font-size:13.5px;color:#cbd5e1;">Mars Trek CTX/MOLA, ESA HRSC, THEMIS Thermal &amp; CRISM Bio.</span>
                             </div>
                         </div>
                         <div class="s1-mini-photo">
-                            <img src="./panos/vanzyl_pia24836.jpg" alt="360 Helmet Visor">
+                            <img src="./panos/ui_360_visor.jpg" alt="NEXO-ARES 360 Helmet Visor UI">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:800;">AR 360° MASTCAM-Z VISOR • PIA24836</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--green);font-weight:800;">AR 360° MASTCAM-Z VISOR • LIVE HUD</span>
                                 <strong style="font-size:16px;color:#fff;margin:2px 0;">First-Person Helmet Visor + PIXL Laser</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;">Real Perseverance panoramas with synthesized PLSS breathing.</span>
+                                <span style="font-size:13.5px;color:#cbd5e1;">Real Perseverance panoramas with live PIXL X-ray spectroscopy.</span>
                             </div>
                         </div>
                         <div class="s1-mini-photo">
-                            <img src="./panos/tubes_pia25663.jpg" alt="Mars Sample Tubes">
+                            <img src="./panos/ui_3d_holotable.jpg" alt="NEXO-ARES 3D Crater Holotable UI">
                             <div>
-                                <span style="font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:800;">WHITE-BOX PHYSICS • ZERO HALLUCINATION</span>
+                                <span style="font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:800;">WHITE-BOX PHYSICS • 3D HOLOTABLE &amp; .STL</span>
                                 <strong style="font-size:16px;color:#fff;margin:2px 0;">Dual Engine: FastAPI + Active xEMU Kernel</strong>
-                                <span style="font-size:13.5px;color:#cbd5e1;">Exact O₂ burn, &lt;20° slope limit, UHF line-of-sight &amp; radiation.</span>
+                                <span style="font-size:13.5px;color:#cbd5e1;">Exact O₂ burn, &lt;20° slope limit, UHF line-of-sight &amp; 3D .STL export.</span>
                             </div>
                         </div>
                     </div>
@@ -604,7 +612,7 @@
 
                 <div class="s2-timeline">
                     <div class="s2-event">
-                        <img src="./panos/rim_pia26373.jpg" alt="Kodiak & Rim Slope">
+                        <img src="./panos/spirit_slope_clean.jpg" alt="Kodiak & Rim Slope">
                         <div class="s2-event-body">
                             <div class="s2-event-top">
                                 <span class="s2-event-title">1. Spirit Rover (2009) — Slope &amp; Sand Trap</span>
@@ -666,9 +674,9 @@
 
             <div class="s3-pipeline">
                 <div class="s3-step">
-                    <div class="s3-num">STAGE 01 // NASA INGESTION</div>
-                    <div class="s3-name">Real Mars Telemetry</div>
-                    <div class="s3-txt">Ingests Mars Trek WMTS tiles, Perseverance photos &amp; DONKI solar weather.</div>
+                    <div class="s3-num">STAGE 01 // NASA &amp; ESA INGESTION</div>
+                    <div class="s3-name">NASA + ESA Multimission</div>
+                    <div class="s3-txt">Ingests NASA Mars Trek WMTS (MOLA, HiRISE), <strong>ESA Mars Express HRSC</strong>, Perseverance &amp; DONKI.</div>
                 </div>
                 <div class="s3-step">
                     <div class="s3-num">STAGE 02 // A* SOLVER</div>
@@ -743,13 +751,13 @@
         </section>
 
         <!-- =========================================================
-             SLIDE 04 // MULTI-SCALE 4-ENGINE SHOWCASE (ALL REAL PHOTOS!)
+             SLIDE 04 // MULTI-SCALE 4-ENGINE SHOWCASE (ALL REAL UI SCREENSHOTS!)
         ========================================================== -->
         <section class="slide">
             <div class="slide-header">
                 <div class="slide-meta">
-                    <span class="slide-kicker">04 // FOUR SYNCHRONIZED VISUAL ENGINES • ORBIT TO SURFACE</span>
-                    <span class="slide-coords">100% AUTHENTIC NASA / JPL-CALTECH / MSSS IMAGERY</span>
+                    <span class="slide-kicker">04 // FOUR SYNCHRONIZED VISUAL ENGINES • REAL NEXO-ARES UI SCREENSHOTS</span>
+                    <span class="slide-coords">LIVE PRODUCTION INTERFACE • ORBIT TO HELMET VISOR</span>
                 </div>
                 <h2 class="slide-headline">
                     Four Real Spatial Scales in <span class="accent">One Tactical Interface.</span>
@@ -757,52 +765,52 @@
             </div>
 
             <div class="s4-showcase">
-                <!-- Left large visual frame with real Belva Crater photo PIA25889 -->
+                <!-- Left large visual frame with real NEXO-ARES 2D Tactical Map screenshot -->
                 <div class="s4-hero-shot">
                     <div class="s4-hero-top-badges">
-                        <span class="s4-chip">🔭 AR 360° HELMET VISOR</span>
-                        <span class="s4-chip">🔬 PIXL LASER SCANNER</span>
-                        <span class="s4-chip">🔊 EVA BREATHING AUDIO + GEIGER</span>
+                        <span class="s4-chip">🗺️ ENGINE 02 // LIVE 2D TACTICAL MAP</span>
+                        <span class="s4-chip">🟢 O₂ AUTONOMY RING</span>
+                        <span class="s4-chip">🧭 CYAN SAFE EVA CORRIDOR</span>
                     </div>
                     <div class="s4-hero-overlay">
-                        <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;margin-bottom:6px;">
-                            ENGINE 04 // MARTIAN 360° STREET VIEW • REAL MASTCAM-Z PANORAMAS (PIA25889 / PIA25172)
+                        <div style="font-family:var(--mono);font-size:11.5px;color:var(--cyan);font-weight:800;margin-bottom:4px;">
+                            ENGINE 02 // REAL NEXO-ARES INTERFACE • 7 SCIENTIFIC LAYERS + xEMU TELEMETRY CONSOLE
                         </div>
-                        <h3 style="font-size:24px;font-weight:900;color:#fff;margin-bottom:8px;">
-                            Step Inside the Astronaut's Helmet Before Leaving the Airlock
+                        <h3 style="font-size:21px;font-weight:900;color:#fff;margin-bottom:5px;">
+                            Google Maps-Style EVA Routing with Live O₂ Autonomy Ring &amp; Hazard Lockout
                         </h3>
-                        <p style="font-size:15.5px;color:#f1f5f9;line-height:1.5;">
-                            Pan 360° inside real Perseverance panoramas at Belva Crater, the Delta, and Van Zyl Overlook. Features an interactive <strong>PIXL X-ray laser scanner</strong> to inspect rock mineralogy (phyllosilicates &amp; sulfates), live NASA API photo feeds, and synthesized PLSS suit audio.
+                        <p style="font-size:14px;color:#f1f5f9;line-height:1.42;">
+                            Real screenshot of the NEXO-ARES tactical console in Jezero Crater: displays the <strong>glowing cyan safe EVA corridor</strong>, the <strong>green PLSS oxygen autonomy ring</strong>, the left xEMU life-support telemetry panel, 7 orbital layers (NASA CTX, MOLA, THEMIS, CRISM, ESA HRSC), and the 13-node mission carousel.
                         </p>
                     </div>
                 </div>
 
-                <!-- Right 3 stacked filmstrip engines with verified local photos -->
+                <!-- Right 3 stacked filmstrip engines with real screenshots of our software -->
                 <div class="s4-stack">
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./panos/vanzyl_pia24836.jpg" alt="3D Planetary Globe">
+                        <img class="s4-thumb" src="./panos/ui_3d_globe.jpg" alt="NEXO-ARES 3D Planetary Globe Screenshot">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--cyan);font-weight:800;">ENGINE 01 // 3D PLANETARY GLOBE + COSMOS</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Global 5-Mission Planetary Explorer</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">3D globe with 2,600 synced stars comparing Perseverance with Curiosity, InSight, Spirit &amp; Opportunity before landing in Jezero.</div>
+                            <div style="font-family:var(--mono);font-size:11.5px;color:var(--cyan);font-weight:800;">ENGINE 01 // 3D PLANETARY GLOBE + COSMOS (UI SCREENSHOT)</div>
+                            <div style="font-size:17px;font-weight:800;color:#fff;margin:2px 0;">Global 5-Mission Planetary Explorer</div>
+                            <div style="font-size:13.5px;color:#cbd5e1;line-height:1.35;">Interactive WebGL 3D Mars globe comparing Perseverance with Curiosity, InSight, Spirit &amp; Opportunity before descending to Jezero.</div>
                         </div>
                     </div>
 
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./jezero-hi-res.jpg" alt="2D Tactical Map">
+                        <img class="s4-thumb" src="./panos/ui_3d_holotable.jpg" alt="NEXO-ARES 3D Crater Holotable Screenshot">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--green);font-weight:800;">ENGINE 02 // 2D TACTICAL MAP + 7 ORBITAL LAYERS</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Google Maps-Style Routing with Live O₂ Ring</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">Includes 5m/px HD Satellite, MOLA Elevation, THEMIS sand-trap detector, CRISM Biosignatures &amp; live step-by-step walk animation.</div>
+                            <div style="font-family:var(--mono);font-size:11.5px;color:var(--amber);font-weight:800;">ENGINE 03 // 3D CRATER HOLOTABLE + .STL EXPORT (UI SCREENSHOT)</div>
+                            <div style="font-size:17px;font-weight:800;color:#fff;margin:2px 0;">Photogrammetric 3D Relief &amp; Physical .STL Export</div>
+                            <div style="font-size:13.5px;color:#cbd5e1;line-height:1.35;">Projects the cyan EVA route and 3D pins onto Jezero's relief with solar shadows (06:00–18:00), MOLA X-Ray &amp; binary <code>.STL</code> export.</div>
                         </div>
                     </div>
 
                     <div class="s4-strip">
-                        <img class="s4-thumb" src="./panos/delta_pia25172.jpg" alt="3D Crater Holotable">
+                        <img class="s4-thumb" src="./panos/ui_360_visor.jpg" alt="NEXO-ARES AR 360 Helmet Visor Screenshot">
                         <div class="s4-strip-body">
-                            <div style="font-family:var(--mono);font-size:12px;color:var(--amber);font-weight:800;">ENGINE 03 // 3D CRATER HOLOTABLE + .STL EXPORT</div>
-                            <div style="font-size:18px;font-weight:800;color:#fff;margin:3px 0;">Photogrammetric 3D Relief &amp; Physical .STL Export</div>
-                            <div style="font-size:14.5px;color:#cbd5e1;line-height:1.4;">Simulates solar shadows (06:00–18:00), MOLA X-Ray wireframe, and exports binary <code>.STL</code> files for physical 3D printing.</div>
+                            <div style="font-family:var(--mono);font-size:11.5px;color:var(--green);font-weight:800;">ENGINE 04 // AR 360° HELMET VISOR + PIXL LASER (UI SCREENSHOT)</div>
+                            <div style="font-size:17px;font-weight:800;color:#fff;margin:2px 0;">First-Person Mastcam-Z Street View &amp; Spectroscopy</div>
+                            <div style="font-size:13.5px;color:#cbd5e1;line-height:1.35;">Walk inside real Perseverance 360° panoramas with top HUD telemetry, red <code>NO-GO</code> slope markers, PIXL X-ray readout &amp; suit audio.</div>
                         </div>
                     </div>
                 </div>
@@ -1049,8 +1057,10 @@
                         <a href="./index.html" class="hud-pill primary" style="flex:1.2;text-align:center;padding:13px;font-size:14px;">🚀 Launch Live Demo</a>
                         <a href="https://github.com/ortiz10m/nexo-code-nass" target="_blank" rel="noopener" class="hud-pill" style="flex:1;text-align:center;padding:13px;font-size:14px;">💻 View GitHub Repo</a>
                     </div>
-                    <div style="font-size:13px;color:#cbd5e1;font-weight:600;">
-                        Developed by <strong>Team Nexo Code</strong> • NASA Space Apps Challenge
+                    <div style="font-size:12.5px;color:#f8fafc;font-weight:600;line-height:1.45;background:rgba(5,8,15,0.88);padding:10px 14px;border-radius:8px;border:1px solid rgba(56,189,248,0.35);width:100%;">
+                        <div style="color:var(--cyan);font-family:var(--mono);font-weight:800;">TEAM NEXO CODE (Neiva, Huila, Colombia)</div>
+                        <div style="margin:3px 0;color:#fff;">David Santiago Ortiz Rincon • Daniel Zea Tamayo • Samuel Esteban Ramirez</div>
+                        <div style="color:#94a3b8;font-size:11.5px;">Challenge: Planetary Exploration &amp; Human EVA Operations • NASA &amp; ESA Open Data</div>
                     </div>
                 </div>
             </div>
