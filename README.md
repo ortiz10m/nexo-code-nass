@@ -1,4 +1,4 @@
-# 🛰️ NEXO-ARES — Astronaut Routing & EVA Survival System for Jezero Crater
+# 🛰️ NEXO-ARES — Interplanetary Survival Guide: Martian Map (Jezero Crater EVA OS)
 
 [![NASA Space Apps 2026](https://img.shields.io/badge/NASA_Space_Apps_2026-Global_Nominee_Candidate-0284c7?style=for-the-badge)](https://www.spaceappschallenge.org/)
 [![Live Interactive App](https://img.shields.io/badge/🚀_Launch_Live_System-NEXO--ARES_OS-10b981?style=for-the-badge)](https://ortiz10m.github.io/nexo-code-nass/frontend/index.html)
@@ -13,11 +13,11 @@
 
 ## 🖥️ NEXO-ARES Live Production Interface Preview
 
-![NEXO-ARES 2D Tactical EVA Console](./frontend/panos/ui_2d_map.jpg)
+![NEXO-ARES 2D Tactical EVA Console](./frontend/panos/nexo_ares_2d_v2.jpg)
 
 | 🪐 Engine 01: 3D Planetary Globe | 🏔️ Engine 03: 3D Crater Holotable & `.STL` | 🧑‍🚀 Engine 04: AR 360° Helmet Visor + PIXL |
 | :---: | :---: | :---: |
-| ![3D Mars Globe](./frontend/panos/ui_3d_globe.jpg) | ![3D Crater Holotable](./frontend/panos/ui_3d_holotable.jpg) | ![AR 360 Helmet Visor](./frontend/panos/ui_360_visor.jpg) |
+| ![3D Mars Globe](./frontend/panos/nexo_ares_globe_v2.jpg) | ![3D Crater Holotable](./frontend/panos/nexo_ares_holotable_v2.jpg) | ![AR 360 Helmet Visor](./frontend/panos/nexo_ares_visor_v2.jpg) |
 
 ---
 
