@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT_Open_Science-38bdf8?style=for-the-badge)](./LICENSE)
 
 > **"NASA Mars Trek was built to view Mars from a desk on Earth; NEXO-ARES was built to keep the first human astronaut alive while walking across Jezero Crater."**  
-> **Official Challenge:** NASA Space Apps Challenge — Planetary Exploration & Human EVA Operations (Jezero Crater, Mars)  
+> **Official Challenge:** Interplanetary Survival Guide: Martian Map  
 > **Location:** Neiva, Huila, Colombia 🇨🇴 • **Team Nexo Code:** David Santiago Ortiz Rincón • Samuel Esteban Ramírez • Daniel Zea Tamayo • Mailyn Yuliana Rojas • Diego Fernando Vargas Ramírez.
 
 ---
