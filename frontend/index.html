@@ -2105,9 +2105,10 @@
             document.body.classList.toggle("tormenta-activa", esTormenta);
             btn.classList.toggle("tormenta", esTormenta);
             const en = typeof idiomaActual !== "undefined" && idiomaActual === "en";
+            const estSolar = en && climaEspacial.estado_solar === "PRECAUCIÓN" ? "CAUTION" : climaEspacial.estado_solar;
             btn.innerText = esTormenta
                 ? (en ? `⚡ SOLAR STORM (${climaEspacial.radiacion_msv_hora} mSv/h) • Shelter ~6 min` : `⚡ TORMENTA SOLAR (${climaEspacial.radiacion_msv_hora} mSv/h) • Refugio ~6 min`)
-                : `☀️ DONKI: ${climaEspacial.estado_solar} (${climaEspacial.radiacion_msv_hora} mSv/h)`;
+                : `☀️ DONKI: ${estSolar} (${climaEspacial.radiacion_msv_hora} mSv/h)`;
         }
 
         async function toggleSimularTormenta() {
@@ -2971,7 +2972,7 @@
             { url: "./panos/rim_pia26373.jpg", titulo: "Borde del Cráter Jezero / Neretva (PIA26373)", cam: "Navcam" }
         ];
         const PANOS_HORIZONTE_360 = [
-            { url: "./panos/threeforks_pia25734.jpg", titulo: "Three Forks 360° (PIA25734)", cam: "Mastcam-Z" },
+            { url: "./panos/delta_pia25172.jpg", titulo: "Jezero Delta Front 360° (PIA25172)", cam: "Mastcam-Z" },
             { url: "./panos/vanzyl_pia24836.jpg", titulo: "Van Zyl Overlook / Séítah 360° (PIA24836)", cam: "Mastcam-Z" },
             { url: "./panos/belva_pia25889.jpg", titulo: "Belva Crater 360° (PIA25889)", cam: "Mastcam-Z" }
         ];
