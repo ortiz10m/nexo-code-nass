@@ -1462,7 +1462,7 @@
                     <div style="line-height:1.1;letter-spacing:0.4px;">NEXO-ARES<small style="display:block;font-size:9.5px;color:#38bdf8;font-weight:700;margin-top:1px;">Mars EVA OS • Nexo Code</small></div>
                 </div>
                 <div style="display:flex;gap:5px;align-items:center;flex-shrink:0;">
-                    <button id="btn-lang" onclick="toggleIdioma()" style="display:none;border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 ES</button>
+                    <button id="btn-lang" onclick="toggleIdioma()" title="Switch language (EN / ES)" style="border:1px solid rgba(56,189,248,0.35);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#38bdf8;white-space:nowrap;">🌐 ES</button>
                     <span id="badge-api" class="chip-backend" title="Active xEMU Deterministic Physics Engine + NASA APIs" style="white-space:nowrap;font-size:10px;padding:4px 7px;border-radius:10px;max-width:125px;overflow:hidden;text-overflow:ellipsis;">⚡ xEMU Engine</span>
                     <button id="btn-toggle-panel" onclick="togglePanel()" title="Collapse panel" style="border:1px solid rgba(255,255,255,0.18);background:rgba(30,41,59,0.85);border-radius:10px;padding:4px 8px;font-size:11px;font-weight:700;cursor:pointer;color:#e2e8f0;">◀</button>
                 </div>
@@ -1544,13 +1544,13 @@
                 <div style="display:flex;flex-direction:column;gap:10px;">
             <div class="sec-titulo" id="sec-equipo">2. Science Payload &amp; Mobility</div>
             <div class="fila-equipo">
-                <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Peso del equipo científico">
-                    <option value="0">🎒 Traje estándar (0 kg)</option>
-                    <option value="12">🧪 Kit muestras (+12 kg)</option>
-                    <option value="25">🔬 Espectrómetro (+25 kg)</option>
+                <select id="select-carga" onchange="ejecutarCalculoGoogleMaps()" title="Science payload weight">
+                    <option value="0">🎒 Standard Suit (0 kg)</option>
+                    <option value="12">🧪 Sample Kit (+12 kg)</option>
+                    <option value="25">🔬 Spectrometer (+25 kg)</option>
                 </select>
                 <label style="display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap;">
-                    <input type="checkbox" id="check-rover" onchange="ejecutarCalculoGoogleMaps()"> 🤖 Rover apoyo
+                    <input type="checkbox" id="check-rover" onchange="ejecutarCalculoGoogleMaps()"> 🤖 Rover support
                 </label>
             </div>
 
@@ -1558,8 +1558,8 @@
 
             <div class="tarjeta-perfil">
                 <div class="metricas-grid">
-                    <div class="metrica-pill"><small>Retorno Científico</small><strong id="met-ciencia">--/100</strong></div>
-                    <div class="metrica-pill"><small>Radiación EVA</small><strong id="met-rad">-- mSv</strong></div>
+                    <div class="metrica-pill"><small>Science Return</small><strong id="met-ciencia">--/100</strong></div>
+                    <div class="metrica-pill"><small>EVA Radiation</small><strong id="met-rad">-- mSv</strong></div>
                     <div class="metrica-pill"><small>O₂ Consumed</small><strong id="met-o2">-- L</strong></div>
                 </div>
                 <div style="display:flex;justify-content:space-between;align-items:center;color:#94a3b8;font-size:10.5px;margin-bottom:4px;">
@@ -1668,15 +1668,15 @@
     </div>
 
     <div id="hud-caminata" class="hud-caminata">
-        <span>🧑‍🚀 <strong id="hud-nodo">En ruta...</strong></span>
+        <span>🧑‍🚀 <strong id="hud-nodo">En route...</strong></span>
         <span>O₂: <strong id="hud-o2">100%</strong></span>
         <span>Elev: <strong id="hud-elev">-2570 m</strong></span>
-        <span>Dosis: <strong id="hud-rad">0.00 mSv</strong></span>
+        <span><span id="lbl-hud-rad">Dose:</span> <strong id="hud-rad">0.00 mSv</strong></span>
     </div>
 
     <div id="tormenta-borde-alerta"></div>
     <div id="tour-subtitulo-bar">
-        <span id="tour-subtitulo-txt" style="color:#7dd3fc;">Paso 1/3: Inserción orbital en Cráter Jezero...</span>
+        <span id="tour-subtitulo-txt" style="color:#7dd3fc;">Step 1/3: Orbital insertion over Jezero Crater...</span>
         <button id="btn-detener-tour" onclick="detenerTourJurados()" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.5);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;">⏹ Stop Tour</button>
     </div>
     <div id="leyenda-capa-activa"></div>
@@ -1685,10 +1685,10 @@
     <div id="modal-reporte-eva" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.78);backdrop-filter:blur(6px);z-index:2500;align-items:center;justify-content:center;" onclick="if(event.target===this)cerrarReporteEVA()">
         <div id="rep-card-aaa" class="rep-card-aaa">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                <span id="rep-badge" style="font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;letter-spacing:0.6px;">EVA EXITOSA</span>
+                <span id="rep-badge" style="font-size:11px;font-weight:800;padding:4px 12px;border-radius:999px;letter-spacing:0.6px;">EVA SUCCESSFUL</span>
                 <button onclick="cerrarReporteEVA()" style="border:none;background:none;font-size:18px;cursor:pointer;color:#94a3b8;">✕</button>
             </div>
-            <h3 id="rep-titulo" style="font-size:18px;font-weight:800;margin-bottom:4px;color:#ffffff;">Misión EVA Completada</h3>
+            <h3 id="rep-titulo" style="font-size:18px;font-weight:800;margin-bottom:4px;color:#ffffff;">EVA Mission Completed</h3>
             <p id="rep-subtitulo" style="font-size:12px;color:#cbd5e1;margin-bottom:10px;"></p>
             <div id="rep-foto-box" style="margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(56,189,248,0.35);background:#090d16;display:none;">
                 <img id="rep-foto-img" src="" alt="Vista del destino" style="width:100%;height:125px;object-fit:cover;display:block;">
@@ -1706,7 +1706,7 @@
     </div>
 
     <div class="cuadro-globo-btn" onclick="abrirGlobo3D()" title="Explorar el planeta Marte en 3D">
-        Globo 3D
+        3D Globe
     </div>
 
     <div class="controles-derecha-abajo" style="display:flex;flex-direction:column;gap:8px;align-items:center;">
@@ -1856,19 +1856,19 @@
     <div id="modal-globo3d" class="modal-fullscreen">
         <div class="sv-topbar">
             <div class="sv-card-info" style="background:rgba(11,15,25,0.9);border:1px solid rgba(56,189,248,0.35);">
-                <div id="globo-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">VISTA ORBITAL 3D • PLANETA MARTE</div>
-                <h3 id="globo-sub" style="font-size:16px;margin:3px 0;">Explorador Global de Misiones NASA</h3>
-                <p id="globo-desc" style="font-size:12px;color:#cbd5e1;">Arrastra el planeta con el mouse o elige una misión abajo para inspeccionarla.</p>
+                <div id="globo-kicker" style="font-size:11px;color:#38bdf8;font-weight:700;">3D ORBITAL VIEW • PLANET MARS</div>
+                <h3 id="globo-sub" style="font-size:16px;margin:3px 0;">NASA Global Mission Explorer</h3>
+                <p id="globo-desc" style="font-size:12px;color:#cbd5e1;">Drag the planet, scroll to zoom, or pick a NASA mission below.</p>
                 <div id="globo-leccion" style="margin-top:6px;font-size:11px;color:#7dd3fc;background:rgba(56,189,248,0.1);border-left:2px solid #38bdf8;padding:4px 8px;border-radius:0 6px 6px 0;display:none;"></div>
-                <button id="btn-globo-aterrizar" onclick="aterrizarEnJezero()" style="display:none;margin-top:8px;padding:6px 12px;border-radius:999px;border:1px solid #00ff9d;background:rgba(0,255,157,0.16);color:#00ff9d;font-size:11px;font-weight:800;cursor:pointer;">🚀 Descender al Mapa EVA (Jezero)</button>
+                <button id="btn-globo-aterrizar" onclick="aterrizarEnJezero()" style="display:none;margin-top:8px;padding:6px 12px;border-radius:999px;border:1px solid #00ff9d;background:rgba(0,255,157,0.16);color:#00ff9d;font-size:11px;font-weight:800;cursor:pointer;">🚀 Descend to EVA Map (Jezero)</button>
             </div>
-            <button id="btn-cerrar-globo" class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Aterrizar en Cráter Jezero</button>
+            <button id="btn-cerrar-globo" class="sv-cerrar" onclick="cerrarGlobo3D()">✕ Land in Jezero Crater</button>
         </div>
         <div id="contenedor-globo-3d"></div>
         <div id="globo-labels-layer" style="position:absolute;inset:0;pointer-events:none;z-index:22;overflow:hidden;"></div>
         <div id="g3d-tex-bar" style="position:absolute;left:20px;bottom:84px;z-index:30;display:flex;gap:6px;background:rgba(11,16,28,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:5px;">
-            <button id="btn-g3d-viking" onclick="cambiarTexturaGlobo3D('viking')" style="padding:6px 11px;border-radius:8px;border:none;background:#ea580c;color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;">🪨 Color Viking</button>
-            <button id="btn-g3d-mola" onclick="cambiarTexturaGlobo3D('mola')" style="padding:6px 11px;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-size:11.5px;font-weight:700;cursor:pointer;">🌈 Altitud MOLA</button>
+            <button id="btn-g3d-viking" onclick="cambiarTexturaGlobo3D('viking')" style="padding:6px 11px;border-radius:8px;border:none;background:#ea580c;color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;">🪨 Viking Color</button>
+            <button id="btn-g3d-mola" onclick="cambiarTexturaGlobo3D('mola')" style="padding:6px 11px;border-radius:8px;border:none;background:transparent;color:#cbd5e1;font-size:11.5px;font-weight:700;cursor:pointer;">🌈 MOLA Elevation</button>
         </div>
         <div id="globo-leyenda-colores" style="position:absolute;top:76px;right:20px;width:255px;background:rgba(15,23,42,0.9);border:1px solid rgba(255,255,255,0.2);border-radius:12px;padding:12px 14px;color:#fff;z-index:30;font-size:12px;backdrop-filter:blur(6px);">
             <div id="globo-ley-titulo" style="font-size:11px;font-weight:700;color:#fbbc04;letter-spacing:0.6px;margin-bottom:8px;">COLOR CODE • MISSIONS</div>
@@ -2255,7 +2255,7 @@
                 nodoBaseId: cercano.nodo.id,
                 pendiente: pendienteEst,
                 sin_comunicacion: cercano.distKm < 0.42 && cercano.nodo.sin_comunicacion,
-                nombre: `Punto libre (${coordClicDerecho.lat.toFixed(3)}°, ${coordClicDerecho.lng.toFixed(3)}°)`
+                nombre: `${idiomaActual === "en" ? "Free point" : "Punto libre"} (${coordClicDerecho.lat.toFixed(3)}°, ${coordClicDerecho.lng.toFixed(3)}°)`
             };
 
             if (rol === "origen") {
@@ -2304,6 +2304,7 @@
         function nomNodo(pt) {
             if (!pt) return "";
             if ((typeof idiomaActual === "undefined" || idiomaActual === "en") && NODOS_EN_MAP[pt.id]) return NODOS_EN_MAP[pt.id].n;
+            if (pt.id === 901 || pt.id === 902) return `${(typeof idiomaActual === "undefined" || idiomaActual === "en") ? "Free point" : "Punto libre"} (${pt.lat.toFixed(3)}°, ${pt.lng.toFixed(3)}°)`;
             return pt.nombre || "";
         }
         function nomCortoNodo(pt) {
@@ -2461,6 +2462,7 @@
         }
 
         function abrirInspectorSitio(id) {
+            window._inspectorNodoId = id;
             const pt = puntosJezero.find(x => x.id === id);
             if (!pt) return;
             const en = idiomaActual === "en";
@@ -2886,7 +2888,7 @@
             const minE = Math.min(...elevs) - 15;
             const maxE = Math.max(...elevs) + 15;
             const spanE = Math.max(1, maxE - minE);
-            document.getElementById("lbl-desnivel").innerText = `${Math.min(...elevs)}m a ${Math.max(...elevs)}m`;
+            document.getElementById("lbl-desnivel").innerText = `${Math.min(...elevs)}m ${idiomaActual === "en" ? "to" : "a"} ${Math.max(...elevs)}m`;
 
             const coords = pts.map((p, i) => {
                 const x = pts.length === 1 ? 160 : Math.round((i / (pts.length - 1)) * 304) + 8;
@@ -4264,6 +4266,7 @@
                 en: ["InSight (Elysium Planitia, 2022)", "Gradual power degradation due to dust accumulation on solar arrays.", "EVA Lesson: Continuous radiation & power monitoring prior to every EVA."] }
         };
         function enfocarMisionPorClave(k) {
+            window._misionGloboActiva = k;
             const m = MISIONES_GLOBO_I18N[k];
             if (!m) return;
             const t = idiomaActual === "en" ? m.en : m.es;
@@ -4333,8 +4336,8 @@
             if (badgeApi) badgeApi.innerText = modoLocal ? (en ? "⚡ xEMU Engine" : "⚡ Motor xEMU") : (en ? "🟢 FastAPI Live" : "🟢 FastAPI Activo");
             const ley = document.querySelector(".leyenda-mapa");
             if (ley) ley.innerHTML = en
-                ? `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span>`
-                : `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span>`;
+                ? `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Habitat</span><span>⚪ Safe</span><span>🔴 Hazard (&gt;20° / No UHF)</span><span>🖱️ Right click: Free route</span>`
+                : `<span id="coords-mars" style="color:#38bdf8;font-weight:700;font-variant-numeric:tabular-nums;">18.45° N, 77.42° E</span><span>🟢 Hábitat</span><span>⚪ Seguro</span><span>🔴 Peligro (&gt;20° / Sin UHF)</span><span>🖱️ Clic derecho: Ruta libre</span>`;
             const setTechBtn = (id, title, sub) => {
                 const el = document.getElementById(id);
                 if (el) el.innerHTML = `<span>${title}</span><small>${sub}</small>`;
@@ -4412,6 +4415,12 @@
             setTextoId("ctx-sv", en ? "🧑‍🚀 Open nearby 360° Street View" : "🧑‍🚀 Ver Street View 360° cercano");
             setTextoId("sv-lbl-rumbo", en ? "Drag to pan 360° • Bearing:" : "Arrastra para girar 360° • Rumbo:");
             setTextoId("btn-limpiar-paradas", en ? "✕ Clear" : "✕ Limpiar");
+            setTextoId("lbl-hud-rad", en ? "Dose:" : "Dosis:");
+            if (document.getElementById("modal-cajablanca")?.style.display === "flex") abrirCajaBlanca();
+            if (document.getElementById("modal-cuff")?.style.display === "flex") abrirCuffChecklist();
+            if (document.getElementById("inspector-sitio")?.style.display === "block" && window._inspectorNodoId) abrirInspectorSitio(window._inspectorNodoId);
+            if (document.getElementById("modal-streetview")?.style.display === "flex" && svNodoActual) mostrarStreetViewNodo(svNodoActual);
+            if (document.getElementById("modal-globo3d")?.style.display === "flex" && window._misionGloboActiva) enfocarMisionPorClave(window._misionGloboActiva);
             if (puntosJezero.length) dibujarNodosBase(true);
             actualizarChipParadas();
             setCarruselColapsado(document.body.classList.contains("carrusel-oculto"));
@@ -4574,7 +4583,7 @@
                 <div class="eq-card">
                     <strong>4. Dosis de Radiación Acumulada (NASA DONKI)</strong>
                     <div class="eq-formula">Dosis = (${tMin} min / 60) · ${radH} mSv/h = ${r.radiacion_msv} mSv</div>
-                    <div>${en ? "Active telemetry source:" : "Fuente activa:"} <strong>${climaEspacial?.fuente || "MSL-RAD / DONKI"}</strong>.</div>
+                    <div>Fuente activa: <strong>${(climaEspacial?.fuente || "MSL-RAD / DONKI").replace("Verified Cache", "Caché Verificada").replace("Local Simulation Cache", "Simulación Caché Local").replace("Offline Cache", "Caché Offline")}</strong>.</div>
                 </div>
             `;
             document.getElementById("modal-cajablanca").style.display = "flex";
